@@ -1,6 +1,11 @@
-/* MYWEB PLATFORM — main.js v1 */
+/* MYWEB PLATFORM — main.js v2 */
 (function(){
 'use strict';
+
+/* ===== FAIL-SAFE (runs first) ===== */
+setTimeout(function(){if(document.documentElement.className.indexOf('nl-loading')>-1){document.documentElement.className=document.documentElement.className.replace('nl-loading','nl-ready')}},2500);
+function nlReady(){try{document.documentElement.className=document.documentElement.className.replace('nl-loading','nl-ready')}catch(e){}}
+window.nlReady=nlReady;
 
 /* ===== DEFAULTS + STORAGE ===== */
 var nlCustomDefaults={scope:'global',logoType:'text',logoUrl:'',logoText:'My Website',siteName:'My Website',tagline:'Welcome',taglineOn:true,primaryColor:'#2865F1',secondaryColor:'#8b5cf6',bgColor:'#f8fafc',bgGradient:'',linkColor:'',textColor:'',headerBg:'',footerBg:'',footerTextColor:'',btnTextColor:'#ffffff',heroTitle:'Welcome to My Website',heroSubtitle:'This is my awesome website',heroTitleColor:'',heroSubtitleColor:'',heroBgImage:'',heroOverlayOpacity:0,heroBtnText:'Get Started',heroBtnUrl:'',navBg:'',navTextColor:'',navSticky:false,navLinks:[{label:'Home',url:'/'},{label:'About',url:'about'},{label:'Contact',url:'contact'}],footerText:'© 2024 My Website',copyrightText:'',showPoweredBy:true,socials:{facebook:'',twitter:'',instagram:'',youtube:''},fontFamily:'Inter',baseFontSize:16,headingWeight:800,contentMaxWidth:1200,borderRadius:12,spacing:'normal',customCSS:'',customJS:'',gaId:'',favicon:''};
@@ -30,8 +35,6 @@ function nlCS(){try{var s=localStorage.getItem('nl_sub');if(!s)return null;var s
 function nlGK(p,d){var c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';var k='NL-';for(var i=0;i<4;i++){for(var j=0;j<4;j++)k+=c.charAt(Math.floor(Math.random()*c.length));if(i<3)k+='-';}return k+'-'+(d?p+'-'+d+'d':p)}
 function nlAK(key){var p=key.split('-');if(p.length<6||p[0]!=='NL')return false;var pid=p[5];var plan=nlPay.plans[pid];if(!plan){for(var x in nlPay.plans){if(nlPay.plans[x].label===pid){plan=nlPay.plans[x];pid=x;break}}}if(!plan)return false;var sd={key:key,plan:pid,n:plan.name,l:plan.label,a:Date.now(),e:Date.now()+(plan.days*86400000),x:false};try{localStorage.setItem('nl_sub',JSON.stringify(sd));return true}catch(e){return false}}
 function nlSyncToHub(){try{if(nlIsHub){var d=nlGD();var payload={txns:d.txns||[],site:window.location.hostname,synced:new Date().toISOString()};var xhr=new XMLHttpRequest();xhr.open('GET','/admin_forms.php?nl_sync='+encodeURIComponent(JSON.stringify(payload))+'&nl_return='+encodeURIComponent('/admin_index.php'),true);try{xhr.send(null)}catch(e){}}else{var d2=nlGD();var payload2={txns:d2.txns||[],site:window.location.hostname,synced:new Date().toISOString()};var img=new Image();img.src='https://forum.myweb.name.ng/admin_forms.php?nl_sync='+encodeURIComponent(JSON.stringify(payload2))+'&nl_return='+encodeURIComponent(window.location.href)}}catch(e){}}
-
-/* Export to window for inline handlers */
 window.nlUA=nlUA;window.nlTP=nlTP;window.nlTF=nlTF;window.nlPay=nlPay;window.nlIsHub=nlIsHub;window.nlThemeMap=nlThemeMap;
 window.nlDT=nlDT;window.nlResolveUrl=nlResolveUrl;window.nlGD=nlGD;window.nlSD=nlSD;window.nlCS=nlCS;window.nlGK=nlGK;window.nlAK=nlAK;window.nlSyncToHub=nlSyncToHub;
 
@@ -41,16 +44,9 @@ function nlInjectCustomization(customObj){
   var at = (document.body && document.body.getAttribute('data-nl-theme')) || nlDT() || 'generic';
   var map = nlThemeMap[at] || nlThemeMap.generic;
   var css = '';
-  if (c.primaryColor) {
-    if (map.logo) css += map.logo + '{color:' + c.primaryColor + ' !important}';
-    if (map.nav) css += map.nav + ' a:hover{color:' + c.primaryColor + ' !important}';
-    css += '[class*="-hero"] .highlight{color:' + c.primaryColor + ' !important;background:none !important;-webkit-text-fill-color:' + c.primaryColor + ' !important}';
-    css += '.nl-custom-nav a{color:' + c.primaryColor + ' !important;font-weight:700 !important}';
-    css += '[class*="-btn"],[class*="-cta"] .btn,a.btn-primary,.landing-hero .btn,.portfolio-contact .btn{background:' + c.primaryColor + ' !important;color:#fff !important}';
-  }
+  if (c.primaryColor) { if (map.logo) css += map.logo + '{color:' + c.primaryColor + ' !important}'; if (map.nav) css += map.nav + ' a:hover{color:' + c.primaryColor + ' !important}'; css += '[class*="-hero"] .highlight{color:' + c.primaryColor + ' !important;background:none !important;-webkit-text-fill-color:' + c.primaryColor + ' !important}'; css += '.nl-custom-nav a{color:' + c.primaryColor + ' !important;font-weight:700 !important}'; css += '[class*="-btn"],[class*="-cta"] .btn,a.btn-primary,.landing-hero .btn,.portfolio-contact .btn{background:' + c.primaryColor + ' !important;color:#fff !important}' }
   if (c.secondaryColor) css += '.nl-featured-nav{background:' + c.secondaryColor + ' !important}';
-  if (c.bgGradient) css += 'body{background:' + c.bgGradient + ' !important}';
-  else if (c.bgColor) css += 'body{background:' + c.bgColor + ' !important}';
+  if (c.bgGradient) css += 'body{background:' + c.bgGradient + ' !important}'; else if (c.bgColor) css += 'body{background:' + c.bgColor + ' !important}';
   if (c.fontFamily) css += 'body,.punbb,h1,h2,h3,h4,h5,h6,a{font-family:' + c.fontFamily + ',system-ui,sans-serif !important}';
   if (c.baseFontSize) css += 'body,.punbb{font-size:' + c.baseFontSize + 'px !important}';
   if (c.contentMaxWidth) css += '.landing-wrapper,.portfolio-wrapper,#pun,.nl-boards-table,.nl-featured,.nl-topics-table,.nl-footer{max-width:' + c.contentMaxWidth + 'px !important}';
@@ -64,10 +60,7 @@ function nlInjectCustomization(customObj){
   $('#nl-custom-injector').remove();
   $('head').append('<style id="nl-custom-injector">' + css + '</style>');
   var logoEl = $(map.logo).first();
-  if (logoEl.length) {
-    if (c.logoType === 'image' && c.logoUrl) logoEl.html('<img src="' + c.logoUrl + '" alt="logo" style="max-height:40px;vertical-align:middle;">');
-    else if (c.logoText || c.siteName) logoEl.text(c.logoText || c.siteName);
-  }
+  if (logoEl.length) { if (c.logoType === 'image' && c.logoUrl) logoEl.html('<img src="' + c.logoUrl + '" alt="logo" style="max-height:40px;vertical-align:middle;">'); else if (c.logoText || c.siteName) logoEl.text(c.logoText || c.siteName); }
   if (c.heroTitle) { var heroT = $(map.heroTitle).first(); if (heroT.length && !heroT.find('a').length) heroT.text(c.heroTitle); }
   if (c.heroSubtitle) { var heroS = $(map.heroSubtitle).first(); if (heroS.length) heroS.text(c.heroSubtitle); }
   if (c.footerText) { var footerEl = $(map.footer).first(); if (footerEl.length) footerEl.html('<b>' + (c.siteName || 'Site') + '</b> - ' + c.footerText); }
@@ -75,8 +68,7 @@ function nlInjectCustomization(customObj){
     if (at === 'nairaland') { var $wl = $('.nl-welcome-line'); if ($wl.length && !$wl.find('.nl-custom-nav').length) { var h = ' \u2022 <span class="nl-custom-nav">'; for (var i = 0; i < c.navLinks.length; i++) { h += '<a href="' + nlResolveUrl(c.navLinks[i].url) + '">' + c.navLinks[i].label + '</a>'; if (i < c.navLinks.length - 1) h += ' \u2022 '; } h += '</span>'; $wl.append(h); } }
     else { var navEl = $(map.nav).first(); if (navEl.length && !navEl.data('nl-replaced')) { var nh = ''; for (var j = 0; j < c.navLinks.length; j++) { if (!c.navLinks[j].label || !c.navLinks[j].url) continue; nh += '<a href="' + nlResolveUrl(c.navLinks[j].url) + '">' + c.navLinks[j].label + '</a>'; } if (nh) { navEl.html(nh); navEl.data('nl-replaced', true); } } }
   }
-  var socials = c.socials || {};
-  var socialHtml = '';
+  var socials = c.socials || {}; var socialHtml = '';
   if (socials.facebook) socialHtml += '<a href="' + socials.facebook + '" target="_blank" style="margin:0 6px;color:inherit;"><i class="fab fa-facebook"></i></a>';
   if (socials.twitter) socialHtml += '<a href="' + socials.twitter + '" target="_blank" style="margin:0 6px;color:inherit;"><i class="fab fa-twitter"></i></a>';
   if (socials.instagram) socialHtml += '<a href="' + socials.instagram + '" target="_blank" style="margin:0 6px;color:inherit;"><i class="fab fa-instagram"></i></a>';
@@ -142,7 +134,7 @@ function nlOpenCustomizer(){
   h += '<div style="display:flex;gap:8px;margin-top:14px;"><button onclick="nlCZReset()" style="flex:0 0 90px;padding:11px;border-radius:10px;background:#f0f2f5;color:#6b7280;border:none;cursor:pointer;font-weight:700;">Reset</button><button onclick="nlCZSave()" style="flex:1;padding:11px;border-radius:10px;background:#22c55e;color:#fff;border:none;cursor:pointer;font-weight:700;">Save & Apply</button></div>';
   h += '</div><div style="background:#fff;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;"><div style="padding:10px 16px;background:#f0f2f5;font-size:12px;font-weight:600;font-family:Inter,sans-serif;">Live Preview</div><iframe id="nl-cz-iframe" src="/?_nl_preview=1" style="flex:1;width:100%;min-height:500px;border:none;"></iframe></div></div></div>';
   $('body').append(h);
-  document.documentElement.className = document.documentElement.className.replace('nl-loading','nl-ready');
+  nlReady();
   var frame = document.getElementById('nl-cz-iframe');
   frame.addEventListener('load', function(){ setTimeout(function(){ try { frame.contentWindow.postMessage({type:'nl-preview', data: nlGetCustom()}, '*'); } catch(e) {} }, 800); });
 }
@@ -190,12 +182,12 @@ function nlBAP(at){
     }
     h+='</div></div>';
     $('body').append(h);
-    document.documentElement.className=document.documentElement.className.replace('nl-loading','nl-ready');
+    nlReady();
     setTimeout(function(){nlFE(uid)},500);
   }catch(err){
     $('body').children().hide();
     $('body').append('<div style="padding:40px;font-family:Inter,sans-serif;"><h2>Loading...</h2><p>Please refresh.</p></div>');
-    document.documentElement.className=document.documentElement.className.replace('nl-loading','nl-ready');
+    nlReady();
   }
 }
 window.nlBAP=nlBAP;
@@ -208,133 +200,438 @@ window.nlSA=nlSA;
 function nlOPP(){var uid=(typeof UserID!=='undefined')?UserID:2;var ov=document.createElement('div');ov.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;';ov.innerHTML='<div style="background:#fff;border-radius:20px;padding:32px;max-width:450px;font-family:Inter,sans-serif;"><h3>Change Password</h3><div style="margin-top:10px;"><label>New</label><input type="password" id="nl-new-pwd" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin-top:6px;"></div><div style="margin-top:10px;"><label>Confirm</label><input type="password" id="nl-confirm-pwd" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin-top:6px;"></div><div style="display:flex;gap:10px;margin-top:16px;"><button id="nl-submit-pwd" style="flex:1;background:#2865F1;color:#fff;border:none;padding:12px;border-radius:10px;cursor:pointer;">Update</button><button onclick="this.parentElement.parentElement.parentElement.remove()" style="flex:1;background:#f0f2f5;padding:12px;border-radius:10px;border:none;cursor:pointer;">Cancel</button></div></div>';document.body.appendChild(ov);document.getElementById('nl-submit-pwd').onclick=function(){var p1=document.getElementById('nl-new-pwd').value;var p2=document.getElementById('nl-confirm-pwd').value;if(!p1||p1.length<4){alert('4+ chars');return}if(p1!==p2){alert('No match');return}try{sessionStorage.setItem('nl_save_password',p1)}catch(e){}document.body.removeChild(ov);setTimeout(function(){window.location.href='/profile.php?action=change_pass&id='+uid+'&nl_save=1'},300)}}
 window.nlOPP=nlOPP;
 
+/* ===== PART 2 CONTINUES BELOW IN NEXT MESSAGE ===== */
+ 
 /* ===== BOOTSTRAP ===== */
 function nlBoot(){
+  /* Preview iframe message listener */
   window.addEventListener('message', function(ev){if (ev && ev.data && ev.data.type === 'nl-preview' && ev.data.data) {setTimeout(function(){ nlInjectCustomization(ev.data.data); }, 100);}});
-  /* Hub sync handler */
-  if(nlIsHub && window.location.href.indexOf('admin_forms.php')>=0 && window.location.search.indexOf('nl_sync=')>=0){
-    var syncData=window.location.search.match(/nl_sync=([^&]+)/);
-    var returnUrl=window.location.search.match(/nl_return=([^&]+)/);
-    if(syncData&&syncData[1]){try{var data=JSON.parse(decodeURIComponent(syncData[1]));var ft=$('textarea[name="form[o_html_footer]"]');if(ft.length>0){var v=ft.val();v=v.replace(/<script type="text\/plain" id="nl-hubdata">[\s\S]*?<\/script>\n?/g,'');v=v.trim()+'\n<script type="text/plain" id="nl-hubdata">/*HUBDATA*/'+JSON.stringify(data)+'/*ENDHUB*/<\/script>';ft.val(v);var $fm=ft.closest('form');if($fm.length>0){var fd=$fm.serialize();if(fd.indexOf('save=')==-1)fd+='&save=1';$.ajax({url:$fm.attr('action'),type:'POST',data:fd,complete:function(){if(returnUrl&&returnUrl[1])window.location.href=decodeURIComponent(returnUrl[1]);else window.location.href='https://forum.myweb.name.ng/admin_index.php'}})}}}catch(e){if(returnUrl&&returnUrl[1])window.location.href=decodeURIComponent(returnUrl[1])}}
-  }
-  if(nlIsHub && window.location.href.indexOf('admin_forms.php')>=0 && window.location.search.indexOf('nl_sync=')<0){
-    var _hf=setInterval(function(){if($('#nl-header-overlay').length>0){$('#nl-header-overlay,#nl-footer-overlay').remove();$('.nl-textarea-wrapper').find('textarea').unwrap();$('textarea[name="form[o_html_header]"],textarea[name="form[o_html_footer]"]').css({visibility:'visible',opacity:1,'pointer-events':'auto'}).removeAttr('readonly tabindex');$('.nl-toggle-settings').hide();clearInterval(_hf)}},200);setTimeout(function(){clearInterval(_hf)},10000)
-  }
-  /* Profile save redirects */
-  var isPS=(window.location.href.indexOf('profile.php?section=essentials')>=0||window.location.href.indexOf('profile.php?action=change_pass')>=0);
-  var pm=window.location.href.match(/[?&]id=(\d+)/);var pid=pm?parseInt(pm[1]):0;var aid=(typeof UserID!=='undefined')?UserID:2;
-  if(isPS&&pid===aid&&window.location.href.indexOf('nl_save=1')<0){window.location.href='/admin_index.php';return}
-  if(window.location.href.indexOf('profile.php')>=0&&window.location.href.indexOf('nl_save=1')>=0){
-    var isPC=window.location.href.indexOf('change_pass')>=0;
-    if(isPC){var sP='';try{sP=sessionStorage.getItem('nl_save_password')||''}catch(e){}try{sessionStorage.removeItem('nl_save_password')}catch(e){}document.documentElement.className=document.documentElement.className.replace('nl-loading','nl-ready');$('body').children().hide();$('body').prepend('<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#2865F1;z-index:99999;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><i class="fas fa-sync-alt fa-spin" style="font-size:48px;"></i><h2>Updating password...</h2></div></div>');
-    setTimeout(function(){try{var pf1=document.querySelector('input[name="req_new_password1"]');var pf2=document.querySelector('input[name="req_new_password2"]');if(pf1&&sP)pf1.value=sP;if(pf2&&sP)pf2.value=sP;var sb=document.querySelector('input[type="submit"][value="Submit"], button[type="submit"]');if(sb)sb.click()}catch(err){}setTimeout(function(){window.location.href='/admin_index.php'},2000)},800);return}
-    else{var sU='';try{sU=sessionStorage.getItem('nl_save_username')||''}catch(e){}var sE='';try{sE=sessionStorage.getItem('nl_save_email')||''}catch(e){}try{sessionStorage.removeItem('nl_save_username')}catch(e){}try{sessionStorage.removeItem('nl_save_email')}catch(e){}document.documentElement.className=document.documentElement.className.replace('nl-loading','nl-ready');$('body').children().hide();$('body').prepend('<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#2865F1;z-index:99999;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><i class="fas fa-sync-alt fa-spin" style="font-size:48px;"></i><h2>Saving...</h2></div></div>');
-    setTimeout(function(){try{var uf=document.getElementById('fld1')||document.querySelector('input[name="req_username"]');var ef=document.getElementById('fld2')||document.querySelector('input[name="req_email"]');if(uf&&sU)uf.value=sU;if(ef&&sE)ef.value=sE;var sb2=document.querySelector('input[type="submit"][value="Submit"], button[type="submit"]');if(sb2)sb2.click()}catch(err){}setTimeout(function(){window.location.href='/admin_index.php'},2000)},800);return}}
-  /* Theme page */
+
+  /* ---- Detect flags ONCE ---- */
+  var H=window.location.href;
+  var Q=window.location.search;
   var ia=(typeof GroupID!=='undefined'&&GroupID===1);
-  var iAI=window.location.href.indexOf('admin_index.php')>=0;
-  var iS=window.location.href.indexOf('admin_style.php')>=0;
-  var iF=window.location.href.indexOf('admin_forms.php')>=0;
-  var sT=(window.location.search.indexOf('theme')>=0);
-  var iAP=window.location.href.indexOf('admin_')>=0;
-  /* Admin index */
-  if(iAI&&ia){
-    if(window.location.href.indexOf('customize')>=0){document.documentElement.className=document.documentElement.className.replace('nl-loading','nl-ready');nlOpenCustomizer();return}
+  var iAI=H.indexOf('admin_index.php')>=0;
+  var iS=H.indexOf('admin_style.php')>=0;
+  var iF=H.indexOf('admin_forms.php')>=0;
+  var sT=(Q.indexOf('theme')>=0);
+  var iAP=H.indexOf('admin_')>=0;
+  var iCZ=(H.indexOf('admin_index.php?customize')>=0||H.indexOf('admin_index.php&customize')>=0);
+
+  /* ============================================================
+     BRANCH 0 — HUB SYNC HANDLER (admin_forms.php?nl_sync=...)
+     ============================================================ */
+  if(nlIsHub && iF && Q.indexOf('nl_sync=')>=0){
+    var syncData=Q.match(/nl_sync=([^&]+)/);
+    var returnUrl=Q.match(/nl_return=([^&]+)/);
+    if(syncData&&syncData[1]){
+      try{
+        var data=JSON.parse(decodeURIComponent(syncData[1]));
+        var ft=$('textarea[name="form[o_html_footer]"]');
+        if(ft.length>0){
+          var v=ft.val();
+          v=v.replace(/\/\*HUBDATA\*\/[\s\S]*?\/\*ENDHUB\*\/\n?/g,'');
+          v=v.trim()+'\n/*HUBDATA*/'+JSON.stringify(data)+'/*ENDHUB*/';
+          ft.val(v);
+          var $fm=ft.closest('form');
+          if($fm.length>0){
+            var fd=$fm.serialize();
+            if(fd.indexOf('save=')==-1)fd+='&save=1';
+            $.ajax({url:$fm.attr('action'),type:'POST',data:fd,complete:function(){
+              if(returnUrl&&returnUrl[1])window.location.href=decodeURIComponent(returnUrl[1]);
+              else window.location.href='https://forum.myweb.name.ng/admin_index.php';
+            }});
+          }
+        }
+      }catch(e){
+        if(returnUrl&&returnUrl[1])window.location.href=decodeURIComponent(returnUrl[1]);
+        else window.location.href='https://forum.myweb.name.ng/admin_index.php';
+      }
+    }
+    nlReady();
+    return;
+  }
+
+  /* ============================================================
+     BRANCH 1 — CUSTOMER SITE admin_forms.php BLOCK
+     (customer sites can't access forms directly)
+     ============================================================ */
+  if(!nlIsHub && iF){
+    var cTS=false;
+    try{if(sessionStorage.getItem('nl_allow_forms_access')==='true'){cTS=true;sessionStorage.removeItem('nl_allow_forms_access')}}catch(e){}
+    if(!cTS && Q.indexOf('nl_type=')<0){
+      $('body').children().hide();
+      $('body').append('<div id="nl-forms-blocked" style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;font-family:Inter,sans-serif;text-align:center;color:#fff;padding:20px;"><div><div style="font-size:64px;margin-bottom:16px;"><i class="fas fa-lock"></i></div><h2 style="font-size:28px;font-weight:800;margin:0 0 12px;">Access Restricted</h2><p style="font-size:16px;opacity:0.9;margin:0 0 8px;">You do not have permission to access this page directly.</p><p style="font-size:14px;opacity:0.7;margin:0 0 24px;">Please use the Theme Selector to configure your forum.</p><p style="font-size:12px;opacity:0.6;">Redirecting to Theme Selector...</p></div></div>');
+      nlReady();
+      setTimeout(function(){window.location.href='/index.php?theme'},2500);
+      return;
+    }
+  }
+
+  /* ============================================================
+     BRANCH 2 — HUB admin_forms.php?nl_type=X THEME INSTALLER
+     ============================================================ */
+  if(iF && Q.indexOf('nl_type=')>=0 && Q.indexOf('nl_sync=')<0){
+    var oT='punbb';
+    if(Q.indexOf('nl_type=nairaland')>=0)oT='nairaland';
+    else if(Q.indexOf('nl_type=portfolio')>=0)oT='portfolio';
+    else if(Q.indexOf('nl_type=landing')>=0)oT='landing';
+    else if(Q.indexOf('nl_type=grocery')>=0)oT='grocery';
+    else if(Q.indexOf('nl_type=foodblog')>=0)oT='foodblog';
+    else if(Q.indexOf('nl_type=fashion')>=0)oT='fashion';
+    else if(Q.indexOf('nl_type=techblog')>=0)oT='techblog';
+    else if(Q.indexOf('nl_type=travel')>=0)oT='travel';
+    else if(Q.indexOf('nl_type=news')>=0)oT='news';
+    var prv=nlTP[oT]||nlTP.punbb;
+    var $ht=$('textarea[name="form[o_html_header]"]');
+    var $ft=$('textarea[name="form[o_html_footer]"]');
+    if($ht.length>0){
+      var ph=null;try{ph=sessionStorage.getItem('nl_install_code')}catch(e){}
+      if(ph!==null&&ph!==undefined){$ht.val(ph);try{sessionStorage.removeItem('nl_install_code')}catch(e){}}
+      if(!$ht.parent().hasClass('nl-textarea-wrapper'))$ht.wrap('<div class="nl-textarea-wrapper"></div>');
+      $ht.attr('readonly','readonly').attr('tabindex','-1');
+    }
+    if($ft.length>0){
+      var pf=null;try{pf=sessionStorage.getItem('nl_install_footer')}catch(e){}
+      if(pf!==null&&pf!==undefined){$ft.val(pf);try{sessionStorage.removeItem('nl_install_footer')}catch(e){}}
+      if(!$ft.parent().hasClass('nl-textarea-wrapper'))$ft.wrap('<div class="nl-textarea-wrapper"></div>');
+      $ft.attr('readonly','readonly').attr('tabindex','-1');
+    }
+    $('#nl-header-overlay,#nl-footer-overlay').remove();
+    var hov='<div class="nl-header-overlay" id="nl-header-overlay"><h3>'+prv.name+' - Header Code</h3><div class="nl-header-preview" style="background:linear-gradient(135deg,'+prv.bg+','+prv.bg2+');color:'+prv.color+';">'+prv.name+' Theme</div><p>Header code loaded below.</p><span class="nl-overlay-note">Click Save Changes to apply</span></div>';
+    var fov='<div class="nl-header-overlay" id="nl-footer-overlay"><h3>'+prv.name+' - Admin Config</h3><div class="nl-header-preview" style="background:linear-gradient(135deg,'+prv.bg+','+prv.bg2+');color:'+prv.color+';">Admin Panel: '+prv.name+'</div><p>Admin config loaded below.</p><span class="nl-overlay-note">Click Save Changes to apply</span></div>';
+    if($ht.length>0)$ht.parent().append(hov);
+    if($ft.length>0)$ft.parent().append(fov);
+    $('#nl-header-overlay,#nl-footer-overlay').on('click mousedown mouseup keydown keypress focus',function(e){e.preventDefault();e.stopPropagation();return false;});
+    var $sb2=$('input[name="save"],input[type="submit"][value*="Save"]');
+    if($sb2.length>0)$sb2.css({background:'#2865F1',color:'#fff',padding:'14px 36px','font-size':'15pt',border:'3px solid #1a4bbf','border-radius':'12px','box-shadow':'0 0 20px rgba(40,101,241,0.4)'});
+    if($ht.closest('form').length>0){
+      $ht.closest('form').prepend('<div class="nl-toggle-settings"><a id="nl-toggle-btn" onclick="nlTgl()">Show All Settings</a></div>');
+      var $fm3=$ht.closest('form');
+      $fm3.off('submit').on('submit',function(e){
+        e.preventDefault();e.stopPropagation();
+        try{sessionStorage.removeItem('nl_detected_theme')}catch(ex){}
+        try{sessionStorage.removeItem('nl_detected_time')}catch(ex){}
+        $('body').children().hide();
+        var sH='<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;font-family:Inter,sans-serif;text-align:center;color:#fff;padding:20px;"><div><div style="font-size:64px;margin-bottom:16px;"><i class="fas fa-check-circle"></i></div><h2 style="font-size:28px;font-weight:800;margin:0 0 12px;">Theme Successfully Saved!</h2><p style="font-size:16px;opacity:0.9;margin:0 0 8px;">Your '+prv.name+' theme has been applied.</p><p style="font-size:14px;opacity:0.7;">Redirecting to Admin Panel...</p></div></div>';
+        $('body').append(sH);
+        nlReady();
+        var fd3=$fm3.serialize();
+        if(fd3.indexOf('save')===-1)fd3+='&save=1';
+        $.ajax({url:$fm3.attr('action')||window.location.href,type:'POST',data:fd3,complete:function(){
+          setTimeout(function(){window.location.href='/admin_index.php'},2500);
+        }});
+        return false;
+      });
+    }
+    $('input[name="save"],input[type="submit"][value*="Save"],button[type="submit"]').off('click').on('click',function(e){
+      var $f=$(this).closest('form');
+      if($f.length>0&&$f.find('textarea[name="form[o_html_header]"]').length>0){e.preventDefault();e.stopPropagation();$f.submit();return false;}
+    });
+    nlReady();
+    return;
+  }
+
+  /* ============================================================
+     BRANCH 3 — HUB admin_forms.php (plain view, remove overlays)
+     ============================================================ */
+  if(nlIsHub && iF && Q.indexOf('nl_type=')<0 && Q.indexOf('nl_sync=')<0){
+    var _hf=setInterval(function(){
+      if($('#nl-header-overlay').length>0){
+        $('#nl-header-overlay,#nl-footer-overlay').remove();
+        $('.nl-textarea-wrapper').find('textarea').unwrap();
+        $('textarea[name="form[o_html_header]"],textarea[name="form[o_html_footer]"]').css({visibility:'visible',opacity:1,'pointer-events':'auto'}).removeAttr('readonly tabindex');
+        $('.nl-toggle-settings').hide();
+        clearInterval(_hf);
+      }
+    },200);
+    setTimeout(function(){clearInterval(_hf)},10000);
+    nlReady();
+    return;
+  }
+
+  /* ============================================================
+     BRANCH 4 — PROFILE SAVE (username/email/password redirect)
+     ============================================================ */
+  var isPS=(H.indexOf('profile.php?section=essentials')>=0||H.indexOf('profile.php?action=change_pass')>=0);
+  var pm=H.match(/[?&]id=(\d+)/);var pid=pm?parseInt(pm[1]):0;var aid=(typeof UserID!=='undefined')?UserID:2;
+  if(isPS&&pid===aid&&H.indexOf('nl_save=1')<0){window.location.href='/admin_index.php';return;}
+  if(H.indexOf('profile.php')>=0&&H.indexOf('nl_save=1')>=0){
+    var isPC=H.indexOf('change_pass')>=0;
+    if(isPC){
+      var sP='';try{sP=sessionStorage.getItem('nl_save_password')||''}catch(e){}
+      try{sessionStorage.removeItem('nl_save_password')}catch(e){}
+      $('body').children().hide();
+      $('body').prepend('<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#2865F1;z-index:99999;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><i class="fas fa-sync-alt fa-spin" style="font-size:48px;"></i><h2>Updating password...</h2></div></div>');
+      nlReady();
+      setTimeout(function(){
+        try{var pf1=document.querySelector('input[name="req_new_password1"]');var pf2=document.querySelector('input[name="req_new_password2"]');if(pf1&&sP)pf1.value=sP;if(pf2&&sP)pf2.value=sP;var sb=document.querySelector('input[type="submit"][value="Submit"], button[type="submit"]');if(sb)sb.click()}catch(err){}
+        setTimeout(function(){window.location.href='/admin_index.php'},2000);
+      },800);
+      return;
+    } else {
+      var sU='';try{sU=sessionStorage.getItem('nl_save_username')||''}catch(e){}
+      var sE='';try{sE=sessionStorage.getItem('nl_save_email')||''}catch(e){}
+      try{sessionStorage.removeItem('nl_save_username')}catch(e){}
+      try{sessionStorage.removeItem('nl_save_email')}catch(e){}
+      $('body').children().hide();
+      $('body').prepend('<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#2865F1;z-index:99999;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><i class="fas fa-sync-alt fa-spin" style="font-size:48px;"></i><h2>Saving your changes...</h2></div></div>');
+      nlReady();
+      setTimeout(function(){
+        try{var uf=document.getElementById('fld1')||document.querySelector('input[name="req_username"]');var ef=document.getElementById('fld2')||document.querySelector('input[name="req_email"]');if(uf&&sU)uf.value=sU;if(ef&&sE)ef.value=sE;var sb2=document.querySelector('input[type="submit"][value="Submit"], button[type="submit"]');if(sb2)sb2.click()}catch(err){}
+        setTimeout(function(){window.location.href='/admin_index.php'},2000);
+      },800);
+      return;
+    }
+  }
+
+  /* ============================================================
+     BRANCH 5 — admin_style.php (auto-enable + skin)
+     ============================================================ */
+  if(iS && ia){
+    nlReady();
+    setTimeout(function(){
+      var $sl2=$('select[name="form[o_custom_style]"]');
+      if($sl2.length>0){
+        if($sl2.val()!=='1'){$sl2.val('1').trigger('change')}
+        $sl2.css({display:'none'});
+        $sl2.closest('.adinput').prepend('<div style="display:inline-block;padding:8px 16px;background:#d4edda;border-radius:8px;font-weight:600;color:#155724;font-family:Inter,sans-serif;font-size:14px;border:1px solid #c3e6cb;"><i class="fas fa-check"></i> Custom Style: <strong>Enabled</strong></div>');
+        $('textarea[name="form[content1]"]').val('');
+        $('textarea[name="form[content2]"]').val('');
+      }
+      var at4=nlDT()||'punbb';
+      var p4=nlUA.palettes[at4]||nlUA.palettes.punbb;
+      $('#pun-admain').prepend('<div style="background:#d4edda;color:#155724;padding:12px 16px;border-radius:8px;margin:8px auto;max-width:1024px;width:96%;font-weight:700;font-size:11pt;text-align:center;font-family:Inter,sans-serif;"><i class="fas fa-check-circle"></i> All options pre-set to YES. Review and click Save Changes.</div>');
+    },500);
+    return;
+  }
+
+  /* ============================================================
+     BRANCH 6 — admin_index.php?customize (working, do not touch logic)
+     ============================================================ */
+  if(iCZ && ia){
+    nlReady();
+    nlOpenCustomizer();
+    return;
+  }
+
+  /* ============================================================
+     BRANCH 7 — admin_index.php (main admin panel)
+     ============================================================ */
+  if(iAI && ia){
     var at2=nlDT();
-    if(at2){nlBAP(at2);return}
+    if(at2){nlBAP(at2);return;}
+    try{
+      var ct=sessionStorage.getItem('nl_detected_theme');
+      var cT=sessionStorage.getItem('nl_detected_time');
+      if(ct&&cT){var el=Date.now()-parseInt(cT);if(el<300000){nlBAP(ct);return;}}
+    }catch(e){}
     $('body').children().hide();
-    $('body').append('<div id="nl-loading" style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><i class="fas fa-sync-alt fa-spin" style="font-size:48px;"></i><h2>Loading Admin Panel</h2></div></div>');
-    document.documentElement.className=document.documentElement.className.replace('nl-loading','nl-ready');
+    $('body').append('<div id="nl-loading" style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><i class="fas fa-sync-alt fa-spin" style="font-size:48px;"></i><h2>Loading Admin Panel</h2><p style="opacity:0.8;">Detecting your theme...</p></div></div>');
+    nlReady();
     $.ajax({url:'/admin_forms.php',type:'GET',dataType:'html',timeout:10000,success:function(fH){
       var det='punbb';
-      var hm2=fH.match(/<textarea[^>]*name="form\[o_html_header\]"[^>]*>([\s\S]*?)<\/textarea>/i);
-      if(hm2&&hm2[1]){var hc2=hm2[1];
-        if(hc2.indexOf('food-header')>=0)det='foodblog';
-        else if(hc2.indexOf('Nairaland')>=0)det='nairaland';
-        else if(hc2.indexOf('Portfolio')>=0)det='portfolio';
-        else if(hc2.indexOf('Landing')>=0)det='landing';
-        else if(hc2.indexOf('Grocery')>=0)det='grocery';
-        else if(hc2.indexOf('Fashion')>=0)det='fashion';
-        else if(hc2.indexOf('Tech Blog')>=0)det='techblog';
-        else if(hc2.indexOf('Travel')>=0)det='travel';
-        else if(hc2.indexOf('News')>=0)det='news';
+      var fm2=fH.match(/<textarea[^>]*name="form\[o_html_footer\]"[^>]*>([\s\S]*?)<\/textarea>/i);
+      if(fm2&&fm2[1]){var tcm=fm2[1].match(/data-nl-theme['"]?\s*,\s*['"](\w+)['"]/);if(tcm&&tcm[1])det=tcm[1];}
+      if(det==='punbb'){
+        var hm2=fH.match(/<textarea[^>]*name="form\[o_html_header\]"[^>]*>([\s\S]*?)<\/textarea>/i);
+        if(hm2&&hm2[1]){var hc2=hm2[1];
+          if(hc2.indexOf('Food Blog')>=0||hc2.indexOf('food-header')>=0)det='foodblog';
+          else if(hc2.indexOf('Nairaland')>=0)det='nairaland';
+          else if(hc2.indexOf('Portfolio')>=0)det='portfolio';
+          else if(hc2.indexOf('Landing')>=0)det='landing';
+          else if(hc2.indexOf('Grocery')>=0)det='grocery';
+          else if(hc2.indexOf('Fashion')>=0)det='fashion';
+          else if(hc2.indexOf('Tech Blog')>=0)det='techblog';
+          else if(hc2.indexOf('Travel')>=0)det='travel';
+          else if(hc2.indexOf('News')>=0||hc2.indexOf('Magazine')>=0)det='news';
+        }
       }
-      $('#nl-loading').remove();nlBAP(det);
-    },error:function(){$('#nl-loading').remove();nlBAP('punbb')}});
+      try{sessionStorage.setItem('nl_detected_theme',det);sessionStorage.setItem('nl_detected_time',Date.now().toString())}catch(e){}
+      $('#nl-loading').remove();
+      nlBAP(det);
+    },error:function(){
+      try{var ft2=sessionStorage.getItem('nl_detected_theme');if(ft2){$('#nl-loading').remove();nlBAP(ft2);return;}}catch(e){}
+      $('#nl-loading').remove();
+      nlBAP('punbb');
+    }});
     return;
   }
-  /* Theme picker */
-  if(sT&&ia){
+
+  /* ============================================================
+     BRANCH 8 — index.php?theme (theme picker grid)
+     ============================================================ */
+  if(sT && ia){
     $('body').children().hide();
-    var h2='<div style="min-height:100vh;background:#2865F1;padding:40px 24px;font-family:Inter,sans-serif;"><div style="max-width:1280px;margin:0 auto;">';
-    h2+='<div style="text-align:center;margin-bottom:48px;"><h1 style="font-size:48px;font-weight:900;color:#fff;">Setup your <span style="background:linear-gradient(135deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">admin panel</span></h1><p style="color:rgba(255,255,255,0.85);font-size:18px;">Choose a theme.</p></div>';
-    h2+='<div style="background:#fff;border-radius:24px;padding:32px;"><div style="display:grid;gap:12px;" class="nl-theme-grid">';
-    var th=[{id:'punbb',name:'PunBB',desc:'Clean',file:'Built-in',bg:'#f0f2f5',bg2:'#d1d5db',color:'#1a1a2e'},{id:'nairaland',name:'Nairaland',desc:'Cream',file:'15535.txt',bg:'#f6f6ec',bg2:'#c8d4c0',color:'#185518'},{id:'portfolio',name:'Portfolio',desc:'Dark',file:'65113.txt',bg:'#1a1a2e',bg2:'#16213e',color:'#e94560'},{id:'landing',name:'Landing',desc:'Purple',file:'86531.txt',bg:'#667eea',bg2:'#764ba2',color:'#fff'},{id:'grocery',name:'Grocery',desc:'Green',file:'15517.txt',bg:'#11998e',bg2:'#38ef7d',color:'#fff'},{id:'foodblog',name:'Food Blog',desc:'Orange',file:'53940.txt',bg:'#f12711',bg2:'#f5af19',color:'#fff'},{id:'fashion',name:'Fashion',desc:'Coral',file:'97250.txt',bg:'#ff6b6b',bg2:'#ee5a24',color:'#fff'},{id:'techblog',name:'Tech Blog',desc:'Cyber',file:'90500.txt',bg:'#0f2027',bg2:'#2c5364',color:'#00d4ff'},{id:'travel',name:'Travel',desc:'Ocean',file:'13426.txt',bg:'#00b4db',bg2:'#0083b0',color:'#fff'},{id:'news',name:'News',desc:'Red',file:'38831.txt',bg:'#434343',bg2:'#000000',color:'#e63946'}];
+    var h2='<div id="nl-theme-page" style="min-height:100vh;background:#2865F1;font-family:Inter,sans-serif;padding:40px 24px;">';
+    h2+='<div style="max-width:1280px;margin:0 auto;">';
+    h2+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;flex-wrap:wrap;gap:12px;">';
+    h2+='<img src="https://forumstatic.ru/files/001c/ac/51/57803.jpg" style="height:38px;border-radius:8px;">';
+    h2+='<div style="display:flex;gap:20px;"><a href="/admin_index.php" style="color:#fff;font-weight:600;text-decoration:none;font-size:14px;"><i class="fas fa-tachometer-alt"></i> Admin</a><a href="/" style="color:#fff;font-weight:600;text-decoration:none;font-size:14px;"><i class="fas fa-home"></i> View Site</a></div>';
+    h2+='</div>';
+    h2+='<div style="text-align:center;margin-bottom:48px;">';
+    h2+='<h1 style="font-size:48px;font-weight:900;color:#fff;line-height:1.1;">Setup your <span style="background:linear-gradient(135deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">admin panel</span></h1>';
+    h2+='<p style="color:rgba(255,255,255,0.85);font-size:18px;max-width:600px;margin:16px auto 0;">Choose a theme. Click any card to load it on the forms page, then save.</p>';
+    h2+='</div>';
+    h2+='<div style="background:#fff;border-radius:24px;padding:32px;box-shadow:0 30px 60px rgba(0,0,0,0.15);">';
+    h2+='<div class="nl-theme-grid">';
+    var th=[{id:'punbb',name:'PunBB',desc:'Clean, fast, classic',file:'Built-in',bg:'#f0f2f5',bg2:'#d1d5db',color:'#1a1a2e'},{id:'nairaland',name:'Nairaland',desc:'Cream & green',file:'15535.txt',bg:'#f6f6ec',bg2:'#c8d4c0',color:'#185518'},{id:'portfolio',name:'Portfolio',desc:'Dark & professional',file:'65113.txt',bg:'#1a1a2e',bg2:'#16213e',color:'#e94560'},{id:'landing',name:'Landing',desc:'Purple gradient',file:'86531.txt',bg:'#667eea',bg2:'#764ba2',color:'#fff'},{id:'grocery',name:'Grocery',desc:'Fresh green',file:'15517.txt',bg:'#11998e',bg2:'#38ef7d',color:'#fff'},{id:'foodblog',name:'Food Blog',desc:'Warm orange & red',file:'53940.txt',bg:'#f12711',bg2:'#f5af19',color:'#fff'},{id:'fashion',name:'Fashion',desc:'Bold coral & pink',file:'97250.txt',bg:'#ff6b6b',bg2:'#ee5a24',color:'#fff'},{id:'techblog',name:'Tech Blog',desc:'Dark blue cyber',file:'90500.txt',bg:'#0f2027',bg2:'#2c5364',color:'#00d4ff'},{id:'travel',name:'Travel',desc:'Ocean blue',file:'13426.txt',bg:'#00b4db',bg2:'#0083b0',color:'#fff'},{id:'news',name:'News',desc:'Bold black & red',file:'38831.txt',bg:'#434343',bg2:'#000000',color:'#e63946'}];
     for(var i=0;i<th.length;i++){var tt2=th[i];
-      h2+='<div onclick="nlIT(\''+tt2.id+'\')" style="border:2px solid #e8ecf1;border-radius:16px;overflow:hidden;cursor:pointer;background:#fff;"><div style="height:70px;display:flex;align-items:center;justify-content:center;font-weight:700;background:linear-gradient(135deg,'+tt2.bg+','+tt2.bg2+');color:'+tt2.color+';">'+tt2.name+'</div><div style="padding:10px 12px;"><h4 style="color:#1a1a2e;font-size:11pt;margin:0 0 2px;">'+tt2.name+'</h4><p style="color:#6b7280;font-size:9pt;margin:0;">'+tt2.desc+'</p></div></div>';
+      h2+='<div onclick="nlIT(\''+tt2.id+'\')" style="border:2px solid #e8ecf1;border-radius:16px;overflow:hidden;cursor:pointer;background:#fff;transition:all 0.3s;" onmouseover="this.style.borderColor=\'#2865F1\';this.style.transform=\'translateY(-4px)\';this.style.boxShadow=\'0 8px 24px rgba(40,101,241,0.12)\'" onmouseout="this.style.borderColor=\'#e8ecf1\';this.style.transform=\'translateY(0)\';this.style.boxShadow=\'none\'">';
+      h2+='<div style="height:70px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11pt;background:linear-gradient(135deg,'+tt2.bg+','+tt2.bg2+');color:'+tt2.color+';">'+tt2.name+'</div>';
+      h2+='<div style="padding:10px 12px;"><h4 style="color:#1a1a2e;font-size:11pt;font-weight:700;margin:0 0 2px;">'+tt2.name+'</h4><p style="color:#6b7280;font-size:9pt;margin:0;">'+tt2.desc+'</p><span style="display:inline-block;background:#f0f2f5;color:#6b7280;font-size:8pt;font-weight:500;padding:1px 8px;border-radius:50px;margin-top:4px;">'+tt2.file+'</span></div>';
+      h2+='</div>';
     }
-    h2+='</div></div></div></div>';
+    h2+='</div>';
+    h2+='<div style="display:inline-block;padding:6px 16px;border-radius:50px;font-size:12px;font-weight:600;margin-top:16px;background:rgba(40,101,241,0.1);color:#2865F1;border:1px solid rgba(40,101,241,0.2);"><i class="fas fa-info-circle"></i> Click a card to load the theme, then click Save Changes.</div>';
+    h2+='</div></div></div>';
     $('body').append(h2);
-    document.documentElement.className=document.documentElement.className.replace('nl-loading','nl-ready');
+    nlReady();
     return;
   }
-  /* Other admin pages */
-  if(!ia||!iAP||iAI||iS||iF||sT) return;
-  var at3=nlDT()||'punbb';
-  var p2=nlUA.palettes[at3]||nlUA.palettes.punbb;
-  var pi={admin_categories:{name:'Categories',icon:'fa-folder'},admin_forums:{name:'Forums',icon:'fa-comments'},admin_users:{name:'Users',icon:'fa-users'},admin_fields:{name:'Profile Fields',icon:'fa-user-edit'},admin_options:{name:'Options',icon:'fa-cog'},admin_permissions:{name:'Permissions',icon:'fa-lock'},admin_groups:{name:'User Groups',icon:'fa-user-tag'},admin_pages:{name:'Pages',icon:'fa-file-alt'},admin_censoring:{name:'Censoring',icon:'fa-ban'},admin_files:{name:'Files',icon:'fa-image'},admin_domain:{name:'Domain',icon:'fa-globe'},admin_backups:{name:'Backups',icon:'fa-database'},admin_scripts:{name:'Scripts',icon:'fa-terminal'},admin_logs:{name:'Forum Logs',icon:'fa-history'},admin_paid_services:{name:'Paid Services',icon:'fa-credit-card'},admin_mail:{name:'Mass Mail',icon:'fa-envelope'},admin_promotion:{name:'Promotion',icon:'fa-bullhorn'},admin_prune:{name:'Prune',icon:'fa-cut'},admin_bans:{name:'Bans',icon:'fa-gavel'},admin_ranks:{name:'Ranks',icon:'fa-star'}};
-  var ci={name:'Admin Tools',icon:'fa-tools'};
-  var pk=Object.keys(pi);
-  for(var k=0;k<pk.length;k++){if(window.location.href.indexOf(pk[k])>=0){ci=pi[pk[k]];break}}
-  var pt=$('#pun-admain h1, #pun-main h1, .main h1, h1').first().text()||ci.name;
-  var wH='<div id="nl-tool-page" style="position:relative;min-height:100vh;background:linear-gradient(135deg,'+p2.bg+','+p2.bgGrad+');padding-bottom:40px;font-family:Inter,sans-serif;">';
-  wH+='<div style="background:rgba(255,255,255,0.12);padding:0 24px;"><div style="max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;height:64px;flex-wrap:wrap;">';
-  wH+='<a href="/admin_index.php" style="color:#fff;font-weight:600;text-decoration:none;"><i class="fas fa-arrow-left"></i> Dashboard</a>';
-  wH+='<span style="color:#fff;font-weight:700;"><i class="fas '+ci.icon+'" style="color:#FFD700;"></i> '+ci.name+'</span>';
-  wH+='</div></div>';
-  wH+='<div style="max-width:1280px;margin:24px auto;width:96%;"><div style="background:#fff;border-radius:20px;padding:32px;">';
-  wH+='<h1 style="color:'+p2.text+';font-size:24px;font-weight:800;margin:0 0 20px;">'+pt+'</h1>';
-  wH+='<div id="nl-tool-content"></div></div></div></div>';
-  $('body').css({margin:'0',padding:'0',background:p2.bg});
-  $('#pun_wrap,#pun').css({background:'transparent',margin:'0',padding:'0','max-width':'100%',width:'100%'});
-  $('#pun-title,#pun-navlinks,#pun-ulinks,#pun-status,#pun-break1,#pun-crumbs1,#pun-break2,#pun-adnav,#pun-break3,#pun-crumbs2,#pun-break4,#pun-about,#pun-stats,#brdmenu,#brdheader,#pun-index').hide();
-  $('body').prepend(wH);
-  $('#pun-main, #pun-admain, .main').appendTo('#nl-tool-content');
-  document.documentElement.className=document.documentElement.className.replace('nl-loading','nl-ready');
-  /* Public page injector */
-  var skip = window.location.href.match(/admin_/);
-  if (!skip) {
-    document.documentElement.classList.remove('nl-ready');
-    document.documentElement.classList.add('nl-loading');
-    var tries = 0, maxTries = 60, applied = false;
-    var iv = setInterval(function(){
-      tries++;
-      var body = document.body;
-      var themeAttr = body && body.getAttribute('data-nl-theme');
-      var hasThemeDom = document.querySelector('[class*="-logo"],[class*="-hero"],.nl-title h1 a,.nl-featured,.nl-boards-table');
-      if ((themeAttr || hasThemeDom) && !applied) {
-        try { nlInjectCustomization(); } catch(e) {}
-        setTimeout(function(){ try { nlInjectCustomization(); } catch(e) {} }, 120);
-        applied = true;
-        setTimeout(function(){ document.documentElement.classList.remove('nl-loading'); document.documentElement.classList.add('nl-ready'); }, 320);
-      }
-      if (tries >= maxTries) { clearInterval(iv); document.documentElement.classList.remove('nl-loading'); document.documentElement.classList.add('nl-ready'); }
-    }, 80);
+
+  /* ============================================================
+     BRANCH 9 — OTHER ADMIN PAGES (categories, forums, users, etc.)
+     THIS IS THE FIX FOR BLANK PAGES
+     ============================================================ */
+  if(ia && iAP && !iAI && !iS && !iF && !sT){
+    var at3=nlDT()||'punbb';
+    var p2=nlUA.palettes[at3]||nlUA.palettes.punbb;
+    var pi={admin_categories:{name:'Categories',icon:'fa-folder'},admin_forums:{name:'Forums',icon:'fa-comments'},admin_users:{name:'Users',icon:'fa-users'},admin_fields:{name:'Profile Fields',icon:'fa-user-edit'},admin_options:{name:'Options',icon:'fa-cog'},admin_permissions:{name:'Permissions',icon:'fa-lock'},admin_groups:{name:'User Groups',icon:'fa-user-tag'},admin_pages:{name:'Pages',icon:'fa-file-alt'},admin_censoring:{name:'Censoring',icon:'fa-ban'},admin_files:{name:'Files',icon:'fa-image'},admin_domain:{name:'Domain',icon:'fa-globe'},admin_backups:{name:'Backups',icon:'fa-database'},admin_scripts:{name:'Scripts',icon:'fa-terminal'},admin_logs:{name:'Forum Logs',icon:'fa-history'},admin_paid_services:{name:'Paid Services',icon:'fa-credit-card'},admin_mail:{name:'Mass Mailing',icon:'fa-envelope'},admin_promotion:{name:'Promotion',icon:'fa-bullhorn'},admin_prune:{name:'Prune',icon:'fa-cut'},admin_bans:{name:'Bans',icon:'fa-gavel'},admin_ranks:{name:'Ranks',icon:'fa-star'}};
+    var ci={name:'Admin Tools',icon:'fa-tools'};
+    var pk=Object.keys(pi);
+    for(var k=0;k<pk.length;k++){if(H.indexOf(pk[k])>=0){ci=pi[pk[k]];break;}}
+    var pt=$('#pun-admain h1, #pun-main h1, .main h1, h1').first().text()||ci.name;
+    var wH='';
+    wH+='<div id="nl-tool-page" style="position:relative;min-height:100vh;background:linear-gradient(135deg,'+p2.bg+','+p2.bgGrad+');padding-bottom:40px;font-family:Inter,sans-serif;">';
+    wH+='<div style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;background-image:radial-gradient(circle,'+p2.accent+' 1px,transparent 1px);background-size:30px 30px;opacity:0.08;"></div>';
+    wH+='<div style="position:relative;z-index:50;background:rgba(255,255,255,0.12);border-bottom:1px solid rgba(255,255,255,0.15);padding:0 24px;">';
+    wH+='<div style="max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;height:64px;flex-wrap:wrap;gap:10px;">';
+    wH+='<div style="display:flex;align-items:center;gap:12px;">';
+    wH+='<a href="/admin_index.php" style="color:rgba(255,255,255,0.85);font-weight:600;font-size:14px;text-decoration:none;display:flex;align-items:center;gap:6px;"><i class="fas fa-arrow-left"></i> Dashboard</a>';
+    wH+='<span style="color:rgba(255,255,255,0.4);font-size:18px;">|</span>';
+    wH+='<span style="display:flex;align-items:center;gap:8px;color:#fff;font-weight:700;font-size:16px;"><i class="fas '+ci.icon+'" style="color:#FFD700;"></i> '+ci.name+'</span>';
+    wH+='</div>';
+    wH+='<div style="display:flex;gap:16px;align-items:center;">';
+    wH+='<a href="/" style="color:rgba(255,255,255,0.85);font-size:13px;text-decoration:none;"><i class="fas fa-home"></i> View Site</a>';
+    wH+='<a href="/index.php?theme" style="color:#FFD700;font-weight:600;font-size:13px;text-decoration:none;"><i class="fas fa-paint-brush"></i> Themes</a>';
+    wH+='</div></div></div>';
+    wH+='<div style="position:relative;z-index:1;max-width:1280px;margin:24px auto;width:96%;">';
+    wH+='<div style="background:rgba(255,255,255,0.97);border-radius:20px;padding:32px;box-shadow:0 8px 32px rgba(0,0,0,0.1);">';
+    wH+='<div style="display:flex;align-items:center;gap:14px;margin-bottom:6px;">';
+    wH+='<div style="width:48px;height:48px;border-radius:14px;background:'+p2.accentLight+';display:flex;align-items:center;justify-content:center;font-size:22px;color:'+p2.accent+';flex-shrink:0;"><i class="fas '+ci.icon+'"></i></div>';
+    wH+='<div><h1 style="color:'+p2.text+';font-size:24px;font-weight:800;margin:0;font-family:Inter,sans-serif;">'+pt+'</h1>';
+    wH+='<p style="color:#6b7280;font-size:13px;margin:2px 0 0;">Admin Panel</p></div></div>';
+    wH+='<hr style="border:none;border-top:1px solid #e8ecf1;margin:20px 0;">';
+    wH+='<div id="nl-tool-content"></div>';
+    wH+='</div></div></div>';
+    $('body').css({margin:'0',padding:'0',background:p2.bg,'min-height':'100vh'});
+    $('#pun_wrap').css({background:'transparent',margin:'0',padding:'0'});
+    $('#pun').css({background:'transparent',margin:'0',padding:'0','max-width':'100%',width:'100%'});
+    $('#pun-title,#pun-navlinks,#pun-ulinks,#pun-status,#pun-break1,#pun-crumbs1,#pun-break2,#pun-adnav,#pun-break3,#pun-crumbs2,#pun-break4,#pun-about,#pun-stats,#brdmenu,#brdheader,#pun-index').hide();
+    $('body').prepend(wH);
+    $('#pun-main, #pun-admain, .main').appendTo('#nl-tool-content');
+    $('#nl-tool-content table').css({width:'100%','border-collapse':'separate','border-spacing':'0','border-radius':'12px',overflow:'hidden','box-shadow':'0 2px 8px rgba(0,0,0,0.04)'});
+    $('#nl-tool-content th').css({background:p2.accentLight,color:p2.accent,padding:'14px 16px','font-weight':'700','font-size':'13px','text-align':'left','border-bottom':'2px solid '+p2.accent,'font-family':'Inter,sans-serif'});
+    $('#nl-tool-content td').css({padding:'12px 16px','border-bottom':'1px solid #f0f2f5','font-size':'13px','font-family':'Inter,sans-serif'});
+    $('#nl-tool-content tr:last-child td').css({'border-bottom':'none'});
+    $('#nl-tool-content input[type="text"],#nl-tool-content input[type="password"],#nl-tool-content textarea,#nl-tool-content select').css({border:'1.5px solid #d1d5db','border-radius':'10px',padding:'10px 14px','font-size':'14px','font-family':'Inter,sans-serif'});
+    $('#nl-tool-content input[type="submit"],#nl-tool-content button,.button').css({background:p2.accent,color:'#fff',border:'none',padding:'10px 24px','border-radius':'10px','font-size':'14px','font-weight':'600','font-family':'Inter,sans-serif',cursor:'pointer'});
+    $('#nl-tool-content a').css({color:p2.accent,'text-decoration':'none','font-weight':'500'});
+    $('#nl-tool-content fieldset,#nl-tool-content .section,#nl-tool-content .container').css({background:'#fafbfc',border:'1px solid #e8ecf1','border-radius':'14px',padding:'20px','margin-bottom':'16px'});
+    $('#nl-tool-content legend').css({color:p2.accent,'font-weight':'700','font-size':'15px','font-family':'Inter,sans-serif',padding:'0 8px'});
+    $('#nl-tool-content h1,#nl-tool-content h2,#nl-tool-content h3').css({color:p2.text,'font-family':'Inter,sans-serif','font-weight':'700'});
+    if(H.indexOf('admin_files.php')>=0){$('meta[name="viewport"]').attr('content','width=1280, initial-scale=0.5, maximum-scale=2, user-scalable=yes');$('#nl-tool-page').css({'min-width':'1024px','overflow-x':'auto'});$('#nl-tool-content').css({'min-width':'900px'});}
+    if(!$('link[href*="font-awesome"]').length){$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">');}
+    nlReady();
+    return;
   }
-  /* Floating admin button */
-  (function(){
-    if(typeof GroupID==='undefined'||GroupID!==1)return;
-    if(window.location.href.match(/admin_/))return;
-    function addBtn(){if(document.getElementById('nl-admin-fab-wrap'))return;var wrap=document.createElement('div');wrap.id='nl-admin-fab-wrap';wrap.style.cssText='position:fixed;bottom:24px;right:24px;z-index:99999;display:flex;flex-direction:column;align-items:center;gap:6px;';var b=document.createElement('a');b.id='nl-admin-fab';b.href='/admin_index.php';b.innerHTML='<i class="fas fa-shield-halved" style="font-size:22px;"></i>';b.style.cssText='background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1a2e;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 8px 24px rgba(255,165,0,0.5);border:2px solid #fff;';var lbl=document.createElement('span');lbl.textContent='ADMIN';lbl.style.cssText='background:#1a1a2e;color:#FFD700;padding:3px 10px;border-radius:8px;font-size:10px;font-weight:900;letter-spacing:1px;';wrap.appendChild(b);wrap.appendChild(lbl);document.body.appendChild(wrap)}
-    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',addBtn);else addBtn();
-    setTimeout(addBtn,1500);setInterval(addBtn,2000);
-  })();
+
+  /* ============================================================
+     BRANCH 10 — PUBLIC PAGES (inject customization + FAB)
+     ============================================================ */
+  if(ia && iAP){nlReady();return;}
+  var iI=($('#pun-index').length||window.location.pathname.match(/\/(index\.php)?$/));
+  if(!iI){nlReady();return;}
+  var tI=false;
+  if($('#pun-title').css('background-color')==='rgb(246, 246, 236)'){tI=true;}
+  if(($('body').css('font-family')||'').indexOf('Open Sans')>=0){tI=true;}
+  if($('.nl-navbar').length>0){tI=true;}
+  if(tI){nlReady();return;}
+  if(!ia){
+    $('#pun-index .main,#pun-stats,#pun-announcement,#pun-crumbs1,#pun-crumbs2').hide();
+    $('#pun-title').after('<div style="background:rgba(255,255,255,0.95);border-radius:24px;padding:32px;max-width:700px;margin:40px auto;text-align:center;box-shadow:0 30px 60px rgba(0,0,0,0.15);font-family:Inter,sans-serif;"><h2 style="color:#1a1a2e;font-size:20pt;font-weight:800;">Forum Under Construction</h2><p style="color:#6b7280;font-size:12pt;">The administrator is setting up this forum.</p><a href="/login.php" style="display:inline-block;padding:14px 36px;background:#2865F1;color:#fff;border-radius:12px;text-decoration:none;font-size:14pt;font-weight:700;"><i class="fas fa-sign-in-alt"></i> Admin Login</a></div>');
+    nlReady();
+    return;
+  }
+  if(ia){
+    $('#pun-index .main,#pun-stats,#pun-announcement,#pun-crumbs1,#pun-crumbs2').hide();
+    $('#pun-title').after('<div style="background:rgba(255,255,255,0.95);border-radius:24px;padding:32px;max-width:700px;margin:40px auto;text-align:center;box-shadow:0 30px 60px rgba(0,0,0,0.15);font-family:Inter,sans-serif;"><h2 style="color:#1a1a2e;font-size:20pt;font-weight:800;">Welcome Admin!</h2><p style="color:#6b7280;font-size:12pt;">Your forum needs a theme before going live.</p><a href="/index.php?theme" style="display:inline-block;padding:14px 36px;background:#2865F1;color:#fff;border-radius:12px;text-decoration:none;font-size:14pt;font-weight:700;"><i class="fas fa-paint-brush"></i> Go to Theme Selection</a></div>');
+    nlReady();
+    return;
+  }
+  nlReady();
 }
 
-/* Wait for jQuery, then boot */
+/* ============================================================
+   PUBLIC PAGE INJECTOR (runs on any public page)
+   ============================================================ */
+function nlRunInjector(){
+  var skip=window.location.href.match(/admin_/);
+  if(skip)return;
+  var tries=0,maxTries=60,applied=false;
+  var iv=setInterval(function(){
+    tries++;
+    var body=document.body;
+    var themeAttr=body&&body.getAttribute('data-nl-theme');
+    var hasThemeDom=document.querySelector('[class*="-logo"],[class*="-hero"],.nl-title h1 a,.nl-featured,.nl-boards-table');
+    if((themeAttr||hasThemeDom)&&!applied){
+      try{nlInjectCustomization();}catch(e){}
+      setTimeout(function(){try{nlInjectCustomization();}catch(e){}},120);
+      applied=true;
+      clearInterval(iv);
+    }
+    if(tries>=maxTries){clearInterval(iv);}
+  },80);
+}
+
+/* ============================================================
+   FLOATING ADMIN BUTTON
+   ============================================================ */
+function nlAddFAB(){
+  if(typeof GroupID==='undefined'||GroupID!==1)return;
+  if(window.location.href.match(/admin_/))return;
+  if(document.getElementById('nl-admin-fab-wrap'))return;
+  var wrap=document.createElement('div');
+  wrap.id='nl-admin-fab-wrap';
+  wrap.style.cssText='position:fixed;bottom:24px;right:24px;z-index:99999;display:flex;flex-direction:column;align-items:center;gap:6px;';
+  var b=document.createElement('a');
+  b.id='nl-admin-fab';
+  b.href='/admin_index.php';
+  b.innerHTML='<i class="fas fa-shield-halved" style="font-size:22px;"></i>';
+  b.style.cssText='background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1a2e;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 8px 24px rgba(255,165,0,0.5);border:2px solid #fff;';
+  var lbl=document.createElement('span');
+  lbl.textContent='ADMIN';
+  lbl.style.cssText='background:#1a1a2e;color:#FFD700;padding:3px 10px;border-radius:8px;font-size:10px;font-weight:900;letter-spacing:1px;';
+  wrap.appendChild(b);wrap.appendChild(lbl);
+  document.body.appendChild(wrap);
+}
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+function nlStart(){
+  nlBoot();
+  nlRunInjector();
+  nlAddFAB();
+}
+window.nlBoot=nlStart;
+
 if(typeof jQuery==='undefined'){
-  var _c=0;_c=0;
-  (function w(){if(typeof jQuery==='undefined'&&_c<200){_c++;setTimeout(w,50);return}if(typeof jQuery!=='undefined'){jQuery(function(){nlBoot()})}})();
-}else{jQuery(function(){nlBoot()})}
+  var _c=0;
+  (function w(){if(typeof jQuery==='undefined'&&_c<200){_c++;setTimeout(w,50);return;}if(typeof jQuery!=='undefined'){jQuery(function(){nlStart();});}})();
+} else {
+  jQuery(function(){nlStart();});
+}
 
 })();
