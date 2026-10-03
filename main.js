@@ -1,4 +1,4 @@
-/* MYWEB PLATFORM — main.js v3 (only what doesn't need to render instantly) */
+/* MYWEB PLATFORM r— main.js v3 (only what doesn't need to render instantly) */
 (function(){
 'use strict';
 
