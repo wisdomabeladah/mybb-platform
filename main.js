@@ -544,8 +544,8 @@ var isHome = (window.location.pathname === '/' ||
 
 if (isHome) {
   var themeAttr = document.body && document.body.getAttribute('data-nl-theme');
-  var hasThemeMarkup = !!themeAttr || $('.nl-navbar').length > 0 || $('.nl-boards-table').length > 0;
-
+  var hasThemeMarkup = !!themeAttr;
+  
   if (!hasThemeMarkup) {
     $('#pun-index .main, #pun .main, .punbb .main, #pun-stats, #pun-announcement, #pun-crumbs1, #pun-crumbs2, #pun-title, #pun-navlinks, #pun-ulinks, #pun-status').hide();
 
