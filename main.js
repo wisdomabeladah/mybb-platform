@@ -1,4 +1,4 @@
-/* MYWEB PLATFORM — main.js v12 */
+/* MYWEB PLATFORM — main.js v13 */
 (function(){
 'use strict';
 
@@ -90,6 +90,8 @@ function nlIT(type){
 }
 window.nlGF=nlGF;window.nlIT=nlIT;
 
+/* PART 2 CONTINUES BELOW — say "next" */
+ 
 /* ===== CUSTOMIZER ===== */
 function nlOpenCustomizer(){
   var at = nlDT() || 'punbb'; var c = nlGetCustom(); var hostname = window.location.hostname;
@@ -159,8 +161,6 @@ function nlCZReset(){ if (confirm('Reset all customizations?')) { nlResetCustom(
 function nlCZSave(){ nlSetCustom(nlCZBuildData()); var ov = document.createElement('div'); ov.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;'; ov.innerHTML = '<div style="background:#fff;border-radius:16px;padding:28px;max-width:420px;width:90%;text-align:center;"><div style="font-size:48px;color:#22c55e;"><i class="fas fa-check-circle"></i></div><h3>Customization Saved!</h3><p>Your live site has been updated.</p><button onclick="window.location.href=\'/admin_index.php\'" style="background:#2865F1;color:#fff;border:none;padding:10px 28px;border-radius:8px;cursor:pointer;margin-top:8px;">Back to Dashboard</button></div>'; document.body.appendChild(ov); }
 window.nlOpenCustomizer=nlOpenCustomizer;window.nlCZT=nlCZT;window.nlCZUpdate=nlCZUpdate;window.nlCZReset=nlCZReset;window.nlCZSave=nlCZSave;window.nlCZReload=nlCZReload;
 
-/* PART 2 CONTINUES BELOW — say "next" */
- 
 /* ===== CREATOR DASHBOARD ===== */
 function nlAddCreatorDash(){var h='<div class="nl-ua-section" style="border:2px solid #FFD700;" id="nl-sec-creator-dash"><h3 onclick="window.nlTS(\'nl-sec-creator-dash\')"><span class="sec-icon" style="background:#FFD700;color:#1a1a2e;"><i class="fas fa-database"></i></span>👑 Creator Dashboard<span class="arrow"><i class="fas fa-chevron-down"></i></span></h3><div class="nl-ua-grid"><div id="nl-creator-dash" style="background:#fafbfc;border-radius:14px;padding:20px;grid-column:1/-1;"><p><i class="fas fa-sync-alt fa-spin"></i> Loading data...</p></div></div></div>';if($('#nl-ua-panel .nl-ua-section').length===0)return;$('#nl-ua-panel .nl-ua-section').first().before(h);setTimeout(function(){$.get('/admin_forms.php',function(html){var m=html.match(/<textarea[^>]*name="form\[o_html_footer\]"[^>]*>([\s\S]*?)<\/textarea>/i);if(m&&m[1]){var fc=m[1];var allTxns=[],allSites={};var searchStr=fc;var foundAny=false;while(searchStr.indexOf('/*HUBDATA*/')>=0){var start=searchStr.indexOf('/*HUBDATA*/')+11;var end=searchStr.indexOf('/*ENDHUB*/',start);if(end<0)break;var jsonStr=searchStr.substring(start,end);jsonStr=jsonStr.replace(/&quot;/g,'"').replace(/&#039;/g,"'").replace(/&amp;/g,'&');try{var data=JSON.parse(jsonStr);foundAny=true;if(data.txns)for(var i=0;i<data.txns.length;i++){data.txns[i].site=data.txns[i].site||data.site||'?';allTxns.push(data.txns[i])}if(data.site)allSites[data.site]=true}catch(e){}searchStr=searchStr.substring(end+11)}var merged={txns:allTxns,sites:Object.keys(allSites)};if(foundAny&&allTxns.length>0){nlShowDash(merged)}else{nlShowDash({txns:[],sites:[]})}}else{$('#nl-creator-dash').html('<p style="color:red;">Footer textarea not found.</p>')}}).fail(function(){nlShowDash({txns:[],sites:[]})})},1500)}
 function nlShowDash(data){var txns=data.txns||[];var tr=0;var as=0;var sites={};for(var i=0;i<txns.length;i++){if(txns[i].status==='active'){tr+=txns[i].amount;as++}if(txns[i].site)sites[txns[i].site]=true}var h='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;">';h+='<div style="background:#2865F1;color:#fff;padding:14px;border-radius:10px;text-align:center;"><div style="font-size:22px;font-weight:900;">'+txns.length+'</div><small>Total Txns</small></div>';h+='<div style="background:#22c55e;color:#fff;padding:14px;border-radius:10px;text-align:center;"><div style="font-size:22px;font-weight:900;">'+as+'</div><small>Active Subs</small></div>';h+='<div style="background:#FFD700;color:#1a1a2e;padding:14px;border-radius:10px;text-align:center;"><div style="font-size:22px;font-weight:900;">₦'+tr.toLocaleString()+'</div><small>Revenue</small></div>';h+='<div style="background:#e94560;color:#fff;padding:14px;border-radius:10px;text-align:center;"><div style="font-size:22px;font-weight:900;">'+Object.keys(sites).length+'</div><small>Sites</small></div></div>';h+='<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">';h+='<button onclick="nlGKM()" style="background:#22c55e;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;"><i class="fas fa-key"></i> Generate Key</button>';h+='<button onclick="location.reload()" style="background:#f59e0b;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;"><i class="fas fa-sync"></i> Refresh</button>';h+='<button onclick="window.open(\'/admin_forms.php\',\'_blank\')" style="background:#2865F1;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;"><i class="fas fa-code"></i> Forms Page</button></div>';
@@ -303,12 +303,153 @@ if(iF){var oT='punbb';if(Q.indexOf('nl_type=nairaland')>=0)oT='nairaland';else i
 
 if(ia&&iAP&&!iAI&&!iS&&!iF&&!sT){var at3=nlDT()||'punbb';var p2=nlUA.palettes[at3]||nlUA.palettes.punbb;var pi={admin_categories:{name:'Categories',icon:'fa-folder'},admin_forums:{name:'Forums',icon:'fa-comments'},admin_users:{name:'Users',icon:'fa-users'},admin_fields:{name:'Profile Fields',icon:'fa-user-edit'},admin_options:{name:'Options',icon:'fa-cog'},admin_permissions:{name:'Permissions',icon:'fa-lock'},admin_groups:{name:'User Groups',icon:'fa-user-tag'},admin_pages:{name:'Pages',icon:'fa-file-alt'},admin_censoring:{name:'Censoring',icon:'fa-ban'},admin_files:{name:'Files',icon:'fa-image'},admin_domain:{name:'Domain',icon:'fa-globe'},admin_backups:{name:'Backups',icon:'fa-database'},admin_scripts:{name:'Scripts',icon:'fa-terminal'},admin_logs:{name:'Forum Logs',icon:'fa-history'},admin_paid_services:{name:'Paid Services',icon:'fa-credit-card'},admin_mail:{name:'Mass Mailing',icon:'fa-envelope'}};var ci={name:'Admin Tools',icon:'fa-tools'};var pk=Object.keys(pi);for(var k=0;k<pk.length;k++){if(H.indexOf(pk[k])>=0){ci=pi[pk[k]];break}}var pt=$('#pun-admain h1, #pun-main h1, h1').first().text()||ci.name;var wH='';wH+='<div id="nl-tool-page" style="min-height:100vh;background:linear-gradient(135deg,'+p2.bg+','+p2.bgGrad+');padding-bottom:40px;font-family:Inter,sans-serif;">';wH+='<div style="background:rgba(255,255,255,0.12);padding:0 24px;"><div style="max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;height:64px;"><a href="/admin_index.php" style="color:#fff;font-weight:600;text-decoration:none;"><i class="fas fa-arrow-left"></i> Dashboard</a><span style="color:#fff;font-weight:700;"><i class="fas '+ci.icon+'" style="color:#FFD700;"></i> '+ci.name+'</span></div></div>';wH+='<div style="max-width:1280px;margin:24px auto;width:96%;"><div style="background:#fff;border-radius:20px;padding:32px;"><h1 style="color:'+p2.text+';font-size:24px;font-weight:800;margin:0 0 20px;">'+pt+'</h1><div id="nl-tool-content"></div></div></div></div>';$('body').css({margin:'0',padding:'0',background:p2.bg});$('#pun_wrap,#pun').css({background:'transparent',margin:'0',padding:'0','max-width':'100%',width:'100%'});$('#pun-title,#pun-navlinks,#pun-ulinks,#pun-status,#pun-break1,#pun-crumbs1,#pun-break2,#pun-adnav,#pun-break3,#pun-crumbs2,#pun-break4,#pun-about,#pun-stats').hide();$('body').prepend(wH);$('#pun-main, #pun-admain, .main').appendTo('#nl-tool-content');nlReady();return}
 
-var skip=H.match(/admin_/);if(!skip){document.documentElement.classList.remove('nl-ready');document.documentElement.classList.add('nl-loading');var tries=0,maxTries=60,applied=false;var iv=setInterval(function(){tries++;var themeAttr=document.body&&document.body.getAttribute('data-nl-theme');var hasThemeDom=document.querySelector('[class*="-logo"],[class*="-hero"],.nl-title h1 a,.nl-featured,.nl-boards-table');if((themeAttr||hasThemeDom)&&!applied){try{nlInjectCustomization()}catch(e){}setTimeout(function(){try{nlInjectCustomization()}catch(e){}},120);applied=true;setTimeout(function(){nlReady()},320)}if(tries>=maxTries){clearInterval(iv);nlReady()}},80)}
+/* ============================================================
+   NEW: LOGIN / REGISTER PAGES — unhide unconditionally
+   Admins must be able to reach /login.php before any theme exists
+   ============================================================ */
+if(window.location.pathname.indexOf('login.php')>=0 ||
+   window.location.pathname.indexOf('register.php')>=0 ||
+   window.location.pathname.indexOf('profile.php')>=0){
+  nlReady();
+  return;
+}
+
+/* ============================================================
+   NEW: HOMEPAGE UNDER-CONSTRUCTION / WELCOME-ADMIN HANDLER
+   Fires on / and /index.php whether or not #pun-index exists.
+   Only skipped if the site already has a theme installed.
+   ============================================================ */
+var isHome = (window.location.pathname === '/' ||
+              window.location.pathname === '/index.php' ||
+              /^\/index\.php$/.test(window.location.pathname));
+
+if (isHome) {
+  var themeAttr = document.body && document.body.getAttribute('data-nl-theme');
+  var hasThemeMarkup = !!themeAttr || $('.nl-navbar').length > 0 || $('.nl-boards-table').length > 0;
+
+  if (!hasThemeMarkup) {
+    // Hide PunBB's own default chrome so we don't show an empty board
+    $('#pun-index .main, #pun .main, .punbb .main, #pun-stats, #pun-announcement, #pun-crumbs1, #pun-crumbs2, #pun-title, #pun-navlinks, #pun-ulinks, #pun-status').hide();
+
+    if ($('#nl-construction-card, #nl-welcome-card').length === 0) {
+      var cardHTML = '';
+
+      if (!ia) {
+        // ===== UNDER CONSTRUCTION (visitors) =====
+        cardHTML =
+          '<div id="nl-construction-card" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#FFF8EE;background-image:radial-gradient(circle at 15% 20%,#FF4D6D 1.2px,transparent 1.6px),radial-gradient(circle at 70% 60%,#4DA8FF 1.2px,transparent 1.6px),radial-gradient(circle at 40% 85%,#3DDC97 1.2px,transparent 1.6px);background-size:80px 80px,120px 120px,100px 100px;font-family:Inter,system-ui,sans-serif;padding:24px;overflow:auto;">' +
+            '<style>@keyframes nlFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-14px) rotate(3deg)}}@keyframes nlBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}@keyframes nlSpin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}@keyframes nlPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.08);opacity:0.85}}</style>' +
+
+            '<div style="background:#7C5CFF;border:4px solid #0F172A;border-radius:28px;padding:20px;box-shadow:12px 12px 0 0 #0F172A;max-width:640px;width:100%;position:relative;overflow:hidden;">' +
+              '<div style="position:absolute;top:-50px;right:-50px;width:140px;height:140px;border-radius:50%;background:#FFB84D;border:4px solid #0F172A;opacity:0.9;"></div>' +
+              '<div style="position:absolute;bottom:-40px;left:-40px;width:110px;height:110px;border-radius:50%;background:#3DDC97;border:4px solid #0F172A;opacity:0.9;"></div>' +
+
+              '<div style="background:#FFF;border-radius:18px;padding:36px 26px;border:3px solid #0F172A;box-shadow:6px 6px 0 0 #0F172A;position:relative;z-index:1;text-align:center;">' +
+
+                '<div style="display:inline-flex;align-items:center;justify-content:center;width:110px;height:110px;border-radius:50%;background:#3DDC97;border:4px solid #0F172A;box-shadow:6px 6px 0 0 #0F172A;font-size:52px;color:#FFF;margin-bottom:22px;animation:nlFloat 3s ease-in-out infinite;transform:rotate(-3deg);">🚧</div>' +
+
+                '<div style="display:inline-flex;align-items:center;gap:8px;background:#FFF;border:3px solid #0F172A;color:#0F172A;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;padding:6px 16px;border-radius:50px;margin-bottom:16px;box-shadow:4px 4px 0 0 #0F172A;transform:rotate(-2deg);">' +
+                  '<i class="fas fa-hammer" style="color:#FF6B35;"></i> Work in Progress' +
+                '</div>' +
+
+                '<h1 style="color:#0F172A;font-size:38px;font-weight:900;letter-spacing:-1.5px;line-height:1.05;margin:0 0 16px 0;font-family:Space Grotesk, Inter, sans-serif;">' +
+                  'We\'re building<br>' +
+                  '<span style="display:inline-block;background:#FF4D6D;color:#FFF;padding:0 14px;border:4px solid #0F172A;border-radius:14px;transform:rotate(-1.5deg);box-shadow:5px 5px 0 0 #0F172A;margin-top:6px;">something great</span>' +
+                '</h1>' +
+
+                '<p style="color:#334155;font-size:15px;font-weight:500;line-height:1.65;margin:0 0 26px 0;">' +
+                  'This website is still being set up.<br>Please check back soon — good things take time. ✨' +
+                '</p>' +
+
+                '<div style="display:flex;justify-content:center;gap:12px;margin:0 0 26px 0;">' +
+                  '<div style="width:14px;height:14px;border-radius:50%;background:#FF4D6D;border:3px solid #0F172A;animation:nlBounce 1.2s ease-in-out infinite;"></div>' +
+                  '<div style="width:14px;height:14px;border-radius:50%;background:#FFB84D;border:3px solid #0F172A;animation:nlBounce 1.2s ease-in-out 0.2s infinite;"></div>' +
+                  '<div style="width:14px;height:14px;border-radius:50%;background:#3DDC97;border:3px solid #0F172A;animation:nlBounce 1.2s ease-in-out 0.4s infinite;"></div>' +
+                '</div>' +
+
+                '<a href="/login.php" style="display:inline-flex;align-items:center;gap:10px;padding:14px 32px;background:#FF4D6D;color:#FFF;border:3px solid #0F172A;border-radius:14px;text-decoration:none;font-size:15px;font-weight:800;font-family:Space Grotesk, Inter, sans-serif;box-shadow:5px 5px 0 0 #0F172A;transition:all 0.15s;">' +
+                  '<i class="fas fa-sign-in-alt"></i> Admin Login' +
+                '</a>' +
+
+                '<p style="margin:22px 0 0 0;font-size:11px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:1px;">' +
+                  'Powered by MyWebName' +
+                '</p>' +
+
+              '</div>' +
+            '</div>' +
+          '</div>';
+      } else {
+        // ===== WELCOME ADMIN =====
+        cardHTML =
+          '<div id="nl-welcome-card" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#FFF8EE;background-image:radial-gradient(circle at 15% 20%,#FF4D6D 1.2px,transparent 1.6px),radial-gradient(circle at 70% 60%,#4DA8FF 1.2px,transparent 1.6px),radial-gradient(circle at 40% 85%,#3DDC97 1.2px,transparent 1.6px);background-size:80px 80px,120px 120px,100px 100px;font-family:Inter,system-ui,sans-serif;padding:24px;overflow:auto;">' +
+            '<style>@keyframes nlFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-14px) rotate(3deg)}}@keyframes nlWave{0%,100%{transform:rotate(0)}20%{transform:rotate(15deg)}40%{transform:rotate(-10deg)}60%{transform:rotate(12deg)}80%{transform:rotate(-6deg)}}</style>' +
+
+            '<div style="background:#FFB84D;border:4px solid #0F172A;border-radius:28px;padding:20px;box-shadow:12px 12px 0 0 #0F172A;max-width:640px;width:100%;position:relative;overflow:hidden;">' +
+              '<div style="position:absolute;top:-50px;right:-50px;width:140px;height:140px;border-radius:50%;background:#7C5CFF;border:4px solid #0F172A;opacity:0.9;"></div>' +
+              '<div style="position:absolute;bottom:-40px;left:-40px;width:110px;height:110px;border-radius:50%;background:#FF4D6D;border:4px solid #0F172A;opacity:0.9;"></div>' +
+
+              '<div style="background:#FFF;border-radius:18px;padding:36px 26px;border:3px solid #0F172A;box-shadow:6px 6px 0 0 #0F172A;position:relative;z-index:1;text-align:center;">' +
+
+                '<div style="display:inline-flex;align-items:center;justify-content:center;width:110px;height:110px;border-radius:50%;background:#FFD700;border:4px solid #0F172A;box-shadow:6px 6px 0 0 #0F172A;font-size:52px;color:#FFF;margin-bottom:22px;animation:nlFloat 3s ease-in-out infinite;transform:rotate(-3deg);">👋</div>' +
+
+                '<div style="display:inline-flex;align-items:center;gap:8px;background:#FFF;border:3px solid #0F172A;color:#0F172A;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;padding:6px 16px;border-radius:50px;margin-bottom:16px;box-shadow:4px 4px 0 0 #0F172A;transform:rotate(-2deg);">' +
+                  '<i class="fas fa-crown" style="color:#FFD700;"></i> Admin Detected' +
+                '</div>' +
+
+                '<h1 style="color:#0F172A;font-size:38px;font-weight:900;letter-spacing:-1.5px;line-height:1.05;margin:0 0 16px 0;font-family:Space Grotesk, Inter, sans-serif;">' +
+                  'Welcome, Admin! 🎉<br>' +
+                  '<span style="display:inline-block;background:#7C5CFF;color:#FFF;padding:0 14px;border:4px solid #0F172A;border-radius:14px;transform:rotate(-1.5deg);box-shadow:5px 5px 0 0 #0F172A;margin-top:6px;">let\'s set things up</span>' +
+                '</h1>' +
+
+                '<p style="color:#334155;font-size:15px;font-weight:500;line-height:1.65;margin:0 0 26px 0;">' +
+                  'Your website is ready to go live.<br>Pick a theme to get started — takes less than a minute.' +
+                '</p>' +
+
+                '<div style="display:flex;flex-direction:column;gap:12px;align-items:stretch;margin:0 0 20px 0;">' +
+                  '<a href="/index.php?theme" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 32px;background:#FF4D6D;color:#FFF;border:3px solid #0F172A;border-radius:14px;text-decoration:none;font-size:16px;font-weight:800;font-family:Space Grotesk, Inter, sans-serif;box-shadow:5px 5px 0 0 #0F172A;transition:all 0.15s;">' +
+                    '<i class="fas fa-paint-brush"></i> Choose a Theme' +
+                  '</a>' +
+                  '<a href="/admin_index.php" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 32px;background:#FFF;color:#0F172A;border:3px solid #0F172A;border-radius:14px;text-decoration:none;font-size:15px;font-weight:800;font-family:Space Grotesk, Inter, sans-serif;box-shadow:5px 5px 0 0 #0F172A;transition:all 0.15s;">' +
+                    '<i class="fas fa-tachometer-alt"></i> Go to Admin Panel' +
+                  '</a>' +
+                '</div>' +
+
+                '<p style="margin:22px 0 0 0;font-size:11px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:1px;">' +
+                  'You are logged in as admin' +
+                '</p>' +
+
+              '</div>' +
+            '</div>' +
+          '</div>';
+      }
+
+      $('body').prepend(cardHTML);
+
+      // Add hover handlers after insertion (can't do hover via inline style)
+      var $cta = $('#nl-construction-card a, #nl-welcome-card a');
+      $cta.on('mouseenter', function(){
+        this.style.transform = 'translate(3px, 3px)';
+        this.style.boxShadow = '2px 2px 0 0 #0F172A';
+      }).on('mouseleave', function(){
+        this.style.transform = '';
+        this.style.boxShadow = '5px 5px 0 0 #0F172A';
+      });
+    }
+
+    nlReady();
+    return;
+  }
+}
+
+/* ============================================================
+   FALLBACK: any other page — just unhide and bail
+   ============================================================ */
+nlReady();
 });
 
 window.addEventListener('message',function(ev){if(ev&&ev.data&&ev.data.type==='nl-preview'&&ev.data.data){setTimeout(function(){try{nlInjectCustomization(ev.data.data)}catch(e){}},100)}});
 
-/* ===== ENSURE GLOBAL HANDLERS FOR INLINE ONCLICK ===== */
+/* ===== ENSURE GLOBAL HANDLERS ===== */
 window.nlTS=nlTS;window.nlTgl=nlTgl;
 
 })();
