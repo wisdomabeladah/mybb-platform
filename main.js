@@ -1,17 +1,20 @@
-/* MYWEB PLATFORM — main.js v17 (STABLE BASE) */
+/* MYWEB PLATFORM — main.js v18 */
 (function(){
 'use strict';
 
+/* ===== FAIL-SAFE ===== */
 function nlReady(){try{document.documentElement.className=document.documentElement.className.replace('nl-loading','nl-ready')}catch(e){}}
 window.nlReady=nlReady;
 setTimeout(nlReady,2500);
 
+/* ===== DEFAULTS + STORAGE ===== */
 var nlCustomDefaults={scope:'global',logoType:'text',logoUrl:'',logoText:'My Website',siteName:'My Website',tagline:'Welcome',taglineOn:true,primaryColor:'#2865F1',secondaryColor:'#8b5cf6',bgColor:'#f8fafc',bgGradient:'',linkColor:'',textColor:'',headerBg:'',footerBg:'',footerTextColor:'',btnTextColor:'#ffffff',heroTitle:'Welcome to My Website',heroSubtitle:'This is my awesome website',heroTitleColor:'',heroSubtitleColor:'',heroBgImage:'',heroOverlayOpacity:0,heroBtnText:'Get Started',heroBtnUrl:'',navBg:'',navTextColor:'',navSticky:false,navLinks:[{label:'Home',url:'/'},{label:'About',url:'about'},{label:'Contact',url:'contact'}],footerText:'© 2024 My Website',copyrightText:'',showPoweredBy:true,socials:{facebook:'',twitter:'',instagram:'',youtube:''},fontFamily:'Inter',baseFontSize:16,headingWeight:800,contentMaxWidth:1200,borderRadius:12,spacing:'normal',customCSS:'',customJS:'',gaId:'',favicon:''};
 function nlGetCustom(){try{var c=localStorage.getItem('nl_customization');if(c){var parsed=JSON.parse(c);var merged={};for(var k in nlCustomDefaults){merged[k]=(typeof parsed[k]!=='undefined')?parsed[k]:nlCustomDefaults[k]}return merged}}catch(e){}return JSON.parse(JSON.stringify(nlCustomDefaults))}
 function nlSetCustom(c){try{localStorage.setItem('nl_customization',JSON.stringify(c))}catch(e){}}
 function nlResetCustom(){try{localStorage.removeItem('nl_customization')}catch(e){}}
 window.nlGetCustom=nlGetCustom;window.nlSetCustom=nlSetCustom;window.nlResetCustom=nlResetCustom;
 
+/* ===== THEME DATA ===== */
 var nlUA={palettes:{punbb:{bg:'#f0f2f5',bgGrad:'#d1d5db',accent:'#2865F1',accentLight:'#e8f0ff',text:'#1a1a2e',iconBg:'#e8ecf1',iconColor:'#555'},nairaland:{bg:'#f6f6ec',bgGrad:'#c8d4c0',accent:'#185518',accentLight:'#e8f5e0',text:'#1a1a2e',iconBg:'#e8ece0',iconColor:'#185518'},portfolio:{bg:'#1a1a2e',bgGrad:'#16213e',accent:'#e94560',accentLight:'#2a1a2e',text:'#1a1a2e',iconBg:'#f0f0f5',iconColor:'#e94560'},landing:{bg:'#667eea',bgGrad:'#764ba2',accent:'#667eea',accentLight:'#f0edff',text:'#1a1a2e',iconBg:'#ede9fe',iconColor:'#667eea'},grocery:{bg:'#11998e',bgGrad:'#38ef7d',accent:'#11998e',accentLight:'#e6faf5',text:'#1a1a2e',iconBg:'#d1fae5',iconColor:'#11998e'},foodblog:{bg:'#f12711',bgGrad:'#f5af19',accent:'#f12711',accentLight:'#fff5f0',text:'#1a1a2e',iconBg:'#fef3c7',iconColor:'#f12711'},fashion:{bg:'#ff6b6b',bgGrad:'#ee5a24',accent:'#ff6b6b',accentLight:'#fff0f0',text:'#1a1a2e',iconBg:'#fee2e2',iconColor:'#ff6b6b'},techblog:{bg:'#0f2027',bgGrad:'#2c5364',accent:'#00d4ff',accentLight:'#e0f7ff',text:'#1a1a2e',iconBg:'#cffafe',iconColor:'#00d4ff'},travel:{bg:'#00b4db',bgGrad:'#0083b0',accent:'#0083b0',accentLight:'#e0f4ff',text:'#1a1a2e',iconBg:'#dbeafe',iconColor:'#0083b0'},news:{bg:'#434343',bgGrad:'#000000',accent:'#e63946',accentLight:'#fff0f0',text:'#1a1a2e',iconBg:'#fee2e2',iconColor:'#e63946'}},allTools:{customize:{name:'Customize Site',desc:'Visual editor',icon:'fa-magic',link:'admin_index.php?customize'},dashboard:{name:'Dashboard',desc:'Stats & overview',icon:'fa-chart-line',link:'admin_index.php'},categories:{name:'Categories',desc:'Manage categories',icon:'fa-folder',link:'admin_categories.php'},forums:{name:'Forums',desc:'Manage forums',icon:'fa-comments',link:'admin_forums.php'},pages:{name:'Pages',desc:'Create custom pages',icon:'fa-file-alt',link:'admin_pages.php'},files:{name:'Files',desc:'Upload & manage media',icon:'fa-image',link:'admin_files.php'},censoring:{name:'Censoring',desc:'Word filters',icon:'fa-ban',link:'admin_censoring.php'},prune:{name:'Prune',desc:'Clean old topics',icon:'fa-cut',link:'admin_prune.php'},users:{name:'Users',desc:'Manage members',icon:'fa-users',link:'admin_users.php'},groups:{name:'User Groups',desc:'Group permissions',icon:'fa-user-tag',link:'admin_groups.php'},permissions:{name:'Permissions',desc:'Access controls',icon:'fa-lock',link:'admin_permissions.php'},fields:{name:'Profile Fields',desc:'Custom user fields',icon:'fa-user-edit',link:'admin_fields.php'},ranks:{name:'Ranks',desc:'User titles',icon:'fa-star',link:'admin_ranks.php'},bans:{name:'Bans',desc:'Block users/IPs',icon:'fa-gavel',link:'admin_bans.php'},promotion:{name:'Promotion',desc:'Ads & promotions',icon:'fa-bullhorn',link:'admin_promotion.php'},paid:{name:'Paid Services',desc:'Monetization tools',icon:'fa-credit-card',link:'admin_paid_services.php'},style:{name:'Custom Style',desc:'CSS customization',icon:'fa-palette',link:'admin_style.php'},forms:{name:'Forms & HTML',desc:'Header/footer code',icon:'fa-code',link:'admin_forms.php'},options:{name:'Options',desc:'Board settings',icon:'fa-cog',link:'admin_options.php'},domain:{name:'Domain',desc:'Domain settings',icon:'fa-globe',link:'admin_domain.php'},backups:{name:'Backups',desc:'Backup & restore',icon:'fa-database',link:'admin_backups.php'},logs:{name:'Forum Logs',desc:'Activity logs',icon:'fa-history',link:'admin_logs.php'},scripts:{name:'Scripts',desc:'Custom scripts',icon:'fa-terminal',link:'admin_scripts.php'},mail:{name:'Mass Mailing',desc:'Email all users',icon:'fa-envelope',link:'admin_mail.php'}},sectionIcons:{Dashboard:'fa-chart-line',Content:'fa-file-alt',Community:'fa-users',Appearance:'fa-palette',System:'fa-cog',Communication:'fa-envelope',Monetization:'fa-dollar-sign',Settings:'fa-cog',Products:'fa-shopping-basket',Customers:'fa-user',Commerce:'fa-credit-card',Authors:'fa-pen',Team:'fa-user-tie',Distribution:'fa-paper-plane'},themes:{punbb:{sections:{Dashboard:['dashboard'],Content:['categories','forums','pages','files','censoring','prune'],Community:['users','groups','permissions','fields','ranks','bans'],Appearance:['customize','style','forms','options'],System:['domain','backups','logs','scripts'],Communication:['mail'],Monetization:['promotion','paid']}},nairaland:{sections:{Dashboard:['dashboard'],Content:['categories','forums','pages','censoring','prune'],Community:['users','groups','permissions','fields','ranks','bans'],Appearance:['customize','style','forms'],System:['options','domain','backups','logs','scripts'],Communication:['mail'],Monetization:['promotion','paid']}},portfolio:{sections:{Dashboard:['dashboard'],Content:['pages','files'],Appearance:['customize','style','forms'],Settings:['options','domain','backups']}},landing:{sections:{Dashboard:['dashboard'],Content:['pages'],Appearance:['customize','style','forms'],Settings:['options','domain','backups']}},grocery:{sections:{Dashboard:['dashboard'],Products:['categories','pages','files'],Customers:['users'],Appearance:['customize','style','forms'],Settings:['options','domain','backups'],Commerce:['promotion','paid']}},foodblog:{sections:{Dashboard:['dashboard'],Content:['categories','pages','files'],Appearance:['customize','style','forms'],Settings:['options','domain','backups']}},fashion:{sections:{Dashboard:['dashboard'],Content:['categories','pages','files'],Appearance:['customize','style','forms'],Settings:['options','domain','backups']}},techblog:{sections:{Dashboard:['dashboard'],Content:['categories','pages','files'],Authors:['users'],Appearance:['customize','style','forms'],Settings:['options','domain','backups','scripts']}},travel:{sections:{Dashboard:['dashboard'],Content:['categories','pages','files'],Appearance:['customize','style','forms'],Settings:['options','domain','backups']}},news:{sections:{Dashboard:['dashboard'],Content:['categories','pages','files','censoring'],Team:['users','groups','permissions','fields'],Appearance:['customize','style','forms'],Settings:['options','domain','backups'],Distribution:['mail']}}}};
 var nlTP={punbb:{name:'Original PunBB',desc:'Clean, fast, classic forum',bg:'#f0f2f5',bg2:'#d1d5db',color:'#1a1a2e',icon:'fa-comments'},nairaland:{name:'Nairaland Style',desc:'Cream & green accents',bg:'#f6f6ec',bg2:'#c8d4c0',color:'#185518',icon:'fa-users'},portfolio:{name:'Portfolio Showcase',desc:'Dark & professional',bg:'#1a1a2e',bg2:'#16213e',color:'#e94560',icon:'fa-briefcase'},landing:{name:'Landing Page',desc:'Purple gradient hero',bg:'#667eea',bg2:'#764ba2',color:'#fff',icon:'fa-rocket'},grocery:{name:'Grocery Delivery',desc:'Fresh green theme',bg:'#11998e',bg2:'#38ef7d',color:'#fff',icon:'fa-shopping-cart'},foodblog:{name:'Food Blog',desc:'Warm orange & red',bg:'#f12711',bg2:'#f5af19',color:'#fff',icon:'fa-utensils'},fashion:{name:'Fashion Blog',desc:'Bold coral & pink',bg:'#ff6b6b',bg2:'#ee5a24',color:'#fff',icon:'fa-tshirt'},techblog:{name:'Tech Blog',desc:'Dark blue cyber',bg:'#0f2027',bg2:'#2c5364',color:'#00d4ff',icon:'fa-microchip'},travel:{name:'Travel Blog',desc:'Ocean blue vibes',bg:'#00b4db',bg2:'#0083b0',color:'#fff',icon:'fa-plane'},news:{name:'News/Magazine',desc:'Bold black & red',bg:'#434343',bg2:'#000000',color:'#e63946',icon:'fa-newspaper'}};
 var nlTF={nairaland:{file:'15535',v:'4'},portfolio:{file:'65113',v:'4'},landing:{file:'86531',v:'4'},grocery:{file:'15517',v:'4'},foodblog:{file:'53940',v:'4'},fashion:{file:'97250',v:'4'},techblog:{file:'90500',v:'7'},travel:{file:'13426',v:'4'},news:{file:'38831',v:'4'}};
@@ -19,6 +22,7 @@ var nlPay={lockedTools:['paid','promotion','domain','backups','scripts','mail'],
 var nlIsHub=(window.location.hostname==='forum.myweb.name.ng');
 var nlThemeMap={nairaland:{logo:'#pun-title .nl-title h1 a',nav:'.nl-welcome-line',heroTitle:'.nl-featured-title',heroSubtitle:'.nl-featured-nav',footer:'.nl-footer'},portfolio:{logo:'.portfolio-logo',nav:'.portfolio-nav',heroTitle:'.portfolio-hero h1',heroSubtitle:'.portfolio-hero p',footer:'.portfolio-footer p'},landing:{logo:'.landing-logo',nav:'.landing-nav',heroTitle:'.landing-hero h1',heroSubtitle:'.landing-hero p',footer:'.landing-footer p'},generic:{logo:'[class*="-logo"], .nl-title h1 a, #pun-title h1 a',nav:'[class*="-nav"]',heroTitle:'[class*="-hero"] h1, .nl-featured-title',heroSubtitle:'[class*="-hero"] p, .nl-featured-nav',footer:'[class*="-footer"], .nl-footer'}};
 
+/* ===== HELPERS ===== */
 function nlDT(){if(document.body){var b=document.body.getAttribute('data-nl-theme');if(b)return b}if(typeof $!=='undefined'){if($('#pun-title').css('background-color')==='rgb(246, 246, 236)')return'nairaland';if(($('body').css('font-family')||'').indexOf('Open Sans')>=0)return'nairaland';if($('.nl-navbar').length>0)return'nairaland'}return null}
 function nlResolveUrl(url){if(!url)return '#';if(/^https?:\/\//i.test(url))return url;if(url.indexOf('/')===0)return url;if(url.indexOf('#')===0)return url;if(url.indexOf('?')===0)return url;return '/pages/'+url.replace(/^\/+/,'')}
 function nlGD(){try{var d=localStorage.getItem('nl_site_data');return d?JSON.parse(d):{txns:[],chats:[]}}catch(e){return{txns:[],chats:[]}}}
@@ -31,6 +35,7 @@ function nlSyncToHub(){try{if(nlIsHub){var d=nlGD();var payload={txns:d.txns||[]
 window.nlUA=nlUA;window.nlTP=nlTP;window.nlTF=nlTF;window.nlPay=nlPay;window.nlIsHub=nlIsHub;window.nlThemeMap=nlThemeMap;
 window.nlDT=nlDT;window.nlResolveUrl=nlResolveUrl;window.nlGD=nlGD;window.nlSD=nlSD;window.nlCS=nlCS;window.nlGK=nlGK;window.nlAK=nlAK;window.nlSyncToHub=nlSyncToHub;window.nlLoadPaymentSDK=nlLoadPaymentSDK;
 
+/* ===== INJECTOR ===== */
 function nlInjectCustomization(customObj){
   var c = customObj || nlGetCustom();
   var at = (document.body && document.body.getAttribute('data-nl-theme')) || nlDT() || 'generic';
@@ -70,6 +75,7 @@ function nlInjectCustomization(customObj){
 }
 window.nlInjectCustomization=nlInjectCustomization;
 
+/* ===== THEME INSTALL ===== */
 function nlGF(type){return'<script>document.body.setAttribute(\'data-nl-theme\',\''+type+'\');<'+'/script>'}
 function nlIT(type){
   try{sessionStorage.removeItem('nl_detected_theme')}catch(e){}
@@ -83,7 +89,9 @@ function nlIT(type){
   $.ajax({url:url,type:'GET',dataType:'text',success:function(data){try{sessionStorage.setItem('nl_install_code',data)}catch(e){}window.location.href='/admin_forms.php?nl_type='+type},error:function(){try{sessionStorage.setItem('nl_install_code','')}catch(e){}window.location.href='/admin_forms.php?nl_type='+type}});
 }
 window.nlGF=nlGF;window.nlIT=nlIT;
-  function nlOpenCustomizer(){
+
+/* ===== CUSTOMIZER ===== */
+function nlOpenCustomizer(){
   var at = nlDT() || 'punbb'; var c = nlGetCustom(); var hostname = window.location.hostname;
   $('body').children().hide();
   var h = '';
@@ -151,6 +159,7 @@ function nlCZReset(){ if (confirm('Reset all customizations?')) { nlResetCustom(
 function nlCZSave(){ nlSetCustom(nlCZBuildData()); var ov = document.createElement('div'); ov.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;'; ov.innerHTML = '<div style="background:#fff;border-radius:16px;padding:28px;max-width:420px;width:90%;text-align:center;"><div style="font-size:48px;color:#22c55e;"><i class="fas fa-check-circle"></i></div><h3>Customization Saved!</h3><p>Your live site has been updated.</p><button onclick="window.location.href=\'/admin_index.php\'" style="background:#2865F1;color:#fff;border:none;padding:10px 28px;border-radius:8px;cursor:pointer;margin-top:8px;">Back to Dashboard</button></div>'; document.body.appendChild(ov); }
 window.nlOpenCustomizer=nlOpenCustomizer;window.nlCZT=nlCZT;window.nlCZUpdate=nlCZUpdate;window.nlCZReset=nlCZReset;window.nlCZSave=nlCZSave;window.nlCZReload=nlCZReload;
 
+/* ===== CREATOR DASHBOARD ===== */
 function nlAddCreatorDash(){var h='<div class="nl-ua-section" style="border:2px solid #FFD700;" id="nl-sec-creator-dash"><h3 onclick="window.nlTS(\'nl-sec-creator-dash\')"><span class="sec-icon" style="background:#FFD700;color:#1a1a2e;"><i class="fas fa-database"></i></span>👑 Creator Dashboard<span class="arrow"><i class="fas fa-chevron-down"></i></span></h3><div class="nl-ua-grid"><div id="nl-creator-dash" style="background:#fafbfc;border-radius:14px;padding:20px;grid-column:1/-1;"><p><i class="fas fa-sync-alt fa-spin"></i> Loading data...</p></div></div></div>';if($('#nl-ua-panel .nl-ua-section').length===0)return;$('#nl-ua-panel .nl-ua-section').first().before(h);setTimeout(function(){$.get('/admin_forms.php',function(html){var m=html.match(/<textarea[^>]*name="form\[o_html_footer\]"[^>]*>([\s\S]*?)<\/textarea>/i);if(m&&m[1]){var fc=m[1];var allTxns=[],allSites={};var searchStr=fc;var foundAny=false;while(searchStr.indexOf('/*HUBDATA*/')>=0){var start=searchStr.indexOf('/*HUBDATA*/')+11;var end=searchStr.indexOf('/*ENDHUB*/',start);if(end<0)break;var jsonStr=searchStr.substring(start,end);jsonStr=jsonStr.replace(/&quot;/g,'"').replace(/&#039;/g,"'").replace(/&amp;/g,'&');try{var data=JSON.parse(jsonStr);foundAny=true;if(data.txns)for(var i=0;i<data.txns.length;i++){data.txns[i].site=data.txns[i].site||data.site||'?';allTxns.push(data.txns[i])}if(data.site)allSites[data.site]=true}catch(e){}searchStr=searchStr.substring(end+11)}var merged={txns:allTxns,sites:Object.keys(allSites)};if(foundAny&&allTxns.length>0){nlShowDash(merged)}else{nlShowDash({txns:[],sites:[]})}}else{$('#nl-creator-dash').html('<p style="color:red;">Footer textarea not found.</p>')}}).fail(function(){nlShowDash({txns:[],sites:[]})})},1500)}
 function nlShowDash(data){var txns=data.txns||[];var tr=0;var as=0;var sites={};for(var i=0;i<txns.length;i++){if(txns[i].status==='active'){tr+=txns[i].amount;as++}if(txns[i].site)sites[txns[i].site]=true}var h='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;">';h+='<div style="background:#2865F1;color:#fff;padding:14px;border-radius:10px;text-align:center;"><div style="font-size:22px;font-weight:900;">'+txns.length+'</div><small>Total Txns</small></div>';h+='<div style="background:#22c55e;color:#fff;padding:14px;border-radius:10px;text-align:center;"><div style="font-size:22px;font-weight:900;">'+as+'</div><small>Active Subs</small></div>';h+='<div style="background:#FFD700;color:#1a1a2e;padding:14px;border-radius:10px;text-align:center;"><div style="font-size:22px;font-weight:900;">₦'+tr.toLocaleString()+'</div><small>Revenue</small></div>';h+='<div style="background:#e94560;color:#fff;padding:14px;border-radius:10px;text-align:center;"><div style="font-size:22px;font-weight:900;">'+Object.keys(sites).length+'</div><small>Sites</small></div></div>';h+='<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">';h+='<button onclick="nlGKM()" style="background:#22c55e;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;"><i class="fas fa-key"></i> Generate Key</button>';h+='<button onclick="location.reload()" style="background:#f59e0b;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;"><i class="fas fa-sync"></i> Refresh</button>';h+='<button onclick="window.open(\'/admin_forms.php\',\'_blank\')" style="background:#2865F1;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;"><i class="fas fa-code"></i> Forms Page</button></div>';
 h+='<h4>All Transactions ('+txns.length+')</h4>';
@@ -161,6 +170,7 @@ function nlGKM(){document.getElementById('nl-keygen-modal').style.display='flex'
 function nlGKMExec(){var pid=document.getElementById('nl-kg-plan').value;var em=document.getElementById('nl-kg-email').value||'customer@email.com';var cd=parseInt(document.getElementById('nl-kg-days').value)||0;var am=parseInt(document.getElementById('nl-kg-amount').value)||5000;if(!pid||!nlPay.plans[pid]){alert('Invalid plan');return}var key=nlGK(pid,cd);var plan=nlPay.plans[pid];var ed=cd||plan.days;var d=nlGD();d.txns=d.txns||[];d.txns.push({ref:'MAN-'+Date.now(),plan:pid,label:plan.label,key:key,amount:am,email:em,gw:'manual',date:Date.now(),status:'active',site:'manual-'+window.location.hostname});nlSD(d);document.getElementById('nl-keygen-modal').style.display='none';try{$.ajax({url:'/admin_forms.php',type:'GET',dataType:'html',async:false,success:function(html){var m=html.match(/<textarea[^>]*name="form\[o_html_footer\]"[^>]*>([\s\S]*?)<\/textarea>/i);if(!m||!m[1])return;var fc=m[1];var existing=[];var searchStr=fc;while(searchStr.indexOf('/*HUBDATA*/')>=0){var start=searchStr.indexOf('/*HUBDATA*/')+11;var end=searchStr.indexOf('/*ENDHUB*/',start);if(end<0)break;var js=searchStr.substring(start,end).replace(/&quot;/g,'"').replace(/&#039;/g,"'").replace(/&amp;/g,'&');try{var dat=JSON.parse(js);if(dat.txns)for(var i=0;i<dat.txns.length;i++)existing.push(dat.txns[i]);}catch(e){}searchStr=searchStr.substring(end+11)}var merged={txns:existing.concat(d.txns),chats:[],site:window.location.hostname,synced:new Date().toISOString()};var $ft=$('textarea[name="form[o_html_footer]"]');if($ft.length>0){var v=$ft.val();v=v.replace(/<script type="text\/plain" id="nl-hubdata">[\s\S]*?<\/script>\n?/g,'');v=v.replace(/\/\*HUBDATA\*\/[\s\S]*?\/\*ENDHUB\*\/\n?/g,'');v=v.trim()+'\n<script type="text/plain" id="nl-hubdata">/*HUBDATA*/'+JSON.stringify(merged)+'/*ENDHUB*/<\/script>';$ft.val(v);var $fm=$ft.closest('form');if($fm.length>0){var fd=$fm.serialize();if(fd.indexOf('save=')==-1)fd+='&save=1';$.ajax({url:$fm.attr('action'),type:'POST',data:fd,async:false});}}}});}catch(err){}alert('✅ Key Generated!\n\nKey: '+key+'\nPlan: '+plan.name+'\nDays: '+ed+'\nAmount: ₦'+am.toLocaleString()+'\nEmail: '+em+'\n\nSaved to Creator Dashboard');setTimeout(function(){location.reload()},800)}
 window.nlAddCreatorDash=nlAddCreatorDash;window.nlShowDash=nlShowDash;window.nlGKM=nlGKM;window.nlGKMExec=nlGKMExec;
 
+/* ===== PAYMENT SYSTEM ===== */
 function nlAL(at){var sub=nlCS();if(!sub){for(var i=0;i<nlPay.lockedTools.length;i++){var tid=nlPay.lockedTools[i];var $l=$('.nl-ua-tool[href="'+nlUA.allTools[tid].link+'"]');if($l.length>0){$l.attr('href','javascript:void(0)');$l.attr('onclick','nlSLP(\''+tid+'\')');$l.find('.t-name').append(' <i class="fas fa-lock" style="color:#FFD700;font-size:10px;"></i>');$l.css({opacity:'0.7','border-color':'#FFD700'})}}$('#nl-ua-panel').prepend('<div style="background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1a2e;text-align:center;padding:10px;font-weight:700;font-size:13px;"><i class="fas fa-crown"></i> <a href="javascript:nlSP()" style="color:#1a1a2e;text-decoration:underline;">Upgrade to Pro</a></div>')}else{var dl=Math.ceil((sub.e-Date.now())/86400000);$('#nl-ua-panel').prepend('<div style="background:rgba(34,197,94,0.2);color:#22c55e;text-align:center;padding:8px;font-weight:600;font-size:12px;"><i class="fas fa-crown"></i> '+sub.l+' Active - '+dl+' days left</div>')}}
 function nlSP(){var sub=nlCS();$('body').children().hide();var h='';h+='<div style="min-height:100vh;background:linear-gradient(135deg,#1a1a2e,#16213e);font-family:Inter,sans-serif;">';h+='<div style="background:rgba(255,255,255,0.12);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.15);padding:0 20px;"><div style="max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;height:60px;"><a href="/admin_index.php" style="color:#fff;font-weight:600;text-decoration:none;"><i class="fas fa-arrow-left"></i> Dashboard</a><span style="color:#FFD700;font-weight:700;">Subscription</span><div></div></div></div>';h+='<div style="max-width:1000px;margin:0 auto;padding:30px 20px;">';if(sub){var dl=Math.ceil((sub.e-Date.now())/86400000);h+='<div style="text-align:center;color:#fff;margin-bottom:30px;"><div style="font-size:64px;">👑</div><h1 style="font-size:36px;font-weight:900;">'+sub.l+' Active!</h1><p>'+sub.n+' - '+dl+' days</p></div>'}else{h+='<div style="text-align:center;color:#fff;margin-bottom:40px;"><h1 style="font-size:38px;font-weight:900;">Upgrade to <span style="background:linear-gradient(135deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Pro</span></h1><p>Unlock premium admin tools</p></div>';h+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;">';var pls=[{id:'pro_monthly',b:'#2865F1',bb:'#2865F1',bc:'#fff'},{id:'pro_yearly',b:'#FFD700',bb:'#FFD700',bc:'#1a1a2e'},{id:'vip_lifetime',b:'#e94560',bb:'#e94560',bc:'#fff'}];for(var i=0;i<pls.length;i++){var pl=pls[i];var plan=nlPay.plans[pl.id];h+='<div style="background:rgba(255,255,255,0.95);border-radius:16px;padding:24px 20px;text-align:center;border:2px solid '+pl.b+';">';h+='<div style="background:'+pl.b+';color:#fff;display:inline-block;padding:4px 14px;border-radius:50px;font-size:11px;margin-bottom:12px;">'+plan.label+'</div>';h+='<h3 style="font-size:20px;font-weight:800;">'+plan.name.replace('Pro ','').replace('VIP ','')+'</h3>';h+='<div style="font-size:38px;font-weight:900;color:'+pl.b+';margin:14px 0;">₦'+plan.price.toLocaleString()+'</div>';h+='<button onclick="nlIP(\''+pl.id+'\',\'paystack\')" style="width:100%;background:'+pl.bb+';color:'+pl.bc+';border:none;padding:11px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:5px;">Paystack</button>';h+='<button onclick="nlIP(\''+pl.id+'\',\'flutterwave\')" style="width:100%;background:transparent;color:'+pl.b+';border:1.5px solid '+pl.b+';padding:10px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;">Flutterwave</button>';h+='</div>'}h+='</div>'}h+='<div style="margin-top:24px;text-align:center;"><p style="color:rgba(255,255,255,0.6);font-size:12px;">Already have a key?</p><div style="display:flex;gap:6px;max-width:450px;margin:0 auto;"><input type="text" id="nl-ak" placeholder="NL-XXXX-XXXX-XXXX-XXXX-PLAN" style="flex:1;padding:10px 14px;border-radius:8px;border:none;font-size:13px;font-family:monospace;"><button onclick="nlMA()" style="background:#22c55e;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:13px;cursor:pointer;">Activate</button></div><p id="nl-am" style="margin-top:6px;font-size:12px;"></p></div>';h+='</div></div>';$('body').append(h);nlReady()}
 function nlMA(){var k=document.getElementById('nl-ak').value.trim().toUpperCase();var m=document.getElementById('nl-am');if(!k){m.style.color='#ef4444';m.textContent='Please enter a key';return}if(nlAK(k)){m.style.color='#22c55e';m.innerHTML='<i class="fas fa-check-circle"></i> Activated!';setTimeout(function(){window.location.href='/admin_index.php'},1500)}else{m.style.color='#ef4444';m.textContent='Invalid key'}}
@@ -170,6 +180,7 @@ function nlSPS(key,plan){var ov=document.createElement('div');ov.style.cssText='
 function nlSLP(tid){var tn=tid?nlUA.allTools[tid].name:'Premium';var ov=document.createElement('div');ov.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;';ov.innerHTML='<div style="background:#fff;border-radius:16px;padding:28px;max-width:420px;width:90%;text-align:center;"><div style="font-size:48px;">🔒</div><h3>'+tn+' is Locked</h3><p>Subscribe to unlock.</p><button onclick="this.parentElement.parentElement.remove();nlSP();" style="width:100%;background:#2865F1;color:#fff;border:none;padding:12px;border-radius:10px;margin:12px 0 6px;cursor:pointer;">View Plans</button><button onclick="this.parentElement.parentElement.remove();" style="width:100%;background:#f0f2f5;color:#6b7280;border:none;padding:10px;border-radius:10px;cursor:pointer;">Close</button></div>';document.body.appendChild(ov)}
 window.nlAL=nlAL;window.nlSP=nlSP;window.nlMA=nlMA;window.nlIP=nlIP;window.nlPP=nlPP;window.nlSPS=nlSPS;window.nlSLP=nlSLP;
 
+/* ===== ADMIN PANEL ===== */
 function nlBAP(at){
   if(window.location.href.indexOf('customize')>=0){nlOpenCustomizer();return}
   try{
@@ -226,6 +237,7 @@ window.nlSA=nlSA;
 function nlOPP(){var uid=(typeof UserID!=='undefined')?UserID:2;var ov=document.createElement('div');ov.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;';ov.innerHTML='<div style="background:#fff;border-radius:20px;padding:32px;max-width:450px;width:90%;"><h3>Change Password</h3><div style="margin-top:10px;"><label>New</label><input type="password" id="nl-new-pwd" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin-top:6px;box-sizing:border-box;"></div><div style="margin-top:10px;"><label>Confirm</label><input type="password" id="nl-confirm-pwd" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin-top:6px;box-sizing:border-box;"></div><div style="display:flex;gap:10px;margin-top:16px;"><button id="nl-submit-pwd" style="flex:1;background:#2865F1;color:#fff;border:none;padding:12px;border-radius:10px;cursor:pointer;">Update</button><button onclick="this.parentElement.parentElement.parentElement.remove()" style="flex:1;background:#f0f2f5;padding:12px;border-radius:10px;border:none;cursor:pointer;">Cancel</button></div></div>';document.body.appendChild(ov);document.getElementById('nl-submit-pwd').onclick=function(){var p1=document.getElementById('nl-new-pwd').value;var p2=document.getElementById('nl-confirm-pwd').value;if(!p1||p1.length<4){alert('4+ chars');return}if(p1!==p2){alert('No match');return}try{sessionStorage.setItem('nl_save_password',p1)}catch(e){}document.body.removeChild(ov);setTimeout(function(){window.location.href='/profile.php?action=change_pass&id='+uid+'&nl_save=1'},300)}}
 window.nlOPP=nlOPP;
 
+/* ===== FLOATING ADMIN BUTTON ===== */
 (function(){
   if(typeof GroupID==='undefined'||GroupID!==1)return;
   if(window.location.href.match(/admin_/))return;
@@ -248,132 +260,75 @@ window.nlOPP=nlOPP;
   setTimeout(addBtn,1500);
 })();
 
-$(document).ready(function(){
-var H=window.location.href, Q=window.location.search;
-var ia=(typeof GroupID!=='undefined'&&GroupID===1);
-var iF=H.indexOf('admin_forms.php')>=0;var iS=H.indexOf('admin_style.php')>=0;var iAI=H.indexOf('admin_index.php')>=0;
-var sT=(Q.indexOf('theme')>=0);var iAP=H.indexOf('admin_')>=0;
-
-/* Cache theme state so the header knows whether to skip splash next time */
-var hasThemeAttr = document.body && document.body.getAttribute('data-nl-theme');
-if (hasThemeAttr) {
-  try { localStorage.setItem('nl_has_theme', '1'); } catch(e) {}
-  if (window.nlRemoveSplash) window.nlRemoveSplash();
-  nlReady();
+/* ===== HELPERS FOR CARDS ===== */
+function nlInjectCardCSS(){
+  if(document.getElementById('nl-card-css'))return;
+  var s=document.createElement('style');
+  s.id='nl-card-css';
+  s.textContent =
+    '#nl-construction-card,#nl-welcome-card{position:fixed;inset:0;z-index:999999;display:flex;align-items:center;justify-content:center;background:#FFF8EE;background-image:radial-gradient(circle at 15% 20%,#FF4D6D 1.2px,transparent 1.6px),radial-gradient(circle at 70% 60%,#4DA8FF 1.2px,transparent 1.6px),radial-gradient(circle at 40% 85%,#3DDC97 1.2px,transparent 1.6px);background-size:80px 80px,120px 120px,100px 100px;font-family:Inter,system-ui,sans-serif;padding:16px;overflow-y:auto;}' +
+    '#nl-construction-card .nl-frame,#nl-welcome-card .nl-frame{max-width:640px;width:100%;position:relative;overflow:hidden;padding:14px;border:4px solid #0F172A;border-radius:24px;box-shadow:10px 10px 0 0 #0F172A;}' +
+    '#nl-construction-card .nl-frame{background:#7C5CFF;}' +
+    '#nl-welcome-card .nl-frame{background:#FFB84D;}' +
+    '#nl-construction-card .nl-frame::before,#nl-welcome-card .nl-frame::before{content:"";position:absolute;top:-50px;right:-50px;width:120px;height:120px;border-radius:50%;border:4px solid #0F172A;opacity:0.9;}' +
+    '#nl-construction-card .nl-frame::before{background:#FFB84D;}' +
+    '#nl-welcome-card .nl-frame::before{background:#7C5CFF;}' +
+    '#nl-construction-card .nl-frame::after,#nl-welcome-card .nl-frame::after{content:"";position:absolute;bottom:-40px;left:-40px;width:100px;height:100px;border-radius:50%;border:4px solid #0F172A;opacity:0.9;}' +
+    '#nl-construction-card .nl-frame::after{background:#3DDC97;}' +
+    '#nl-welcome-card .nl-frame::after{background:#FF4D6D;}' +
+    '#nl-construction-card .nl-inner,#nl-welcome-card .nl-inner{background:#FFF;border-radius:16px;padding:26px 20px;border:3px solid #0F172A;box-shadow:5px 5px 0 0 #0F172A;position:relative;z-index:1;text-align:center;}' +
+    '#nl-construction-card .nl-emoji,#nl-welcome-card .nl-emoji{display:inline-flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:50%;border:4px solid #0F172A;box-shadow:5px 5px 0 0 #0F172A;font-size:38px;margin-bottom:16px;animation:nlCardFloat 3s ease-in-out infinite;transform:rotate(-3deg);}' +
+    '#nl-construction-card .nl-emoji{background:#3DDC97;}' +
+    '#nl-welcome-card .nl-emoji{background:#FFD700;}' +
+    '#nl-construction-card .nl-badge,#nl-welcome-card .nl-badge{display:inline-flex;align-items:center;gap:6px;background:#FFF;border:3px solid #0F172A;color:#0F172A;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;padding:5px 14px;border-radius:50px;margin-bottom:14px;box-shadow:3px 3px 0 0 #0F172A;transform:rotate(-2deg);}' +
+    '#nl-construction-card .nl-title,#nl-welcome-card .nl-title{color:#0F172A;font-size:28px;font-weight:900;letter-spacing:-1px;line-height:1.1;margin:0 0 12px;font-family:Space Grotesk,Inter,sans-serif;}' +
+    '#nl-construction-card .nl-title span,#nl-welcome-card .nl-title span{display:inline-block;color:#FFF;padding:0 10px;border:3px solid #0F172A;border-radius:10px;box-shadow:4px 4px 0 0 #0F172A;margin-top:4px;}' +
+    '#nl-construction-card .nl-title span{background:#FF4D6D;transform:rotate(-1.5deg);}' +
+    '#nl-welcome-card .nl-title span{background:#7C5CFF;transform:rotate(-1.5deg);}' +
+    '#nl-construction-card .nl-desc,#nl-welcome-card .nl-desc{color:#334155;font-size:14px;font-weight:500;line-height:1.6;margin:0 0 20px;}' +
+    '#nl-construction-card .nl-owner-box{background:#FFF8EE;border:3px solid #0F172A;border-radius:12px;padding:14px 16px;margin:0 0 18px;box-shadow:3px 3px 0 0 rgba(15,23,42,0.15);text-align:left;}' +
+    '#nl-construction-card .nl-owner-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;color:#0F172A;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;}' +
+    '#nl-construction-card .nl-owner-text{font-size:12.5px;color:#334155;line-height:1.55;font-weight:500;}' +
+    '#nl-construction-card .nl-dots{display:flex;justify-content:center;gap:10px;margin:0 0 20px;}' +
+    '#nl-construction-card .nl-dots span{width:12px;height:12px;border-radius:50%;border:3px solid #0F172A;animation:nlCardBounce 1.2s ease-in-out infinite;}' +
+    '#nl-construction-card .nl-dots span:nth-child(1){background:#FF4D6D;}' +
+    '#nl-construction-card .nl-dots span:nth-child(2){background:#FFB84D;animation-delay:0.2s;}' +
+    '#nl-construction-card .nl-dots span:nth-child(3){background:#3DDC97;animation-delay:0.4s;}' +
+    '#nl-construction-card .nl-cta,#nl-welcome-card .nl-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;border:3px solid #0F172A;border-radius:12px;text-decoration:none;font-size:14px;font-weight:800;font-family:Space Grotesk,Inter,sans-serif;box-shadow:4px 4px 0 0 #0F172A;transition:all 0.15s;width:100%;max-width:320px;margin:0 auto;}' +
+    '#nl-construction-card .nl-cta{background:#FF4D6D;color:#FFF;}' +
+    '#nl-welcome-card .nl-cta{background:#FF4D6D;color:#FFF;}' +
+    '#nl-welcome-card .nl-cta.secondary{background:#FFF;color:#0F172A;margin-top:10px;}' +
+    '#nl-construction-card .nl-cta:hover,#nl-welcome-card .nl-cta:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 0 #0F172A;}' +
+    '#nl-construction-card .nl-footnote,#nl-welcome-card .nl-footnote{margin:18px 0 0;font-size:10.5px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:1px;}' +
+    '#nl-welcome-card .nl-actions{display:flex;flex-direction:column;gap:0;align-items:center;}' +
+    '@keyframes nlCardFloat{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-10px) rotate(3deg);}}' +
+    '@keyframes nlCardBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}' +
+    '@media (max-width:480px){' +
+      '#nl-construction-card .nl-title,#nl-welcome-card .nl-title{font-size:22px;letter-spacing:-0.5px;}' +
+      '#nl-construction-card .nl-inner,#nl-welcome-card .nl-inner{padding:22px 16px;}' +
+      '#nl-construction-card .nl-emoji,#nl-welcome-card .nl-emoji{width:70px;height:70px;font-size:32px;}' +
+      '#nl-construction-card .nl-desc,#nl-welcome-card .nl-desc{font-size:13px;}' +
+      '#nl-construction-card .nl-owner-text{font-size:12px;}' +
+      '#nl-construction-card .nl-cta,#nl-welcome-card .nl-cta{padding:12px 20px;font-size:13px;}' +
+      '#nl-construction-card .nl-frame,#nl-welcome-card .nl-frame{padding:10px;}' +
+    }' +
+    '@media (prefers-reduced-motion: reduce){#nl-construction-card .nl-emoji,#nl-welcome-card .nl-emoji,#nl-construction-card .nl-dots span{animation:none !important;}}';
+  document.head.appendChild(s);
 }
 
-if(nlIsHub && iF && Q.indexOf('nl_sync=')>=0)return;
-if(nlIsHub && iF && Q.indexOf('nl_sync=')<0){
-  var _hf=setInterval(function(){if($('#nl-header-overlay').length>0){$('#nl-header-overlay,#nl-footer-overlay').remove();$('.nl-textarea-wrapper').find('textarea').unwrap();$('textarea[name="form[o_html_header]"],textarea[name="form[o_html_footer]"]').css({visibility:'visible',opacity:1,'pointer-events':'auto'}).removeAttr('readonly tabindex');$('.nl-toggle-settings').hide();clearInterval(_hf)}},200);setTimeout(function(){clearInterval(_hf)},10000);
-}
+/* ===== LOGIN PAGE REDESIGN ===== */
+function nlRenderLogin(){
+  if($('#nl-login-page').length) return;
+  
+  var $origForm = $('form').has('input[name="form[req_username]"]').first();
+  var action = $origForm.length ? $origForm.attr('action') : '/login.php?action=in';
+  var redirect = $('input[name="form[redirect_url]"]').first().val() || '/';
 
-var isPS=(H.indexOf('profile.php?section=essentials')>=0||H.indexOf('profile.php?action=change_pass')>=0);
-var pm=H.match(/[?&]id=(\d+)/);var pid=pm?parseInt(pm[1]):0;var aid=(typeof UserID!=='undefined')?UserID:2;
-if(isPS&&pid===aid&&H.indexOf('nl_save=1')<0){window.location.href='/admin_index.php';return}
-if(H.indexOf('profile.php')>=0&&H.indexOf('nl_save=1')>=0){
-  var isPC=H.indexOf('change_pass')>=0;
-  if(isPC){var sP='';try{sP=sessionStorage.getItem('nl_save_password')||''}catch(e){}try{sessionStorage.removeItem('nl_save_password')}catch(e){}nlReady();$('body').children().hide();$('body').prepend('<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#2865F1;z-index:99999;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><i class="fas fa-sync-alt fa-spin" style="font-size:48px;"></i><h2>Updating password...</h2></div></div>');setTimeout(function(){try{var pf1=document.querySelector('input[name="req_new_password1"]');var pf2=document.querySelector('input[name="req_new_password2"]');if(pf1&&sP)pf1.value=sP;if(pf2&&sP)pf2.value=sP;var sb=document.querySelector('input[type="submit"][value="Submit"], button[type="submit"]');if(sb)sb.click()}catch(err){}setTimeout(function(){window.location.href='/admin_index.php'},2000)},800);return}
-  else{var sU='';try{sU=sessionStorage.getItem('nl_save_username')||''}catch(e){}var sE='';try{sE=sessionStorage.getItem('nl_save_email')||''}catch(e){}try{sessionStorage.removeItem('nl_save_username')}catch(e){}try{sessionStorage.removeItem('nl_save_email')}catch(e){}nlReady();$('body').children().hide();$('body').prepend('<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#2865F1;z-index:99999;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><i class="fas fa-sync-alt fa-spin" style="font-size:48px;"></i><h2>Saving...</h2></div></div>');setTimeout(function(){try{var uf=document.getElementById('fld1')||document.querySelector('input[name="req_username"]');var ef=document.getElementById('fld2')||document.querySelector('input[name="req_email"]');if(uf&&sU)uf.value=sU;if(ef&&sE)ef.value=sE;var sb2=document.querySelector('input[type="submit"][value="Submit"], button[type="submit"]');if(sb2)sb2.click()}catch(err){}setTimeout(function(){window.location.href='/admin_index.php'},2000)},800);return}
-}
+  $('body').children().hide();
 
-if(Q.indexOf('theme')>=0&&Q.indexOf('nl_done=1')<0){var nc=true;try{if(sessionStorage.getItem('nl_custom_style_enabled')==='true')nc=false}catch(e){}if(nc){window.location.href='/admin_style.php?nl_auto=1';return}}
-if(H.indexOf('nl_auto=1')>=0){$('body').children().hide();var aH='<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><div style="font-size:48px;margin-bottom:16px;"><i class="fas fa-sync-alt fa-spin"></i></div><h2>Configuring your site...</h2></div></div>';$('body').append(aH);nlReady();setTimeout(function(){var $sl=$('select[name="form[o_custom_style]"]');if($sl.length>0){$sl.val('1');var $fm=$sl.closest('form');if($fm.length>0){var fd=$fm.serialize();if(fd.indexOf('save')===-1)fd+='&save=1';$.ajax({url:$fm.attr('action')||H,type:'POST',data:fd,success:function(){sessionStorage.setItem('nl_custom_style_enabled','true');setTimeout(function(){window.location.href='/index.php?theme&nl_done=1'},800)},error:function(){sessionStorage.setItem('nl_custom_style_enabled','true');setTimeout(function(){window.location.href='/index.php?theme&nl_done=1'},500)}})}else{setTimeout(function(){window.location.href='/index.php?theme&nl_done=1'},500)}}else{setTimeout(function(){window.location.href='/index.php?theme&nl_done=1'},500)}},1000);return}
-
-if(iF && !nlIsHub){var cTS=false;try{if(sessionStorage.getItem('nl_allow_forms_access')==='true'){cTS=true;sessionStorage.removeItem('nl_allow_forms_access')}}catch(e){}if(!cTS&&Q.indexOf('nl_type=')<0){nlReady();$('body').children().hide();$('body').append('<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><div style="font-size:64px;margin-bottom:16px;"><i class="fas fa-lock"></i></div><h2 style="font-size:28px;font-weight:800;">Access Restricted</h2><p>Please use the Theme Selector to configure your forum.</p><p style="font-size:12px;opacity:0.6;">Redirecting...</p></div></div>');setTimeout(function(){window.location.href='/index.php?theme'},2500);return}}
-
-if(iAI&&ia){
-  if(H.indexOf('customize')>=0){nlReady();nlOpenCustomizer();return}
-  var at2=nlDT();if(at2){nlBAP(at2);return}
-  try{var ct=sessionStorage.getItem('nl_detected_theme');var cT=sessionStorage.getItem('nl_detected_time');if(ct&&cT){var el=Date.now()-parseInt(cT);if(el<300000){nlBAP(ct);return}}}catch(e){}
-  nlReady();$('body').children().hide();$('body').append('<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><div style="font-size:48px;margin-bottom:16px;"><i class="fas fa-sync-alt fa-spin"></i></div><h2>Loading Admin Panel</h2></div></div>');
-  $.ajax({url:'/admin_forms.php',type:'GET',dataType:'html',timeout:10000,success:function(fH){var det='punbb';var fm2=fH.match(/<textarea[^>]*name="form\[o_html_footer\]"[^>]*>([\s\S]*?)<\/textarea>/i);if(fm2&&fm2[1]){var tcm=fm2[1].match(/data-nl-theme['"]?\s*,\s*['"](\w+)['"]/);if(tcm&&tcm[1])det=tcm[1]}if(det==='punbb'){var hm2=fH.match(/<textarea[^>]*name="form\[o_html_header\]"[^>]*>([\s\S]*?)<\/textarea>/i);if(hm2&&hm2[1]){var hc2=hm2[1];if(hc2.indexOf('food-header')>=0)det='foodblog';else if(hc2.indexOf('Nairaland')>=0)det='nairaland';else if(hc2.indexOf('Portfolio')>=0)det='portfolio';else if(hc2.indexOf('Landing')>=0)det='landing';else if(hc2.indexOf('Grocery')>=0)det='grocery';else if(hc2.indexOf('Fashion')>=0)det='fashion';else if(hc2.indexOf('Tech Blog')>=0)det='techblog';else if(hc2.indexOf('Travel')>=0)det='travel';else if(hc2.indexOf('News')>=0)det='news'}}try{sessionStorage.setItem('nl_detected_theme',det);sessionStorage.setItem('nl_detected_time',Date.now().toString())}catch(e){}$('#nl-loading').remove();nlBAP(det)},error:function(){try{var ft2=sessionStorage.getItem('nl_detected_theme');if(ft2){nlBAP(ft2);return}}catch(e){}nlBAP('punbb')}});return
-}
-
-if(sT&&ia){$('body').children().hide();var h2='<div style="min-height:100vh;background:#2865F1;font-family:Inter,sans-serif;padding:40px 24px;"><div style="max-width:1280px;margin:0 auto;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;flex-wrap:wrap;gap:12px;"><img src="https://forumstatic.ru/files/001c/ac/51/57803.jpg" style="height:38px;border-radius:8px;"><div style="display:flex;gap:20px;"><a href="/admin_index.php" style="color:#fff;font-weight:600;text-decoration:none;font-size:14px;"><i class="fas fa-tachometer-alt"></i> Admin</a><a href="/" style="color:#fff;font-weight:600;text-decoration:none;font-size:14px;"><i class="fas fa-home"></i> View Site</a></div></div><div style="text-align:center;margin-bottom:48px;"><h1 style="font-size:48px;font-weight:900;color:#fff;">Setup your <span style="background:linear-gradient(135deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">admin panel</span></h1><p style="color:rgba(255,255,255,0.85);font-size:18px;">Choose a theme.</p></div><div style="background:#fff;border-radius:24px;padding:32px;"><div class="nl-theme-grid">';var th=[{id:'punbb',name:'PunBB',desc:'Clean, fast, classic',file:'Built-in',bg:'#f0f2f5',bg2:'#d1d5db',color:'#1a1a2e'},{id:'nairaland',name:'Nairaland',desc:'Cream & green',file:'15535.txt',bg:'#f6f6ec',bg2:'#c8d4c0',color:'#185518'},{id:'portfolio',name:'Portfolio',desc:'Dark professional',file:'65113.txt',bg:'#1a1a2e',bg2:'#16213e',color:'#e94560'},{id:'landing',name:'Landing',desc:'Purple gradient',file:'86531.txt',bg:'#667eea',bg2:'#764ba2',color:'#fff'},{id:'grocery',name:'Grocery',desc:'Fresh green',file:'15517.txt',bg:'#11998e',bg2:'#38ef7d',color:'#fff'},{id:'foodblog',name:'Food Blog',desc:'Orange & red',file:'53940.txt',bg:'#f12711',bg2:'#f5af19',color:'#fff'},{id:'fashion',name:'Fashion',desc:'Coral & pink',file:'97250.txt',bg:'#ff6b6b',bg2:'#ee5a24',color:'#fff'},{id:'techblog',name:'Tech Blog',desc:'Cyber blue',file:'90500.txt',bg:'#0f2027',bg2:'#2c5364',color:'#00d4ff'},{id:'travel',name:'Travel',desc:'Ocean blue',file:'13426.txt',bg:'#00b4db',bg2:'#0083b0',color:'#fff'},{id:'news',name:'News',desc:'Black & red',file:'38831.txt',bg:'#434343',bg2:'#000000',color:'#e63946'}];for(var i=0;i<th.length;i++){var tt2=th[i];h2+='<div onclick="nlIT(\''+tt2.id+'\')" style="border:2px solid #e8ecf1;border-radius:16px;overflow:hidden;cursor:pointer;background:#fff;"><div style="height:70px;display:flex;align-items:center;justify-content:center;font-weight:700;background:linear-gradient(135deg,'+tt2.bg+','+tt2.bg2+');color:'+tt2.color+';">'+tt2.name+'</div><div style="padding:10px 12px;"><h4 style="color:#1a1a2e;font-size:11pt;font-weight:700;margin:0 0 2px;">'+tt2.name+'</h4><p style="color:#6b7280;font-size:9pt;margin:0;">'+tt2.desc+'</p><span style="display:inline-block;background:#f0f2f5;color:#6b7280;font-size:8pt;padding:1px 8px;border-radius:50px;margin-top:4px;">'+tt2.file+'</span></div></div>'}h2+='</div></div></div></div>';$('body').append(h2);nlReady();return}
-
-if(iS&&ia){nlReady();setTimeout(function(){var $sl2=$('select[name="form[o_custom_style]"]');if($sl2.length>0){if($sl2.val()!=='1'){$sl2.val('1').trigger('change')}$sl2.css({display:'none'})}},500);setTimeout(function(){$('input[type="radio"][value="1"]').each(function(){if(!$(this).prop('checked')){$(this).prop('checked',true)}})},800);return}
-
-if(iF){
-  var oT='punbb';if(Q.indexOf('nl_type=nairaland')>=0)oT='nairaland';else if(Q.indexOf('nl_type=portfolio')>=0)oT='portfolio';else if(Q.indexOf('nl_type=landing')>=0)oT='landing';else if(Q.indexOf('nl_type=grocery')>=0)oT='grocery';else if(Q.indexOf('nl_type=foodblog')>=0)oT='foodblog';else if(Q.indexOf('nl_type=fashion')>=0)oT='fashion';else if(Q.indexOf('nl_type=techblog')>=0)oT='techblog';else if(Q.indexOf('nl_type=travel')>=0)oT='travel';else if(Q.indexOf('nl_type=news')>=0)oT='news';var prv=nlTP[oT]||nlTP.punbb;var $ht=$('textarea[name="form[o_html_header]"]');if($ht.length>0){var ph=null;try{ph=sessionStorage.getItem('nl_install_code')}catch(e){}if(ph!==null&&ph!==undefined){$ht.val(ph);try{sessionStorage.removeItem('nl_install_code')}catch(e){}}if(!$ht.parent().hasClass('nl-textarea-wrapper')){$ht.wrap('<div class="nl-textarea-wrapper"></div>')}$ht.attr('readonly','readonly').attr('tabindex','-1')}var $ft=$('textarea[name="form[o_html_footer]"]');if($ft.length>0){var pf=null;try{pf=sessionStorage.getItem('nl_install_footer')}catch(e){}if(pf!==null&&pf!==undefined){$ft.val(pf);try{sessionStorage.removeItem('nl_install_footer')}catch(e){}}if(!$ft.parent().hasClass('nl-textarea-wrapper')){$ft.wrap('<div class="nl-textarea-wrapper"></div>')}$ft.attr('readonly','readonly').attr('tabindex','-1')}$('#nl-header-overlay,#nl-footer-overlay').remove();var hov='<div class="nl-header-overlay" id="nl-header-overlay"><h3>'+prv.name+' - Header Code</h3><div class="nl-header-preview" style="background:linear-gradient(135deg,'+prv.bg+','+prv.bg2+');color:'+prv.color+';">'+prv.name+'</div><p>Header code loaded.</p><span class="nl-overlay-note">Save to apply</span></div>';var fov='<div class="nl-header-overlay" id="nl-footer-overlay"><h3>'+prv.name+' - Admin Config</h3><div class="nl-header-preview" style="background:linear-gradient(135deg,'+prv.bg+','+prv.bg2+');color:'+prv.color+';">Admin: '+prv.name+'</div><p>Admin config loaded.</p><span class="nl-overlay-note">Save to apply</span></div>';if($ht.length>0)$ht.parent().append(hov);if($ft.length>0)$ft.parent().append(fov);$('#nl-header-overlay,#nl-footer-overlay').on('click mousedown mouseup keydown keypress focus',function(e){e.preventDefault();e.stopPropagation();return false});var $sb2=$('input[name="save"],input[type="submit"][value*="Save"]');if($sb2.length>0){$sb2.css({background:'#2865F1',color:'#fff',padding:'14px 36px','font-size':'15pt',border:'3px solid #1a4bbf','border-radius':'12px'})}if($ht.closest('form').length>0){
-      $ht.closest('form').prepend('<div class="nl-toggle-settings"><a id="nl-toggle-btn" onclick="nlTgl()">Show All Settings</a></div>');
-      var $fm3=$ht.closest('form');
-      var launchedFromTheme = Q.indexOf('nl_type=')>=0;
-      if(launchedFromTheme){
-        setTimeout(function(){
-          if($fm3.length>0){
-            $('body').children().hide();
-            $('body').append('<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><div style="font-size:64px;margin-bottom:16px;"><i class="fas fa-check-circle"></i></div><h2>Applying '+prv.name+' theme...</h2><p style="opacity:0.85;">This only takes a moment</p></div></div>');
-            var fd3=$fm3.serialize();
-            if(fd3.indexOf('save')===-1)fd3+='&save=1';
-            $.ajax({url:$fm3.attr('action')||H,type:'POST',data:fd3,complete:function(){
-              try{sessionStorage.setItem('nl_custom_style_enabled','true')}catch(e){}
-              setTimeout(function(){window.location.href='/admin_index.php'},1200);
-            }});
-          }
-        }, 800);
-      } else {
-        $fm3.off('submit').on('submit',function(e){e.preventDefault();e.stopPropagation();$('body').children().hide();$('body').append('<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><h2>Theme Saved!</h2><p>Redirecting...</p></div></div>');var fd3=$fm3.serialize();if(fd3.indexOf('save')===-1)fd3+='&save=1';$.ajax({url:$fm3.attr('action')||H,type:'POST',data:fd3,complete:function(){try{sessionStorage.setItem('nl_custom_style_enabled','true')}catch(e){}setTimeout(function(){window.location.href='/admin_index.php'},2000)}});return false});
-      }
-    }nlReady();return
-}
-
-if(ia&&iAP&&!iAI&&!iS&&!iF&&!sT){
-  var at3=nlDT()||'punbb';var p2=nlUA.palettes[at3]||nlUA.palettes.punbb;var pi={admin_categories:{name:'Categories',icon:'fa-folder'},admin_forums:{name:'Forums',icon:'fa-comments'},admin_users:{name:'Users',icon:'fa-users'},admin_fields:{name:'Profile Fields',icon:'fa-user-edit'},admin_options:{name:'Options',icon:'fa-cog'},admin_permissions:{name:'Permissions',icon:'fa-lock'},admin_groups:{name:'User Groups',icon:'fa-user-tag'},admin_pages:{name:'Pages',icon:'fa-file-alt'},admin_censoring:{name:'Censoring',icon:'fa-ban'},admin_files:{name:'Files',icon:'fa-image'},admin_domain:{name:'Domain',icon:'fa-globe'},admin_backups:{name:'Backups',icon:'fa-database'},admin_scripts:{name:'Scripts',icon:'fa-terminal'},admin_logs:{name:'Forum Logs',icon:'fa-history'},admin_paid_services:{name:'Paid Services',icon:'fa-credit-card'},admin_mail:{name:'Mass Mailing',icon:'fa-envelope'}};var ci={name:'Admin Tools',icon:'fa-tools'};var pk=Object.keys(pi);for(var k=0;k<pk.length;k++){if(H.indexOf(pk[k])>=0){ci=pi[pk[k]];break}}var pt=$('#pun-admain h1, #pun-main h1, h1').first().text()||ci.name;var wH='<div id="nl-tool-page" style="min-height:100vh;background:linear-gradient(135deg,'+p2.bg+','+p2.bgGrad+');padding-bottom:40px;font-family:Inter,sans-serif;"><div style="background:rgba(255,255,255,0.12);padding:0 24px;"><div style="max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;height:64px;"><a href="/admin_index.php" style="color:#fff;font-weight:600;text-decoration:none;"><i class="fas fa-arrow-left"></i> Dashboard</a><span style="color:#fff;font-weight:700;"><i class="fas '+ci.icon+'" style="color:#FFD700;"></i> '+ci.name+'</span></div></div><div style="max-width:1280px;margin:24px auto;width:96%;"><div style="background:#fff;border-radius:20px;padding:32px;"><h1 style="color:'+p2.text+';font-size:24px;font-weight:800;margin:0 0 20px;">'+pt+'</h1><div id="nl-tool-content"></div></div></div></div>';$('body').css({margin:'0',padding:'0',background:p2.bg});$('#pun_wrap,#pun').css({background:'transparent',margin:'0',padding:'0','max-width':'100%',width:'100%'});$('#pun-title,#pun-navlinks,#pun-ulinks,#pun-status,#pun-break1,#pun-crumbs1,#pun-break2,#pun-adnav,#pun-break3,#pun-crumbs2,#pun-break4,#pun-about,#pun-stats').hide();$('body').prepend(wH);$('#pun-main, #pun-admain, .main').appendTo('#nl-tool-content');nlReady();return
-}
-
-if(window.location.pathname.indexOf('login.php')>=0 || window.location.pathname.indexOf('register.php')>=0){
-  if($('form').has('input[name="form[req_username]"]').length > 0){
-    nlRenderLogin();
-    return;
-  }
-}
-
-if(window.location.pathname.indexOf('profile.php')>=0){nlReady();return}
-
-var isHome = (window.location.pathname === '/' || window.location.pathname === '/index.php');
-if(isHome){
-  var themeAttr = document.body && document.body.getAttribute('data-nl-theme');
-  if(!themeAttr){
-    $('#pun-index .main, #pun .main, .punbb .main, #pun-stats, #pun-announcement, #pun-crumbs1, #pun-crumbs2, #pun-title, #pun-navlinks, #pun-ulinks, #pun-status').hide();
-    if($('#nl-construction-card, #nl-welcome-card').length === 0){
-      nlInjectCardCSS();
-      if(!ia){
-        var cardHTML='<div id="nl-construction-card"><div class="nl-frame"><div class="nl-inner"><div class="nl-emoji">🚧</div><div class="nl-badge"><i class="fas fa-hammer" style="color:#FF6B35;"></i> Work in Progress</div><h1 class="nl-title">We\'re building<br><span>something great</span></h1><p class="nl-desc">This website is still being set up.<br>Please check back soon — good things take time ✨</p><div class="nl-owner-box"><div class="nl-owner-title"><i class="fas fa-user-shield" style="color:#FF4D6D;"></i> Site Owner?</div><div class="nl-owner-text">Log in and pick a theme to make your website live. Only takes a minute — don\'t worry, nothing is broken.</div></div><div class="nl-dots"><span></span><span></span><span></span></div><a href="/login.php" class="nl-cta"><i class="fas fa-sign-in-alt"></i> Admin Login</a><p class="nl-footnote">Powered by MyWebName</p></div></div></div>';
-        $('body').prepend(cardHTML);
-      }else{
-        var cardHTMLW='<div id="nl-welcome-card"><div class="nl-frame"><div class="nl-inner"><div class="nl-emoji">👋</div><div class="nl-badge"><i class="fas fa-crown" style="color:#FFD700;"></i> Admin Detected</div><h1 class="nl-title">Welcome, Admin! 🎉<br><span>let\'s set things up</span></h1><p class="nl-desc">Your website is ready to go live.<br>Pick a theme to get started — takes less than a minute.</p><div class="nl-actions"><a href="/index.php?theme" class="nl-cta"><i class="fas fa-paint-brush"></i> Choose a Theme</a><a href="/admin_index.php" class="nl-cta secondary"><i class="fas fa-tachometer-alt"></i> Go to Admin Panel</a></div><p class="nl-footnote">You are logged in as admin</p></div></div></div>';
-        $('body').prepend(cardHTMLW);
-      }
-    }
-    nlReady();
-    return;
-  }
-}
-
-var skip = H.match(/admin_/);
-if (!skip) {
-  var tries = 0, maxTries = 60, applied = false;
-  var iv = setInterval(function(){
-    tries++;
-    var themeAttr2 = document.body && document.body.getAttribute('data-nl-theme');
-    var hasThemeDom = document.querySelector('[class*="-logo"],[class*="-hero"],.nl-title h1 a,.nl-featured,.nl-boards-table');
-    if ((themeAttr2 || hasThemeDom) && !applied) {
-      try { nlInjectCustomization(); } catch(e) {}
-      setTimeout(function(){ try { nlInjectCustomization(); } catch(e) {} }, 120);
-      applied = true;
-      try { localStorage.setItem('nl_has_theme', '1'); } catch(e) {}
-      if (window.nlRemoveSplash) window.nlRemoveSplash();
-      setTimeout(nlReady, 320);
-      clearInterval(iv);
-    }
-    if (tries >= maxTries) { clearInterval(iv); if (window.nlRemoveSplash) window.nlRemoveSplash(); nlReady(); }
-  }, 80);
-} else {
-  nlReady();
-}
-});
-
-window.addEventListener('message',function(ev){if(ev&&ev.data&&ev.data.type==='nl-preview'&&ev.data.data){setTimeout(function(){try{nlInjectCustomization(ev.data.data)}catch(e){}},100)}});
-window.nlTS=nlTS;window.nlTgl=nlTgl;
-
-})();
+  var css = document.createElement('style');
+  css.textContent =
+    '#nl-login-page{position:fixed;inset:0;z-index:999999;display:flex;align-items:center;justify-content:center;background:#FFF8EE;background-image:radial-gradient(circle at 15% 20%,#FF4D6D 1.2px,transparent 1.6px),radial-gradient(circle at 70% 60%,#4DA8FF 1.2px,transparent 1.6px),radial-gradient(circle at 40% 85%,#3DDC97 1.2px,transparent 1.6px);background-size:80px 80px,120px 120px,100px 100px;font-family:Inter,system-ui,sans-serif;padding:16px;overflow-y:auto;}' +
+    '#nl-login-page .nl-frame{max-width:420px;width:100%;position:relative;overflow:hidden;padding:14px;background:#7C5CFF;border:4px solid #0F172A;border-radius:24px;box-shadow:10px 10px 0 0 #0F172A;}' +
+    '#nl-login-page .nl-frame::before{content:"";position:absolute;top:-50px;right:-50px;width:110px;height:110px;border-radius:50%;background:#FFB84D;border:4px solid #0F172A;opacity:0.9;}' +
+    '#nl-login-page .nl-frame::after{content:""
