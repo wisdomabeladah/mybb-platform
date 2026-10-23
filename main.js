@@ -1,4 +1,4 @@
-/* MYWEB PLATFORM — main.js v21 */
+/* MYWEB PLATFORM — main.js v22 */
 (function(){
 'use strict';
 
@@ -107,172 +107,76 @@ function nlForceCustomStyleAndProceed(redirectUrl){
 }
 window.nlForceCustomStyleAndProceed = nlForceCustomStyleAndProceed;
 
-/* ===== MEMPHIS AUTH PAGES (login / register / forget) — only rendered when no theme ===== */
+/* ===== MEMPHIS AUTH PAGES (style-only — real forms stay intact) ===== */
 function nlRenderLogin(){
   try{
-    var isForget = window.location.href.indexOf('action=forget')>=0;
     var isRegister = window.location.pathname.indexOf('register.php')>=0;
+    var isForget = window.location.href.indexOf('action=forget')>=0;
 
-    var errText = '';
-    var $errEl = $('#pun-main .info-box.error, #pun-main .error, #pun-main .formal .info-box').first();
-    if ($errEl.length) {
-      var t = $errEl.text().replace(/\s+/g,' ').trim();
-      if (t.length > 0 && t.length < 200) errText = t;
-    }
+    var $container = $('#pun-main').first();
+    if (!$container.length) { nlReady(); return; }
 
-    var $realForm = $('#pun-main form#login, #pun-main form#register, #pun-main form#forget, #pun-main form').first();
-    var formAction = $realForm.length ? ($realForm.attr('action') || '/login.php?action=in') : '/login.php?action=in';
-    var isForgetForm = isForget || formAction.indexOf('forget')>=0;
+    var accColor = isRegister ? '#FF4D6D' : (isForget ? '#FFB84D' : '#7C5CFF');
+    var accShadow = isRegister ? '#FF4D6D' : (isForget ? '#7C5CFF' : '#FF4D6D');
+    var emoji = isRegister ? '✨' : (isForget ? '🔑' : '👋');
+    var heading = isRegister ? 'Create your account' : (isForget ? 'Reset your password' : 'Welcome back!');
+    var subtext = isRegister ? 'Sign up to join the community.' : (isForget ? 'We\'ll send a reset link.' : 'Log in to manage your website.');
+
+    var $wrap = $(
+      '<div id="nl-auth-page" style="min-height:100vh;background:#FFF8EE;background-image:radial-gradient(circle at 15% 20%,#FF4D6D 1.2px,transparent 1.6px),radial-gradient(circle at 70% 60%,#4DA8FF 1.2px,transparent 1.6px),radial-gradient(circle at 40% 85%,#3DDC97 1.2px,transparent 1.6px);background-size:80px 80px,120px 120px,100px 100px;font-family:Inter,system-ui,sans-serif;padding:40px 24px;box-sizing:border-box;">' +
+        '<div style="max-width:560px;margin:0 auto;">' +
+          '<div style="background:' + accColor + ';border:4px solid #0F172A;border-radius:28px 28px 0 0;padding:20px;box-shadow:12px 0 0 0 #0F172A;position:relative;overflow:hidden;">' +
+            '<div style="position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:' + accShadow + ';border:4px solid #0F172A;opacity:0.85;"></div>' +
+            '<div style="position:relative;z-index:1;text-align:center;">' +
+              '<div style="display:inline-flex;align-items:center;justify-content:center;width:80px;height:80px;border-radius:50%;background:#FFF;border:4px solid #0F172A;box-shadow:4px 4px 0 0 #0F172A;font-size:38px;margin-bottom:14px;">' + emoji + '</div>' +
+              '<h1 style="color:#0F172A;font-size:26px;font-weight:900;letter-spacing:-1px;line-height:1.1;margin:0 0 8px 0;font-family:Space Grotesk, Inter, sans-serif;text-shadow:2px 2px 0 #FFF;">' + heading + '</h1>' +
+              '<p style="color:#0F172A;font-size:14px;font-weight:600;margin:0;opacity:0.85;">' + subtext + '</p>' +
+            '</div>' +
+          '</div>' +
+          '<div id="nl-auth-body" style="background:#FFF;border:4px solid #0F172A;border-top:none;border-radius:0 0 28px 28px;padding:26px 22px;box-shadow:12px 12px 0 0 #0F172A;"></div>' +
+        '</div>' +
+      '</div>'
+    );
 
     $('body').children().hide();
+    $('body').append($wrap);
 
-    var accColor = isRegister ? '#FF4D6D' : (isForgetForm ? '#FFB84D' : '#7C5CFF');
-    var accShadow = isRegister ? '#FF4D6D' : (isForgetForm ? '#7C5CFF' : '#FF4D6D');
-    var emoji = isRegister ? '✨' : (isForgetForm ? '🔑' : '👋');
-    var badgeIcon = isRegister ? 'fa-user-plus' : (isForgetForm ? 'fa-key' : 'fa-sign-in-alt');
-    var badgeTxt = isRegister ? 'Join Us' : (isForgetForm ? 'Password Reset' : 'Welcome Back');
+    $container.detach().appendTo('#nl-auth-body').show();
+    $('#pun-title, #pun-navlinks, #pun-ulinks, #pun-status, #pun-crumbs1, #pun-crumbs2, #pun-break1, #pun-break2, #pun-break3, #pun-break4, #pun-stats, #pun-about').hide();
 
-    var errBanner = errText
-      ? '<div style="background:#FEE2E2;border:3px solid #0F172A;border-radius:12px;padding:12px 16px;margin:0 0 18px 0;box-shadow:4px 4px 0 0 #0F172A;color:#991B1B;font-size:13px;font-weight:700;display:flex;align-items:center;gap:10px;"><i class="fas fa-exclamation-circle" style="font-size:16px;"></i><span>' + errText + '</span></div>'
-      : '';
+    var css =
+      '#nl-auth-body h1{display:none!important;}' +
+      '#nl-auth-body .formal{padding:0!important;margin:0!important;background:none!important;border:none!important;}' +
+      '#nl-auth-body .container{padding:0!important;margin:0!important;background:none!important;border:none!important;}' +
+      '#nl-auth-body fieldset{border:2px solid #0F172A!important;border-radius:14px!important;padding:18px 16px!important;margin:0 0 16px 0!important;background:#FAFBFC!important;}' +
+      '#nl-auth-body legend{background:' + accColor + '!important;color:#FFF!important;font-weight:800!important;font-size:11px!important;text-transform:uppercase!important;letter-spacing:1.2px!important;padding:5px 14px!important;border:2px solid #0F172A!important;border-radius:50px!important;box-shadow:2px 2px 0 0 #0F172A!important;}' +
+      '#nl-auth-body legend span{background:none!important;padding:0!important;margin:0!important;font-size:inherit!important;}' +
+      '#nl-auth-body label{font-size:12px!important;font-weight:800!important;color:#0F172A!important;text-transform:uppercase!important;letter-spacing:1px!important;display:block!important;margin:0 0 6px 0!important;}' +
+      '#nl-auth-body label em{color:#999!important;font-style:normal!important;font-weight:600!important;text-transform:none!important;letter-spacing:0!important;font-size:11px!important;}' +
+      '#nl-auth-body input[type="text"],#nl-auth-body input[type="password"],#nl-auth-body input[type="email"],#nl-auth-body select,#nl-auth-body textarea{width:100%!important;padding:12px 14px!important;border:3px solid #0F172A!important;border-radius:12px!important;box-shadow:3px 3px 0 0 #0F172A!important;font-size:15px!important;font-family:Inter,sans-serif!important;background:#FFF!important;box-sizing:border-box!important;outline:none!important;}' +
+      '#nl-auth-body input[type="text"]:focus,#nl-auth-body input[type="password"]:focus,#nl-auth-body input[type="email"]:focus,#nl-auth-body select:focus,#nl-auth-body textarea:focus{box-shadow:3px 3px 0 0 ' + accColor + '!important;}' +
+      '#nl-auth-body input[type="submit"],#nl-auth-body button{width:100%!important;padding:16px!important;background:' + accColor + '!important;color:' + (isForget ? '#0F172A' : '#FFF') + '!important;border:3px solid #0F172A!important;border-radius:14px!important;font-size:16px!important;font-weight:900!important;font-family:Space Grotesk, Inter, sans-serif!important;cursor:pointer!important;box-shadow:5px 5px 0 0 #0F172A!important;transition:all 0.15s!important;text-transform:uppercase!important;letter-spacing:0.5px!important;}' +
+      '#nl-auth-body input[type="submit"]:hover,#nl-auth-body button:hover{transform:translate(3px,3px)!important;box-shadow:2px 2px 0 0 #0F172A!important;}' +
+      '#nl-auth-body input[type="radio"],#nl-auth-body input[type="checkbox"]{width:20px!important;height:20px!important;accent-color:' + accColor + '!important;margin-right:8px!important;vertical-align:middle!important;}' +
+      '#nl-auth-body .info-box,#nl-auth-body .infofield{background:#FEF3C7!important;border:2px solid #0F172A!important;border-radius:10px!important;padding:10px 12px!important;margin:0 0 16px 0!important;font-size:12px!important;color:#78350F!important;font-weight:600!important;}' +
+      '#nl-auth-body .info-box .legend,#nl-auth-body .info-box p:first-child{font-weight:800!important;margin:0 0 6px 0!important;color:#0F172A!important;}' +
+      '#nl-auth-body .fs-box{padding:0!important;}' +
+      '#nl-auth-body .inputfield,#nl-auth-body .selectfield,#nl-auth-body .checkfield,#nl-auth-body .radiofield{margin:0 0 14px 0!important;padding:0!important;}' +
+      '#nl-auth-body .inputfield label,#nl-auth-body .datafield label{font-weight:800!important;color:#0F172A!important;font-size:12px!important;text-transform:uppercase!important;letter-spacing:1px!important;display:block!important;margin-bottom:6px!important;}' +
+      '#nl-auth-body .input{display:block!important;}' +
+      '#nl-auth-body .formsubmit{margin-top:14px!important;padding:0!important;}' +
+      '#nl-auth-body .formsubmit a{display:inline-block!important;margin:6px 4px 0 0!important;font-size:12px!important;color:#64748B!important;font-weight:700!important;text-decoration:none!important;}' +
+      '#nl-auth-body .formsubmit a:hover{color:' + accColor + '!important;}' +
+      '#nl-auth-body a{color:#7C5CFF!important;font-weight:700!important;text-decoration:none!important;}' +
+      '#nl-auth-body a:hover{text-decoration:underline!important;}' +
+      '#nl-auth-body #username-status{font-size:11px!important;color:#64748B!important;font-weight:700!important;margin-left:8px!important;}' +
+      '#nl-auth-body .social{display:inline-block!important;width:32px!important;height:32px!important;margin:4px 4px 0 0!important;border:2px solid #0F172A!important;border-radius:10px!important;background:#F0F2F5!important;}' +
+      '#nl-auth-body .required em{display:none!important;}' +
+      '#nl-auth-body .punbb{border:none!important;background:none!important;}';
 
-    var h = '';
-    h += '<style>@keyframes nlLFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)}}</style>';
-    h += '<div id="nl-login-page" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#FFF8EE;background-image:radial-gradient(circle at 15% 20%,#FF4D6D 1.2px,transparent 1.6px),radial-gradient(circle at 70% 60%,#4DA8FF 1.2px,transparent 1.6px),radial-gradient(circle at 40% 85%,#3DDC97 1.2px,transparent 1.6px);background-size:80px 80px,120px 120px,100px 100px;font-family:Inter,system-ui,sans-serif;padding:24px;overflow:auto;">';
-    h += '<div style="background:' + accColor + ';border:4px solid #0F172A;border-radius:28px;padding:20px;box-shadow:12px 12px 0 0 #0F172A;max-width:460px;width:100%;position:relative;overflow:hidden;">';
-    h += '<div style="position:absolute;top:-50px;right:-50px;width:130px;height:130px;border-radius:50%;background:' + accShadow + ';border:4px solid #0F172A;opacity:0.9;"></div>';
-    h += '<div style="position:absolute;bottom:-40px;left:-40px;width:100px;height:100px;border-radius:50%;background:#3DDC97;border:4px solid #0F172A;opacity:0.9;"></div>';
-    h += '<div style="background:#FFF;border-radius:18px;padding:32px 26px;border:3px solid #0F172A;box-shadow:6px 6px 0 0 #0F172A;position:relative;z-index:1;">';
+    $('head').append('<style id="nl-auth-style">' + css + '</style>');
 
-    h += '<div style="text-align:center;">';
-    h += '<div style="display:inline-flex;align-items:center;justify-content:center;width:90px;height:90px;border-radius:50%;background:' + accColor + ';border:4px solid #0F172A;box-shadow:5px 5px 0 0 #0F172A;font-size:42px;color:#FFF;margin-bottom:18px;animation:nlLFloat 3s ease-in-out infinite;transform:rotate(-3deg);">' + emoji + '</div>';
-    h += '<div style="display:inline-flex;align-items:center;gap:8px;background:#FFF;border:3px solid #0F172A;color:#0F172A;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;padding:5px 14px;border-radius:50px;margin-bottom:14px;box-shadow:4px 4px 0 0 #0F172A;transform:rotate(-2deg);"><i class="fas ' + badgeIcon + '" style="color:' + accColor + ';"></i> ' + badgeTxt + '</div>';
-    h += '<h1 style="color:#0F172A;font-size:30px;font-weight:900;letter-spacing:-1.2px;line-height:1.05;margin:0 0 10px 0;font-family:Space Grotesk, Inter, sans-serif;">' + (isRegister ? 'Create your<br>' : (isForgetForm ? 'Reset your<br>' : 'Welcome<br>')) + '<span style="display:inline-block;background:' + accColor + ';color:#FFF;padding:0 12px;border:4px solid #0F172A;border-radius:12px;transform:rotate(-1.5deg);box-shadow:5px 5px 0 0 #0F172A;margin-top:4px;">' + (isRegister ? 'account' : (isForgetForm ? 'password' : 'back!')) + '</span></h1>';
-    h += '<p style="color:#334155;font-size:14px;font-weight:500;line-height:1.55;margin:0 0 22px 0;">' + (isRegister ? 'Sign up to join the community.' : (isForgetForm ? 'Enter your email and we\'ll send a reset link.' : 'Log in to manage your website.')) + '</p>';
-    h += '</div>';
-
-    h += errBanner;
-
-    h += '<form id="nl-auth-form" method="post" action="' + formAction + '" onsubmit="return nlSubmitAuthForm(event, ' + (isRegister?'true':'false') + ', ' + (isForgetForm?'true':'false') + ')">';
-    h += '<input type="hidden" name="form_sent" value="1" />';
-    h += '<input type="hidden" name="redirect_url" value="" />';
-
-    var inputStyle = 'width:100%;padding:14px 16px;border:3px solid #0F172A;border-radius:12px;font-size:15px;font-family:inherit;background:#FFF;box-sizing:border-box;box-shadow:4px 4px 0 0 #0F172A;outline:none;';
-    var labelStyle = 'display:block;font-size:12px;font-weight:800;color:#0F172A;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;';
-
-    if (isForgetForm) {
-      var emailVal = '';
-      var $e = $realForm.find('input[name="req_email"]').first();
-      if ($e.length) emailVal = $e.val() || '';
-      h += '<div style="margin-bottom:20px;">';
-      h += '<label style="' + labelStyle + '">Email Address</label>';
-      h += '<input type="email" name="req_email" value="' + emailVal.replace(/"/g,'&quot;') + '" required style="' + inputStyle + '" placeholder="you@email.com" />';
-      h += '</div>';
-    } else if (isRegister) {
-      var rUser = '';
-      var rEmail = '';
-      var $ru = $realForm.find('input[name="req_username"]').first();
-      var $re = $realForm.find('input[name="req_email"]').first();
-      if ($ru.length) rUser = $ru.val() || '';
-      if ($re.length) rEmail = $re.val() || '';
-
-      h += '<div style="margin-bottom:14px;">';
-      h += '<label style="' + labelStyle + '">Username</label>';
-      h += '<input type="text" name="req_username" id="fld1" value="' + rUser.replace(/"/g,'&quot;') + '" required autofocus maxlength="25" style="' + inputStyle + '" placeholder="choose a username" />';
-      h += '</div>';
-      h += '<div style="margin-bottom:14px;">';
-      h += '<label style="' + labelStyle + '">Email</label>';
-      h += '<input type="email" name="req_email" value="' + rEmail.replace(/"/g,'&quot;') + '" required maxlength="80" style="' + inputStyle + '" placeholder="you@email.com" />';
-      h += '</div>';
-      h += '<div style="margin-bottom:14px;">';
-      h += '<label style="' + labelStyle + '">Timezone</label>';
-      h += '<select name="timezone" id="nl-tz-select" style="' + inputStyle + 'cursor:pointer;">';
-      var tzs = [
-        {v:'1',t:'Nigeria / Lagos (GMT+1)'},
-        {v:'13',t:'UK / London (GMT+0)'},
-        {v:'19',t:'Europe / Paris (GMT+1)'},
-        {v:'22',t:'Dubai (GMT+4)'},
-        {v:'24',t:'Karachi (GMT+5)'},
-        {v:'26',t:'India / Delhi (GMT+5:30)'},
-        {v:'31',t:'Singapore (GMT+8)'},
-        {v:'32',t:'China / Beijing (GMT+8)'},
-        {v:'33',t:'Japan / Tokyo (GMT+9)'},
-        {v:'36',t:'Australia / Sydney (GMT+10)'},
-        {v:'2',t:'USA / New York (GMT-5)'},
-        {v:'6',t:'USA / Los Angeles (GMT-8)'}
-      ];
-      for (var ti=0; ti<tzs.length; ti++) {
-        h += '<option value="' + tzs[ti].v + '"' + (ti===0?' selected':'') + '>' + tzs[ti].t + '</option>';
-      }
-      h += '</select></div>';
-      h += '<div style="background:#fef3c7;border:2px solid #0F172A;border-radius:10px;padding:10px 12px;margin-bottom:20px;font-size:12px;color:#78350f;font-weight:600;"><i class="fas fa-info-circle"></i> A password will be emailed to you after registration.</div>';
-    } else {
-      var userVal = '';
-      var $u = $realForm.find('input[name="req_username"]').first();
-      if ($u.length) userVal = $u.val() || '';
-      h += '<div style="margin-bottom:14px;">';
-      h += '<label style="' + labelStyle + '">Username</label>';
-      h += '<input type="text" name="req_username" id="fld1" value="' + userVal.replace(/"/g,'&quot;') + '" required autofocus style="' + inputStyle + '" placeholder="your username" />';
-      h += '</div>';
-      h += '<div style="margin-bottom:20px;">';
-      h += '<label style="' + labelStyle + '">Password</label>';
-      h += '<input type="password" name="req_password" id="fld2" required style="' + inputStyle + '" placeholder="••••••••" />';
-      h += '</div>';
-    }
-
-    h += '<button type="submit" style="width:100%;padding:16px;background:' + accColor + ';color:' + (isForgetForm ? '#0F172A' : '#FFF') + ';border:3px solid #0F172A;border-radius:12px;font-size:16px;font-weight:900;font-family:Space Grotesk, Inter, sans-serif;letter-spacing:0.3px;cursor:pointer;box-shadow:5px 5px 0 0 #0F172A;transition:all 0.15s;" onmouseover="this.style.transform=\'translate(3px,3px)\';this.style.boxShadow=\'2px 2px 0 0 #0F172A\'" onmouseout="this.style.transform=\'\';this.style.boxShadow=\'5px 5px 0 0 #0F172A\'">' + (isRegister ? '<i class="fas fa-user-plus"></i> Create Account' : (isForgetForm ? '<i class="fas fa-paper-plane"></i> Send Reset Link' : '<i class="fas fa-sign-in-alt"></i> Log In')) + '</button>';
-
-    h += '</form>';
-
-    if (isForgetForm) {
-      h += '<div style="text-align:center;margin-top:18px;font-size:13px;color:#64748B;"><a href="/login.php" style="color:' + accColor + ';font-weight:800;text-decoration:none;">← Back to login</a></div>';
-    } else if (isRegister) {
-      h += '<div style="text-align:center;margin-top:18px;font-size:13px;color:#64748B;">Already have an account? <a href="/login.php" style="color:' + accColor + ';font-weight:800;text-decoration:none;">Log in</a></div>';
-    } else {
-      h += '<div style="text-align:center;margin-top:18px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap;font-size:13px;">';
-      h += '<a href="/login.php?action=forget" style="color:#64748B;font-weight:700;text-decoration:none;">Forgot password?</a>';
-      h += '<span style="color:#CBD5E1;">•</span>';
-      h += '<a href="/register.php" style="color:#64748B;font-weight:700;text-decoration:none;">Create account</a>';
-      h += '</div>';
-    }
-
-    h += '<div style="text-align:center;margin-top:22px;"><a href="/" style="font-size:11px;color:#94A3B8;font-weight:700;text-transform:uppercase;letter-spacing:1px;text-decoration:none;">← Back to site</a></div>';
-
-    h += '</div></div></div>';
-
-    $('body').append(h);
-
-    /* Register: hook submit through real form to preserve reCAPTCHA flow */
-    window.nlSubmitAuthForm = function(ev, isReg, isFgt){
-      ev.preventDefault();
-      if (!isReg) return true; /* login + forget submit normally */
-      /* Register: copy Memphis values to real form, trigger reCAPTCHA flow */
-      var username = $('#nl-auth-form input[name="req_username"]').val() || '';
-      var email = $('#nl-auth-form input[name="req_email"]').val() || '';
-      var tz = $('#nl-auth-form select[name="timezone"]').val() || '1';
-      if (!username || !email) { alert('Username and email required'); return false; }
-      var $real = $('#register');
-      if (!$real.length) { alert('Registration form not available. Please refresh.'); return false; }
-      $real.find('#username').val(username);
-      $real.find('input[name="req_username"]').val(username);
-      $real.find('input[name="req_email"]').val(email);
-      $real.find('select[name="timezone"]').val(tz);
-      /* Trigger real form submit which runs the reCAPTCHA chain */
-      $('body').children().hide();
-      $('body').append('<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#FF4D6D;z-index:99999;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><div style="font-size:64px;margin-bottom:16px;"><i class="fas fa-user-plus fa-spin"></i></div><h2>Creating your account...</h2><p style="opacity:0.85;">Just a moment</p></div></div>');
-      setTimeout(function(){
-        /* Trigger the reCAPTCHA-protected submit */
-        try {
-          var $btn = $real.find('input[name="register"]');
-          if ($btn.length) { $btn.prop('disabled', false); }
-          $real.trigger('submit');
-        } catch(e) {
-          /* Fallback: submit form directly */
-          $real[0].submit();
-        }
-      }, 400);
-      return false;
-    };
+    $('#nl-auth-body').append('<div style="text-align:center;margin-top:20px;"><a href="/" style="font-size:11px;color:#94A3B8!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;text-decoration:none!important;">← Back to site</a></div>');
 
     nlReady();
   }catch(err){
@@ -448,14 +352,13 @@ window.nlOPP=nlOPP;
   setTimeout(addBtn,1500);
 })();
 
-/* ===== BOOT DISPATCHER (v21) ===== */
+/* ===== BOOT DISPATCHER (v22) ===== */
 $(document).ready(function(){
 var H=window.location.href, Q=window.location.search;
 var ia=(typeof GroupID!=='undefined'&&GroupID===1);
 var iF=H.indexOf('admin_forms.php')>=0;var iS=H.indexOf('admin_style.php')>=0;var iAI=H.indexOf('admin_index.php')>=0;
 var sT=(Q.indexOf('theme')>=0);var iAP=H.indexOf('admin_')>=0;
 
-/* Cache theme status for header splash logic (v21 removed splash, but cache still useful) */
 try{
   var _tnm = document.body && document.body.getAttribute('data-nl-theme');
   if(_tnm){ localStorage.setItem('nl_has_theme','1'); }
@@ -491,7 +394,6 @@ if(iAI&&ia){
 
 if(sT&&ia){$('body').children().hide();var h2='<div style="min-height:100vh;background:#2865F1;font-family:Inter,sans-serif;padding:40px 24px;"><div style="max-width:1280px;margin:0 auto;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;flex-wrap:wrap;gap:12px;"><img src="https://forumstatic.ru/files/001c/ac/51/57803.jpg" style="height:38px;border-radius:8px;"><div style="display:flex;gap:20px;"><a href="/admin_index.php" style="color:#fff;font-weight:600;text-decoration:none;font-size:14px;"><i class="fas fa-tachometer-alt"></i> Admin</a><a href="/" style="color:#fff;font-weight:600;text-decoration:none;font-size:14px;"><i class="fas fa-home"></i> View Site</a></div></div><div style="text-align:center;margin-bottom:48px;"><h1 style="font-size:48px;font-weight:900;color:#fff;">Setup your <span style="background:linear-gradient(135deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">admin panel</span></h1><p style="color:rgba(255,255,255,0.85);font-size:18px;">Choose a theme.</p></div><div style="background:#fff;border-radius:24px;padding:32px;"><div class="nl-theme-grid">';var th=[{id:'punbb',name:'PunBB',desc:'Clean, fast, classic',file:'Built-in',bg:'#f0f2f5',bg2:'#d1d5db',color:'#1a1a2e'},{id:'nairaland',name:'Nairaland',desc:'Cream & green',file:'15535.txt',bg:'#f6f6ec',bg2:'#c8d4c0',color:'#185518'},{id:'portfolio',name:'Portfolio',desc:'Dark professional',file:'65113.txt',bg:'#1a1a2e',bg2:'#16213e',color:'#e94560'},{id:'landing',name:'Landing',desc:'Purple gradient',file:'86531.txt',bg:'#667eea',bg2:'#764ba2',color:'#fff'},{id:'grocery',name:'Grocery',desc:'Fresh green',file:'15517.txt',bg:'#11998e',bg2:'#38ef7d',color:'#fff'},{id:'foodblog',name:'Food Blog',desc:'Orange & red',file:'53940.txt',bg:'#f12711',bg2:'#f5af19',color:'#fff'},{id:'fashion',name:'Fashion',desc:'Coral & pink',file:'97250.txt',bg:'#ff6b6b',bg2:'#ee5a24',color:'#fff'},{id:'techblog',name:'Tech Blog',desc:'Cyber blue',file:'90500.txt',bg:'#0f2027',bg2:'#2c5364',color:'#00d4ff'},{id:'travel',name:'Travel',desc:'Ocean blue',file:'13426.txt',bg:'#00b4db',bg2:'#0083b0',color:'#fff'},{id:'news',name:'News',desc:'Black & red',file:'38831.txt',bg:'#434343',bg2:'#000000',color:'#e63946'}];for(var i=0;i<th.length;i++){var tt2=th[i];h2+='<div onclick="nlIT(\''+tt2.id+'\')" style="border:2px solid #e8ecf1;border-radius:16px;overflow:hidden;cursor:pointer;background:#fff;"><div style="height:70px;display:flex;align-items:center;justify-content:center;font-weight:700;background:linear-gradient(135deg,'+tt2.bg+','+tt2.bg2+');color:'+tt2.color+';">'+tt2.name+'</div><div style="padding:10px 12px;"><h4 style="color:#1a1a2e;font-size:11pt;font-weight:700;margin:0 0 2px;">'+tt2.name+'</h4><p style="color:#6b7280;font-size:9pt;margin:0;">'+tt2.desc+'</p><span style="display:inline-block;background:#f0f2f5;color:#6b7280;font-size:8pt;padding:1px 8px;border-radius:50px;margin-top:4px;">'+tt2.file+'</span></div></div>'}h2+='</div></div></div></div>';$('body').append(h2);nlReady();return}
 
-/* admin_style.php — always block direct navigation on customer sites; hub keeps old behavior */
 if(iS){
   if(nlIsHub){
     if(ia){nlReady();setTimeout(function(){var $sl2=$('select[name="form[o_custom_style]"]');if($sl2.length>0){if($sl2.val()!=='1'){$sl2.val('1').trigger('change')}$sl2.css({display:'none'})}},500);setTimeout(function(){$('input[type="radio"][value="1"]').each(function(){if(!$(this).prop('checked')){$(this).prop('checked',true)}})},800);return}
@@ -524,7 +426,7 @@ if(iF){var oT='punbb';if(Q.indexOf('nl_type=nairaland')>=0)oT='nairaland';else i
 
 if(ia&&iAP&&!iAI&&!iS&&!iF&&!sT){var at3=nlDT()||'punbb';var p2=nlUA.palettes[at3]||nlUA.palettes.punbb;var pi={admin_categories:{name:'Categories',icon:'fa-folder'},admin_forums:{name:'Forums',icon:'fa-comments'},admin_users:{name:'Users',icon:'fa-users'},admin_fields:{name:'Profile Fields',icon:'fa-user-edit'},admin_options:{name:'Options',icon:'fa-cog'},admin_permissions:{name:'Permissions',icon:'fa-lock'},admin_groups:{name:'User Groups',icon:'fa-user-tag'},admin_pages:{name:'Pages',icon:'fa-file-alt'},admin_censoring:{name:'Censoring',icon:'fa-ban'},admin_files:{name:'Files',icon:'fa-image'},admin_domain:{name:'Domain',icon:'fa-globe'},admin_backups:{name:'Backups',icon:'fa-database'},admin_scripts:{name:'Scripts',icon:'fa-terminal'},admin_logs:{name:'Forum Logs',icon:'fa-history'},admin_paid_services:{name:'Paid Services',icon:'fa-credit-card'},admin_mail:{name:'Mass Mailing',icon:'fa-envelope'}};var ci={name:'Admin Tools',icon:'fa-tools'};var pk=Object.keys(pi);for(var k=0;k<pk.length;k++){if(H.indexOf(pk[k])>=0){ci=pi[pk[k]];break}}var pt=$('#pun-admain h1, #pun-main h1, h1').first().text()||ci.name;var wH='<div id="nl-tool-page" style="min-height:100vh;background:linear-gradient(135deg,'+p2.bg+','+p2.bgGrad+');padding-bottom:40px;font-family:Inter,sans-serif;"><div style="background:rgba(255,255,255,0.12);padding:0 24px;"><div style="max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;height:64px;"><a href="/admin_index.php" style="color:#fff;font-weight:600;text-decoration:none;"><i class="fas fa-arrow-left"></i> Dashboard</a><span style="color:#fff;font-weight:700;"><i class="fas '+ci.icon+'" style="color:#FFD700;"></i> '+ci.name+'</span></div></div><div style="max-width:1280px;margin:24px auto;width:96%;"><div style="background:#fff;border-radius:20px;padding:32px;"><h1 style="color:'+p2.text+';font-size:24px;font-weight:800;margin:0 0 20px;">'+pt+'</h1><div id="nl-tool-content"></div></div></div></div>';$('body').css({margin:'0',padding:'0',background:p2.bg});$('#pun_wrap,#pun').css({background:'transparent',margin:'0',padding:'0','max-width':'100%',width:'100%'});$('#pun-title,#pun-navlinks,#pun-ulinks,#pun-status,#pun-break1,#pun-crumbs1,#pun-break2,#pun-adnav,#pun-break3,#pun-crumbs2,#pun-break4,#pun-about,#pun-stats').hide();$('body').prepend(wH);$('#pun-main, #pun-admain, .main').appendTo('#nl-tool-content');nlReady();return}
 
-/* v21: Memphis auth pages ONLY on no-theme sites; themed sites use their own styling */
+/* v22: Memphis auth pages (style-only) ONLY on no-theme sites */
 if(window.location.pathname.indexOf('login.php')>=0 || window.location.pathname.indexOf('register.php')>=0){
   var _authTries = 0;
   var _authIv = setInterval(function(){
@@ -563,7 +465,6 @@ if (isHome) {
     if ($('#nl-construction-card, #nl-welcome-card').length === 0) {
       var cardHTML = '';
       if (!ia) {
-        /* Visitor — construction card */
         cardHTML =
           '<div id="nl-construction-card" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#FFF8EE;background-image:radial-gradient(circle at 15% 20%,#FF4D6D 1.2px,transparent 1.6px),radial-gradient(circle at 70% 60%,#4DA8FF 1.2px,transparent 1.6px),radial-gradient(circle at 40% 85%,#3DDC97 1.2px,transparent 1.6px);background-size:80px 80px,120px 120px,100px 100px;font-family:Inter,system-ui,sans-serif;padding:24px;overflow:auto;">' +
             '<style>@keyframes nlFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-14px) rotate(3deg)}}@keyframes nlBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}</style>' +
@@ -582,7 +483,6 @@ if (isHome) {
             '</div>' +
           '</div>';
       } else {
-        /* Admin — welcome card with Go to Admin Panel button */
         cardHTML =
           '<div id="nl-welcome-card" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#FFF8EE;background-image:radial-gradient(circle at 15% 20%,#FF4D6D 1.2px,transparent 1.6px),radial-gradient(circle at 70% 60%,#4DA8FF 1.2px,transparent 1.6px),radial-gradient(circle at 40% 85%,#3DDC97 1.2px,transparent 1.6px);background-size:80px 80px,120px 120px,100px 100px;font-family:Inter,system-ui,sans-serif;padding:24px;overflow:auto;">' +
             '<style>@keyframes nlFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-14px) rotate(3deg)}}</style>' +
