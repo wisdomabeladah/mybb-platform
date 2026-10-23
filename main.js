@@ -1,4 +1,4 @@
-/* MYWEB PLATFORM — main.js v19 */
+/* MYWEB PLATFORM — main.js v20 */
 (function(){
 'use strict';
 
@@ -87,60 +87,128 @@ window.nlGF=nlGF;window.nlIT=nlIT;
 /* ===== FORCE CUSTOM STYLE (empty boxes + flip to Yes + save) ===== */
 function nlForceCustomStyleAndProceed(redirectUrl){
   var nextUrl = redirectUrl || '/admin_index.php';
-
   $('body').children().hide();
   var $spin = $('<div id="nl-style-spinner" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#2865F1;z-index:99999;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><div style="font-size:64px;margin-bottom:16px;"><i class="fas fa-palette fa-spin"></i></div><h2 style="font-size:24px;font-weight:800;margin:0 0 8px 0;">Configuring your style...</h2><p style="font-size:14px;opacity:0.85;margin:0;">Almost there — just a moment</p></div></div>');
   $('body').append($spin);
-
-  $.ajax({
-    url: '/admin_style.php',
-    type: 'GET',
-    dataType: 'html',
-    cache: false,
-    timeout: 15000
-  }).done(function(html){
+  $.ajax({url:'/admin_style.php',type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(html){
     var $parsed = $('<div>').html(html);
     var $form = $parsed.find('form.adcontainer').first();
     if (!$form.length) { $form = $parsed.find('form').first(); }
-
     var formAction = $form.length ? ($form.attr('action') || '/admin_style.php?action=foo') : '/admin_style.php?action=foo';
-
     var fd = {};
-    $form.find('input[type="hidden"]').each(function(){
-      var n = $(this).attr('name'); if (n) fd[n] = $(this).val();
-    });
-
+    $form.find('input[type="hidden"]').each(function(){var n = $(this).attr('name'); if (n) fd[n] = $(this).val();});
     fd['form[o_custom_style]'] = '1';
     fd['form[content1]'] = '';
     fd['form[content2]'] = '';
     fd['save'] = 'Save changes';
-
-    $form.find('input[type="text"], input[type="number"], select, textarea').each(function(){
-      var n = $(this).attr('name');
-      if (!n) return;
-      if (n === 'form[o_custom_style]' || n === 'form[content1]' || n === 'form[content2]') return;
-      if (fd[n] !== undefined) return;
-      fd[n] = $(this).val();
-    });
-
-    $.ajax({
-      url: formAction,
-      type: 'POST',
-      data: fd,
-      cache: false,
-      timeout: 15000
-    }).always(function(){
-      try { sessionStorage.setItem('nl_custom_style_enabled','true'); } catch(e) {}
-      window.location.href = nextUrl;
-    });
-  }).fail(function(){
-    try { sessionStorage.setItem('nl_custom_style_enabled','true'); } catch(e) {}
-    window.location.href = nextUrl;
-  });
+    $form.find('input[type="text"], input[type="number"], select, textarea').each(function(){var n = $(this).attr('name');if (!n) return;if (n === 'form[o_custom_style]' || n === 'form[content1]' || n === 'form[content2]') return;if (fd[n] !== undefined) return;fd[n] = $(this).val();});
+    $.ajax({url:formAction,type:'POST',data:fd,cache:false,timeout:15000}).always(function(){try { sessionStorage.setItem('nl_custom_style_enabled','true'); } catch(e) {}window.location.href = nextUrl;});
+  }).fail(function(){try { sessionStorage.setItem('nl_custom_style_enabled','true'); } catch(e) {}window.location.href = nextUrl;});
 }
 window.nlForceCustomStyleAndProceed = nlForceCustomStyleAndProceed;
 
-function nlOpenCustomizer(){
+/* ===== MEMPHIS LOGIN PAGE ===== */
+function nlRenderLogin(){
+  try{
+    var isForget = window.location.href.indexOf('action=forget')>=0;
+    var isRegister = window.location.href.indexOf('register.php')>=0;
+
+    /* Detect PunBB login error (rendered above the form on failed login) */
+    var errText = '';
+    var $errEl = $('#pun-main .info-box.error, #pun-main .error, #pun-main .formal .info-box').first();
+    if ($errEl.length) {
+      var t = $errEl.text().replace(/\s+/g,' ').trim();
+      if (t.length > 0 && t.length < 200) errText = t;
+    }
+
+    /* Grab the real form so we can reuse its fields */
+    var $realForm = $('#pun-main form#login, #pun-main form#forget, #pun-main form').first();
+    var formAction = $realForm.length ? ($realForm.attr('action') || '/login.php?action=in') : '/login.php?action=in';
+    var isForgetForm = isForget || formAction.indexOf('forget')>=0;
+
+    /* Hide everything else */
+    $('body').children().hide();
+
+    var spinnerCss = '@keyframes nlLFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)}}';
+    var errBanner = errText
+      ? '<div style="background:#FEE2E2;border:3px solid #0F172A;border-radius:12px;padding:12px 16px;margin:0 0 18px 0;box-shadow:4px 4px 0 0 #0F172A;color:#991B1B;font-size:13px;font-weight:700;display:flex;align-items:center;gap:10px;"><i class="fas fa-exclamation-circle" style="font-size:16px;"></i><span>' + errText + '</span></div>'
+      : '';
+
+    var h = '';
+    h += '<style>' + spinnerCss + '</style>';
+    h += '<div id="nl-login-page" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#FFF8EE;background-image:radial-gradient(circle at 15% 20%,#FF4D6D 1.2px,transparent 1.6px),radial-gradient(circle at 70% 60%,#4DA8FF 1.2px,transparent 1.6px),radial-gradient(circle at 40% 85%,#3DDC97 1.2px,transparent 1.6px);background-size:80px 80px,120px 120px,100px 100px;font-family:Inter,system-ui,sans-serif;padding:24px;overflow:auto;">';
+    h += '<div style="background:' + (isForgetForm ? '#FFB84D' : '#7C5CFF') + ';border:4px solid #0F172A;border-radius:28px;padding:20px;box-shadow:12px 12px 0 0 #0F172A;max-width:460px;width:100%;position:relative;overflow:hidden;">';
+    h += '<div style="position:absolute;top:-50px;right:-50px;width:130px;height:130px;border-radius:50%;background:' + (isForgetForm ? '#7C5CFF' : '#FFB84D') + ';border:4px solid #0F172A;opacity:0.9;"></div>';
+    h += '<div style="position:absolute;bottom:-40px;left:-40px;width:100px;height:100px;border-radius:50%;background:' + (isForgetForm ? '#3DDC97' : '#FF4D6D') + ';border:4px solid #0F172A;opacity:0.9;"></div>';
+    h += '<div style="background:#FFF;border-radius:18px;padding:32px 26px;border:3px solid #0F172A;box-shadow:6px 6px 0 0 #0F172A;position:relative;z-index:1;">';
+
+    h += '<div style="text-align:center;">';
+    h += '<div style="display:inline-flex;align-items:center;justify-content:center;width:90px;height:90px;border-radius:50%;background:' + (isForgetForm ? '#FFB84D' : '#7C5CFF') + ';border:4px solid #0F172A;box-shadow:5px 5px 0 0 #0F172A;font-size:42px;color:#FFF;margin-bottom:18px;animation:nlLFloat 3s ease-in-out infinite;transform:rotate(-3deg);">' + (isForgetForm ? '🔑' : '👋') + '</div>';
+    h += '<div style="display:inline-flex;align-items:center;gap:8px;background:#FFF;border:3px solid #0F172A;color:#0F172A;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;padding:5px 14px;border-radius:50px;margin-bottom:14px;box-shadow:4px 4px 0 0 #0F172A;transform:rotate(-2deg);"><i class="fas ' + (isForgetForm ? 'fa-key' : 'fa-sign-in-alt') + '" style="color:' + (isForgetForm ? '#FF6B35' : '#7C5CFF') + ';"></i> ' + (isForgetForm ? 'Password Reset' : 'Welcome Back') + '</div>';
+    h += '<h1 style="color:#0F172A;font-size:30px;font-weight:900;letter-spacing:-1.2px;line-height:1.05;margin:0 0 10px 0;font-family:Space Grotesk, Inter, sans-serif;">' + (isForgetForm ? 'Reset your<br>' : 'Welcome<br>') + '<span style="display:inline-block;background:' + (isForgetForm ? '#7C5CFF' : '#FF4D6D') + ';color:#FFF;padding:0 12px;border:4px solid #0F172A;border-radius:12px;transform:rotate(-1.5deg);box-shadow:5px 5px 0 0 #0F172A;margin-top:4px;">' + (isForgetForm ? 'password' : 'back!') + '</span></h1>';
+    h += '<p style="color:#334155;font-size:14px;font-weight:500;line-height:1.55;margin:0 0 22px 0;">' + (isForgetForm ? 'Enter your email and we\'ll send a reset link.' : 'Log in to manage your website.') + '</p>';
+    h += '</div>';
+
+    h += errBanner;
+
+    /* Form */
+    h += '<form id="nl-login-form" method="post" action="' + formAction + '" onsubmit="return process_form(this)">';
+    h += '<input type="hidden" name="form_sent" value="1" />';
+    h += '<input type="hidden" name="redirect_url" value="" />';
+
+    if (isForgetForm) {
+      var emailVal = '';
+      var $e = $realForm.find('input[name="req_email"]').first();
+      if ($e.length) emailVal = $e.val() || '';
+      h += '<div style="margin-bottom:16px;">';
+      h += '<label style="display:block;font-size:12px;font-weight:800;color:#0F172A;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Email Address</label>';
+      h += '<input type="email" name="req_email" value="' + emailVal.replace(/"/g,'&quot;') + '" required style="width:100%;padding:14px 16px;border:3px solid #0F172A;border-radius:12px;font-size:15px;font-family:inherit;background:#FFF;box-sizing:border-box;box-shadow:4px 4px 0 0 #0F172A;outline:none;" placeholder="you@email.com" />';
+      h += '</div>';
+    } else {
+      var userVal = '';
+      var $u = $realForm.find('input[name="req_username"]').first();
+      if ($u.length) userVal = $u.val() || '';
+      h += '<div style="margin-bottom:14px;">';
+      h += '<label style="display:block;font-size:12px;font-weight:800;color:#0F172A;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Username</label>';
+      h += '<input type="text" name="req_username" id="fld1" value="' + userVal.replace(/"/g,'&quot;') + '" required autofocus style="width:100%;padding:14px 16px;border:3px solid #0F172A;border-radius:12px;font-size:15px;font-family:inherit;background:#FFF;box-sizing:border-box;box-shadow:4px 4px 0 0 #0F172A;outline:none;" placeholder="your username" />';
+      h += '</div>';
+      h += '<div style="margin-bottom:20px;">';
+      h += '<label style="display:block;font-size:12px;font-weight:800;color:#0F172A;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Password</label>';
+      h += '<input type="password" name="req_password" id="fld2" required style="width:100%;padding:14px 16px;border:3px solid #0F172A;border-radius:12px;font-size:15px;font-family:inherit;background:#FFF;box-sizing:border-box;box-shadow:4px 4px 0 0 #0F172A;outline:none;" placeholder="••••••••" />';
+      h += '</div>';
+    }
+
+    h += '<button type="submit" name="' + (isForgetForm ? 'req_email_submit' : 'login') + '" style="width:100%;padding:16px;background:' + (isForgetForm ? '#FFB84D' : '#FF4D6D') + ';color:' + (isForgetForm ? '#0F172A' : '#FFF') + ';border:3px solid #0F172A;border-radius:12px;font-size:16px;font-weight:900;font-family:Space Grotesk, Inter, sans-serif;letter-spacing:0.3px;cursor:pointer;box-shadow:5px 5px 0 0 #0F172A;transition:all 0.15s;" onmouseover="this.style.transform=\'translate(3px,3px)\';this.style.boxShadow=\'2px 2px 0 0 #0F172A\'" onmouseout="this.style.transform=\'\';this.style.boxShadow=\'5px 5px 0 0 #0F172A\'">' + (isForgetForm ? '<i class="fas fa-paper-plane"></i> Send Reset Link' : '<i class="fas fa-sign-in-alt"></i> Log In') + '</button>';
+
+    h += '</form>';
+
+    /* Links */
+    if (isForgetForm) {
+      h += '<div style="text-align:center;margin-top:18px;font-size:13px;color:#64748B;"><a href="/login.php" style="color:#7C5CFF;font-weight:800;text-decoration:none;">← Back to login</a></div>';
+    } else {
+      h += '<div style="text-align:center;margin-top:18px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap;font-size:13px;">';
+      h += '<a href="/login.php?action=forget" style="color:#64748B;font-weight:700;text-decoration:none;">Forgot password?</a>';
+      h += '<span style="color:#CBD5E1;">•</span>';
+      h += '<a href="/register.php" style="color:#64748B;font-weight:700;text-decoration:none;">Create account</a>';
+      h += '</div>';
+    }
+
+    /* Back to site */
+    h += '<div style="text-align:center;margin-top:22px;"><a href="/" style="font-size:11px;color:#94A3B8;font-weight:700;text-transform:uppercase;letter-spacing:1px;text-decoration:none;">← Back to site</a></div>';
+
+    h += '</div></div></div>';
+
+    $('body').append(h);
+    nlReady();
+  }catch(err){
+    try{console.error('nlRenderLogin failed:',err)}catch(e){}
+    nlReady();
+  }
+}
+window.nlRenderLogin = nlRenderLogin;
+
+/* PART 2 CONTINUES BELOW */
+ function nlOpenCustomizer(){
   var at = nlDT() || 'punbb'; var c = nlGetCustom(); var hostname = window.location.hostname;
   $('body').children().hide();
   var h = '';
@@ -305,7 +373,7 @@ window.nlOPP=nlOPP;
   setTimeout(addBtn,1500);
 })();
 
-/* ===== BOOT DISPATCHER (v19) ===== */
+/* ===== BOOT DISPATCHER (v20) ===== */
 $(document).ready(function(){
 var H=window.location.href, Q=window.location.search;
 var ia=(typeof GroupID!=='undefined'&&GroupID===1);
@@ -341,17 +409,25 @@ if(iAI&&ia){
 
 if(sT&&ia){$('body').children().hide();var h2='<div style="min-height:100vh;background:#2865F1;font-family:Inter,sans-serif;padding:40px 24px;"><div style="max-width:1280px;margin:0 auto;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;flex-wrap:wrap;gap:12px;"><img src="https://forumstatic.ru/files/001c/ac/51/57803.jpg" style="height:38px;border-radius:8px;"><div style="display:flex;gap:20px;"><a href="/admin_index.php" style="color:#fff;font-weight:600;text-decoration:none;font-size:14px;"><i class="fas fa-tachometer-alt"></i> Admin</a><a href="/" style="color:#fff;font-weight:600;text-decoration:none;font-size:14px;"><i class="fas fa-home"></i> View Site</a></div></div><div style="text-align:center;margin-bottom:48px;"><h1 style="font-size:48px;font-weight:900;color:#fff;">Setup your <span style="background:linear-gradient(135deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">admin panel</span></h1><p style="color:rgba(255,255,255,0.85);font-size:18px;">Choose a theme.</p></div><div style="background:#fff;border-radius:24px;padding:32px;"><div class="nl-theme-grid">';var th=[{id:'punbb',name:'PunBB',desc:'Clean, fast, classic',file:'Built-in',bg:'#f0f2f5',bg2:'#d1d5db',color:'#1a1a2e'},{id:'nairaland',name:'Nairaland',desc:'Cream & green',file:'15535.txt',bg:'#f6f6ec',bg2:'#c8d4c0',color:'#185518'},{id:'portfolio',name:'Portfolio',desc:'Dark professional',file:'65113.txt',bg:'#1a1a2e',bg2:'#16213e',color:'#e94560'},{id:'landing',name:'Landing',desc:'Purple gradient',file:'86531.txt',bg:'#667eea',bg2:'#764ba2',color:'#fff'},{id:'grocery',name:'Grocery',desc:'Fresh green',file:'15517.txt',bg:'#11998e',bg2:'#38ef7d',color:'#fff'},{id:'foodblog',name:'Food Blog',desc:'Orange & red',file:'53940.txt',bg:'#f12711',bg2:'#f5af19',color:'#fff'},{id:'fashion',name:'Fashion',desc:'Coral & pink',file:'97250.txt',bg:'#ff6b6b',bg2:'#ee5a24',color:'#fff'},{id:'techblog',name:'Tech Blog',desc:'Cyber blue',file:'90500.txt',bg:'#0f2027',bg2:'#2c5364',color:'#00d4ff'},{id:'travel',name:'Travel',desc:'Ocean blue',file:'13426.txt',bg:'#00b4db',bg2:'#0083b0',color:'#fff'},{id:'news',name:'News',desc:'Black & red',file:'38831.txt',bg:'#434343',bg2:'#000000',color:'#e63946'}];for(var i=0;i<th.length;i++){var tt2=th[i];h2+='<div onclick="nlIT(\''+tt2.id+'\')" style="border:2px solid #e8ecf1;border-radius:16px;overflow:hidden;cursor:pointer;background:#fff;"><div style="height:70px;display:flex;align-items:center;justify-content:center;font-weight:700;background:linear-gradient(135deg,'+tt2.bg+','+tt2.bg2+');color:'+tt2.color+';">'+tt2.name+'</div><div style="padding:10px 12px;"><h4 style="color:#1a1a2e;font-size:11pt;font-weight:700;margin:0 0 2px;">'+tt2.name+'</h4><p style="color:#6b7280;font-size:9pt;margin:0;">'+tt2.desc+'</p><span style="display:inline-block;background:#f0f2f5;color:#6b7280;font-size:8pt;padding:1px 8px;border-radius:50px;margin-top:4px;">'+tt2.file+'</span></div></div>'}h2+='</div></div></div></div>';$('body').append(h2);nlReady();return}
 
-if(iS&&ia){nlReady();setTimeout(function(){var $sl2=$('select[name="form[o_custom_style]"]');if($sl2.length>0){if($sl2.val()!=='1'){$sl2.val('1').trigger('change')}$sl2.css({display:'none'})}},500);setTimeout(function(){$('input[type="radio"][value="1"]').each(function(){if(!$(this).prop('checked')){$(this).prop('checked',true)}})},800);return}
+/* PATCH 2: admin_style.php — always block direct navigation on customer sites; hub keeps old behavior */
+if(iS){
+  if(nlIsHub){
+    if(ia){nlReady();setTimeout(function(){var $sl2=$('select[name="form[o_custom_style]"]');if($sl2.length>0){if($sl2.val()!=='1'){$sl2.val('1').trigger('change')}$sl2.css({display:'none'})}},500);setTimeout(function(){$('input[type="radio"][value="1"]').each(function(){if(!$(this).prop('checked')){$(this).prop('checked',true)}})},800);return}
+    nlReady();$('body').children().hide();$('body').append('<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><div style="font-size:64px;margin-bottom:16px;"><i class="fas fa-lock"></i></div><h2 style="font-size:28px;font-weight:800;">Access Restricted</h2><p>Please use the Theme Selector to configure your forum.</p><p style="font-size:12px;opacity:0.6;">Redirecting...</p></div></div>');setTimeout(function(){window.location.href='/admin_index.php'},2500);return;
+  }
+  nlReady();$('body').children().hide();$('body').append('<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><div style="font-size:64px;margin-bottom:16px;"><i class="fas fa-lock"></i></div><h2 style="font-size:28px;font-weight:800;">Access Restricted</h2><p>Please use the Theme Selector to configure your forum.</p><p style="font-size:12px;opacity:0.6;">Redirecting...</p></div></div>');setTimeout(function(){window.location.href='/admin_index.php'},2500);return;
+}
 
 if(iF){var oT='punbb';if(Q.indexOf('nl_type=nairaland')>=0)oT='nairaland';else if(Q.indexOf('nl_type=portfolio')>=0)oT='portfolio';else if(Q.indexOf('nl_type=landing')>=0)oT='landing';else if(Q.indexOf('nl_type=grocery')>=0)oT='grocery';else if(Q.indexOf('nl_type=foodblog')>=0)oT='foodblog';else if(Q.indexOf('nl_type=fashion')>=0)oT='fashion';else if(Q.indexOf('nl_type=techblog')>=0)oT='techblog';else if(Q.indexOf('nl_type=travel')>=0)oT='travel';else if(Q.indexOf('nl_type=news')>=0)oT='news';var prv=nlTP[oT]||nlTP.punbb;var $ht=$('textarea[name="form[o_html_header]"]');if($ht.length>0){var ph=null;try{ph=sessionStorage.getItem('nl_install_code')}catch(e){}if(ph!==null&&ph!==undefined){$ht.val(ph);try{sessionStorage.removeItem('nl_install_code')}catch(e){}}if(!$ht.parent().hasClass('nl-textarea-wrapper')){$ht.wrap('<div class="nl-textarea-wrapper"></div>')}$ht.attr('readonly','readonly').attr('tabindex','-1')}var $ft=$('textarea[name="form[o_html_footer]"]');if($ft.length>0){var pf=null;try{pf=sessionStorage.getItem('nl_install_footer')}catch(e){}if(pf!==null&&pf!==undefined){$ft.val(pf);try{sessionStorage.removeItem('nl_install_footer')}catch(e){}}if(!$ft.parent().hasClass('nl-textarea-wrapper')){$ft.wrap('<div class="nl-textarea-wrapper"></div>')}$ft.attr('readonly','readonly').attr('tabindex','-1')}$('#nl-header-overlay,#nl-footer-overlay').remove();var hov='<div class="nl-header-overlay" id="nl-header-overlay"><h3>'+prv.name+' - Header Code</h3><div class="nl-header-preview" style="background:linear-gradient(135deg,'+prv.bg+','+prv.bg2+');color:'+prv.color+';">'+prv.name+'</div><p>Header code loaded.</p><span class="nl-overlay-note">Save to apply</span></div>';var fov='<div class="nl-header-overlay" id="nl-footer-overlay"><h3>'+prv.name+' - Admin Config</h3><div class="nl-header-preview" style="background:linear-gradient(135deg,'+prv.bg+','+prv.bg2+');color:'+prv.color+';">Admin: '+prv.name+'</div><p>Admin config loaded.</p><span class="nl-overlay-note">Save to apply</span></div>';if($ht.length>0)$ht.parent().append(hov);if($ft.length>0)$ft.parent().append(fov);$('#nl-header-overlay,#nl-footer-overlay').on('click mousedown mouseup keydown keypress focus',function(e){e.preventDefault();e.stopPropagation();return false});var $sb2=$('input[name="save"],input[type="submit"][value*="Save"]');if($sb2.length>0){$sb2.css({background:'#2865F1',color:'#fff',padding:'14px 36px','font-size':'15pt',border:'3px solid #1a4bbf','border-radius':'12px'})}if($ht.closest('form').length>0){
       $ht.closest('form').prepend('<div class="nl-toggle-settings"><a id="nl-toggle-btn" onclick="nlTgl()">Show All Settings</a></div>');
       var $fm3=$ht.closest('form');
       var launchedFromTheme = Q.indexOf('nl_type=')>=0;
       if(launchedFromTheme){
+        /* PATCH 1: hide instantly, spinner from frame 1 */
+        $('body').children().hide();
+        $('body').append('<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><div style="font-size:64px;margin-bottom:16px;"><i class="fas fa-check-circle"></i></div><h2>Applying '+prv.name+' theme...</h2><p style="opacity:0.85;">This only takes a moment</p></div></div>');
         setTimeout(function(){
           if($fm3.length>0){
-            $('body').children().hide();
-            $('body').append('<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><div style="font-size:64px;margin-bottom:16px;"><i class="fas fa-check-circle"></i></div><h2>Applying '+prv.name+' theme...</h2><p style="opacity:0.85;">This only takes a moment</p></div></div>');
             var fd3=$fm3.serialize();
             if(fd3.indexOf('save')===-1)fd3+='&save=1';
             $.ajax({url:$fm3.attr('action')||H,type:'POST',data:fd3,complete:function(){
@@ -367,9 +443,13 @@ if(iF){var oT='punbb';if(Q.indexOf('nl_type=nairaland')>=0)oT='nairaland';else i
 
 if(ia&&iAP&&!iAI&&!iS&&!iF&&!sT){var at3=nlDT()||'punbb';var p2=nlUA.palettes[at3]||nlUA.palettes.punbb;var pi={admin_categories:{name:'Categories',icon:'fa-folder'},admin_forums:{name:'Forums',icon:'fa-comments'},admin_users:{name:'Users',icon:'fa-users'},admin_fields:{name:'Profile Fields',icon:'fa-user-edit'},admin_options:{name:'Options',icon:'fa-cog'},admin_permissions:{name:'Permissions',icon:'fa-lock'},admin_groups:{name:'User Groups',icon:'fa-user-tag'},admin_pages:{name:'Pages',icon:'fa-file-alt'},admin_censoring:{name:'Censoring',icon:'fa-ban'},admin_files:{name:'Files',icon:'fa-image'},admin_domain:{name:'Domain',icon:'fa-globe'},admin_backups:{name:'Backups',icon:'fa-database'},admin_scripts:{name:'Scripts',icon:'fa-terminal'},admin_logs:{name:'Forum Logs',icon:'fa-history'},admin_paid_services:{name:'Paid Services',icon:'fa-credit-card'},admin_mail:{name:'Mass Mailing',icon:'fa-envelope'}};var ci={name:'Admin Tools',icon:'fa-tools'};var pk=Object.keys(pi);for(var k=0;k<pk.length;k++){if(H.indexOf(pk[k])>=0){ci=pi[pk[k]];break}}var pt=$('#pun-admain h1, #pun-main h1, h1').first().text()||ci.name;var wH='<div id="nl-tool-page" style="min-height:100vh;background:linear-gradient(135deg,'+p2.bg+','+p2.bgGrad+');padding-bottom:40px;font-family:Inter,sans-serif;"><div style="background:rgba(255,255,255,0.12);padding:0 24px;"><div style="max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;height:64px;"><a href="/admin_index.php" style="color:#fff;font-weight:600;text-decoration:none;"><i class="fas fa-arrow-left"></i> Dashboard</a><span style="color:#fff;font-weight:700;"><i class="fas '+ci.icon+'" style="color:#FFD700;"></i> '+ci.name+'</span></div></div><div style="max-width:1280px;margin:24px auto;width:96%;"><div style="background:#fff;border-radius:20px;padding:32px;"><h1 style="color:'+p2.text+';font-size:24px;font-weight:800;margin:0 0 20px;">'+pt+'</h1><div id="nl-tool-content"></div></div></div></div>';$('body').css({margin:'0',padding:'0',background:p2.bg});$('#pun_wrap,#pun').css({background:'transparent',margin:'0',padding:'0','max-width':'100%',width:'100%'});$('#pun-title,#pun-navlinks,#pun-ulinks,#pun-status,#pun-break1,#pun-crumbs1,#pun-break2,#pun-adnav,#pun-break3,#pun-crumbs2,#pun-break4,#pun-about,#pun-stats').hide();$('body').prepend(wH);$('#pun-main, #pun-admain, .main').appendTo('#nl-tool-content');nlReady();return}
 
-if(window.location.pathname.indexOf('login.php')>=0 ||
-   window.location.pathname.indexOf('register.php')>=0 ||
-   window.location.pathname.indexOf('profile.php')>=0){
+/* v20: Memphis login page */
+if(window.location.pathname.indexOf('login.php')>=0){
+  nlRenderLogin();
+  return;
+}
+
+if(window.location.pathname.indexOf('register.php')>=0 || window.location.pathname.indexOf('profile.php')>=0){
   nlReady();
   return;
 }
