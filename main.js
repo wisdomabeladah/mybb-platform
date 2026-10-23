@@ -1,4 +1,4 @@
-/* MYWEB PLATFORM — main.js v18 */
+/* MYWEB PLATFORM — main.js v19 */
 (function(){
 'use strict';
 
@@ -83,7 +83,64 @@ function nlIT(type){
   $.ajax({url:url,type:'GET',dataType:'text',success:function(data){try{sessionStorage.setItem('nl_install_code',data)}catch(e){}window.location.href='/admin_forms.php?nl_type='+type},error:function(){try{sessionStorage.setItem('nl_install_code','')}catch(e){}window.location.href='/admin_forms.php?nl_type='+type}});
 }
 window.nlGF=nlGF;window.nlIT=nlIT;
-  function nlOpenCustomizer(){
+
+/* ===== FORCE CUSTOM STYLE (empty boxes + flip to Yes + save) ===== */
+function nlForceCustomStyleAndProceed(redirectUrl){
+  var nextUrl = redirectUrl || '/admin_index.php';
+
+  $('body').children().hide();
+  var $spin = $('<div id="nl-style-spinner" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#2865F1;z-index:99999;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><div style="font-size:64px;margin-bottom:16px;"><i class="fas fa-palette fa-spin"></i></div><h2 style="font-size:24px;font-weight:800;margin:0 0 8px 0;">Configuring your style...</h2><p style="font-size:14px;opacity:0.85;margin:0;">Almost there — just a moment</p></div></div>');
+  $('body').append($spin);
+
+  $.ajax({
+    url: '/admin_style.php',
+    type: 'GET',
+    dataType: 'html',
+    cache: false,
+    timeout: 15000
+  }).done(function(html){
+    var $parsed = $('<div>').html(html);
+    var $form = $parsed.find('form.adcontainer').first();
+    if (!$form.length) { $form = $parsed.find('form').first(); }
+
+    var formAction = $form.length ? ($form.attr('action') || '/admin_style.php?action=foo') : '/admin_style.php?action=foo';
+
+    var fd = {};
+    $form.find('input[type="hidden"]').each(function(){
+      var n = $(this).attr('name'); if (n) fd[n] = $(this).val();
+    });
+
+    fd['form[o_custom_style]'] = '1';
+    fd['form[content1]'] = '';
+    fd['form[content2]'] = '';
+    fd['save'] = 'Save changes';
+
+    $form.find('input[type="text"], input[type="number"], select, textarea').each(function(){
+      var n = $(this).attr('name');
+      if (!n) return;
+      if (n === 'form[o_custom_style]' || n === 'form[content1]' || n === 'form[content2]') return;
+      if (fd[n] !== undefined) return;
+      fd[n] = $(this).val();
+    });
+
+    $.ajax({
+      url: formAction,
+      type: 'POST',
+      data: fd,
+      cache: false,
+      timeout: 15000
+    }).always(function(){
+      try { sessionStorage.setItem('nl_custom_style_enabled','true'); } catch(e) {}
+      window.location.href = nextUrl;
+    });
+  }).fail(function(){
+    try { sessionStorage.setItem('nl_custom_style_enabled','true'); } catch(e) {}
+    window.location.href = nextUrl;
+  });
+}
+window.nlForceCustomStyleAndProceed = nlForceCustomStyleAndProceed;
+
+function nlOpenCustomizer(){
   var at = nlDT() || 'punbb'; var c = nlGetCustom(); var hostname = window.location.hostname;
   $('body').children().hide();
   var h = '';
@@ -248,14 +305,12 @@ window.nlOPP=nlOPP;
   setTimeout(addBtn,1500);
 })();
 
-/* ===== BOOT DISPATCHER (v18 — fixed) ===== */
+/* ===== BOOT DISPATCHER (v19) ===== */
 $(document).ready(function(){
 var H=window.location.href, Q=window.location.search;
 var ia=(typeof GroupID!=='undefined'&&GroupID===1);
 var iF=H.indexOf('admin_forms.php')>=0;var iS=H.indexOf('admin_style.php')>=0;var iAI=H.indexOf('admin_index.php')>=0;
 var sT=(Q.indexOf('theme')>=0);var iAP=H.indexOf('admin_')>=0;
-
-/* FIX A: removed early nlReady() — every branch ends with nlReady() after UI is built */
 
 if(nlIsHub && iF && Q.indexOf('nl_sync=')>=0)return;
 if(nlIsHub && iF && Q.indexOf('nl_sync=')<0){
@@ -272,7 +327,7 @@ if(H.indexOf('profile.php')>=0&&H.indexOf('nl_save=1')>=0){
 }
 
 if(Q.indexOf('theme')>=0&&Q.indexOf('nl_done=1')<0){var nc=true;try{if(sessionStorage.getItem('nl_custom_style_enabled')==='true')nc=false}catch(e){}if(nc){window.location.href='/admin_style.php?nl_auto=1';return}}
-if(H.indexOf('nl_auto=1')>=0){$('body').children().hide();var aH='<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><div style="font-size:48px;margin-bottom:16px;"><i class="fas fa-sync-alt fa-spin"></i></div><h2>Configuring your site...</h2></div></div>';$('body').append(aH);nlReady();setTimeout(function(){var $sl=$('select[name="form[o_custom_style]"]');if($sl.length>0){$sl.val('1');var $fm=$sl.closest('form');if($fm.length>0){var fd=$fm.serialize();if(fd.indexOf('save')===-1)fd+='&save=1';$.ajax({url:$fm.attr('action')||H,type:'POST',data:fd,success:function(){sessionStorage.setItem('nl_custom_style_enabled','true');setTimeout(function(){window.location.href='/index.php?theme&nl_done=1'},800)},error:function(){sessionStorage.setItem('nl_custom_style_enabled','true');setTimeout(function(){window.location.href='/index.php?theme&nl_done=1'},500)}})}else{setTimeout(function(){window.location.href='/index.php?theme&nl_done=1'},500)}}else{setTimeout(function(){window.location.href='/index.php?theme&nl_done=1'},500)}},1000);return}
+if(H.indexOf('nl_auto=1')>=0){nlForceCustomStyleAndProceed('/index.php?theme&nl_done=1');return}
 
 if(iF && !nlIsHub){var cTS=false;try{if(sessionStorage.getItem('nl_allow_forms_access')==='true'){cTS=true;sessionStorage.removeItem('nl_allow_forms_access')}}catch(e){}if(!cTS&&Q.indexOf('nl_type=')<0){nlReady();$('body').children().hide();$('body').append('<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><div style="font-size:64px;margin-bottom:16px;"><i class="fas fa-lock"></i></div><h2 style="font-size:28px;font-weight:800;">Access Restricted</h2><p>Please use the Theme Selector to configure your forum.</p><p style="font-size:12px;opacity:0.6;">Redirecting...</p></div></div>');setTimeout(function(){window.location.href='/index.php?theme'},2500);return}}
 
@@ -301,7 +356,7 @@ if(iF){var oT='punbb';if(Q.indexOf('nl_type=nairaland')>=0)oT='nairaland';else i
             if(fd3.indexOf('save')===-1)fd3+='&save=1';
             $.ajax({url:$fm3.attr('action')||H,type:'POST',data:fd3,complete:function(){
               try{sessionStorage.setItem('nl_custom_style_enabled','true')}catch(e){}
-              setTimeout(function(){window.location.href='/admin_index.php'},1200);
+              nlForceCustomStyleAndProceed('/admin_index.php');
             }});
           }
         }, 800);
@@ -312,7 +367,6 @@ if(iF){var oT='punbb';if(Q.indexOf('nl_type=nairaland')>=0)oT='nairaland';else i
 
 if(ia&&iAP&&!iAI&&!iS&&!iF&&!sT){var at3=nlDT()||'punbb';var p2=nlUA.palettes[at3]||nlUA.palettes.punbb;var pi={admin_categories:{name:'Categories',icon:'fa-folder'},admin_forums:{name:'Forums',icon:'fa-comments'},admin_users:{name:'Users',icon:'fa-users'},admin_fields:{name:'Profile Fields',icon:'fa-user-edit'},admin_options:{name:'Options',icon:'fa-cog'},admin_permissions:{name:'Permissions',icon:'fa-lock'},admin_groups:{name:'User Groups',icon:'fa-user-tag'},admin_pages:{name:'Pages',icon:'fa-file-alt'},admin_censoring:{name:'Censoring',icon:'fa-ban'},admin_files:{name:'Files',icon:'fa-image'},admin_domain:{name:'Domain',icon:'fa-globe'},admin_backups:{name:'Backups',icon:'fa-database'},admin_scripts:{name:'Scripts',icon:'fa-terminal'},admin_logs:{name:'Forum Logs',icon:'fa-history'},admin_paid_services:{name:'Paid Services',icon:'fa-credit-card'},admin_mail:{name:'Mass Mailing',icon:'fa-envelope'}};var ci={name:'Admin Tools',icon:'fa-tools'};var pk=Object.keys(pi);for(var k=0;k<pk.length;k++){if(H.indexOf(pk[k])>=0){ci=pi[pk[k]];break}}var pt=$('#pun-admain h1, #pun-main h1, h1').first().text()||ci.name;var wH='<div id="nl-tool-page" style="min-height:100vh;background:linear-gradient(135deg,'+p2.bg+','+p2.bgGrad+');padding-bottom:40px;font-family:Inter,sans-serif;"><div style="background:rgba(255,255,255,0.12);padding:0 24px;"><div style="max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;height:64px;"><a href="/admin_index.php" style="color:#fff;font-weight:600;text-decoration:none;"><i class="fas fa-arrow-left"></i> Dashboard</a><span style="color:#fff;font-weight:700;"><i class="fas '+ci.icon+'" style="color:#FFD700;"></i> '+ci.name+'</span></div></div><div style="max-width:1280px;margin:24px auto;width:96%;"><div style="background:#fff;border-radius:20px;padding:32px;"><h1 style="color:'+p2.text+';font-size:24px;font-weight:800;margin:0 0 20px;">'+pt+'</h1><div id="nl-tool-content"></div></div></div></div>';$('body').css({margin:'0',padding:'0',background:p2.bg});$('#pun_wrap,#pun').css({background:'transparent',margin:'0',padding:'0','max-width':'100%',width:'100%'});$('#pun-title,#pun-navlinks,#pun-ulinks,#pun-status,#pun-break1,#pun-crumbs1,#pun-break2,#pun-adnav,#pun-break3,#pun-crumbs2,#pun-break4,#pun-about,#pun-stats').hide();$('body').prepend(wH);$('#pun-main, #pun-admain, .main').appendTo('#nl-tool-content');nlReady();return}
 
-/* FIX C: login/register/profile pages just unhide — no undefined nlRenderLogin() call */
 if(window.location.pathname.indexOf('login.php')>=0 ||
    window.location.pathname.indexOf('register.php')>=0 ||
    window.location.pathname.indexOf('profile.php')>=0){
@@ -320,7 +374,6 @@ if(window.location.pathname.indexOf('login.php')>=0 ||
   return;
 }
 
-/* FIX D: construction card — loosened isHome + no-theme fallback for all public pages */
 var isHome = (window.location.pathname === '' ||
               window.location.pathname === '/' ||
               window.location.pathname === '/index.php' ||
@@ -383,7 +436,6 @@ if (isHome) {
   }
 }
 
-/* FALLBACK FIX (D2): if we got here on a public non-admin page and there's still no theme markup, show the card instead of raw PunBB */
 var themeAttrAny = document.body && document.body.getAttribute('data-nl-theme');
 var hasThemeMarkupAny = !!themeAttrAny || $('.nl-navbar').length > 0 || $('.nl-boards-table').length > 0;
 if (!hasThemeMarkupAny && $('#nl-construction-card, #nl-welcome-card').length === 0 && !$('#nl-customizer').length) {
