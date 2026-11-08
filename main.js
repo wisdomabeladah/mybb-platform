@@ -491,14 +491,7 @@ if(ia&&iO&&nativeMatch){
       var saveOptions=function(){
         $.ajax({url:$nativeForm.attr('action')||H,type:'POST',data:nativeData,complete:function(){window.location.href='/admin_index.php'}});
       };
-      $.ajax({url:'/admin_style.php',type:'GET',dataType:'html',cache:false,timeout:10000}).done(function(html){
-        var $styleForm=$('<div>').html(html).find('form').first();
-        var styleAction=$styleForm.attr('action')||'/admin_style.php?action=foo';
-        var styleData={};
-        $styleForm.find('input[type="hidden"]').each(function(){var n=$(this).attr('name');if(n)styleData[n]=$(this).val()});
-        styleData['form[o_custom_style]']='0';styleData['form[content1]']='';styleData['form[content2]']='';styleData.save='Save changes';
-        $.ajax({url:styleAction,type:'POST',data:styleData,complete:saveOptions});
-      }).fail(saveOptions);
+      saveOptions();
       return;
     }
   }
