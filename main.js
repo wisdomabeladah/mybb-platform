@@ -28,7 +28,7 @@ function nlNativeRestore(){
     var o=document.getElementById('nl-native-override');
     if(!o){o=document.createElement('style');o.id='nl-native-override';document.head.appendChild(o)}
     o.textContent='#pun-main,#pun-index .category,#pun-index .forum,#pun-viewforum .punbb .main,#pun-viewtopic .punbb .main,.punbb .post,.punbb .main .post{display:block!important;visibility:visible!important;opacity:1!important} html.nl-native-mode body .nl-navbar,html.nl-native-mode body .nl-boards-table,html.nl-native-mode body .nl-featured,html.nl-native-mode body .nl-online,html.nl-native-mode body .nl-footer,html.nl-native-mode body .nl-topics-table,html.nl-native-mode body .nl-ad-slider,html.nl-native-mode body .nl-title,html.nl-native-mode body .nl-welcome-line,html.nl-native-mode body .nl-stats-line{display:none!important;visibility:hidden!important;opacity:0!important}';
-    document.documentElement.className+=' nl-native-mode';$('#pun-main').css({display:'block',visibility:'visible',opacity:1});$('#pun-main .category,#pun-main .forum').each(function(){$(this).css({display:'block',visibility:'visible',opacity:1})});
+    document.documentElement.className+=' nl-native-mode';['display','visibility','opacity'].forEach(function(k){document.querySelector('#pun-main')?.style.setProperty(k,k==='display'?'block':k==='visibility'?'visible':'1','important')});document.querySelectorAll('#pun-main .category,#pun-main .forum').forEach(function(e){e.style.setProperty('display','block','important');e.style.setProperty('visibility','visible','important');e.style.setProperty('opacity','1','important')});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply);else apply();
   setTimeout(apply,200);setTimeout(apply,1000);
