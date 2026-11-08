@@ -458,8 +458,31 @@ var iF=H.indexOf('admin_forms.php')>=0;var iS=H.indexOf('admin_style.php')>=0;va
 var sT=(Q.indexOf('theme')>=0);var iAP=H.indexOf('admin_')>=0;
 var iO=H.indexOf('admin_options.php')>=0;var nativeMatch=Q.match(/[?&]nl_native=([^&]+)/);
 var nativeBoardMode=(typeof BoardStyle!=='undefined'&&BoardStyle&&BoardStyle!=='Custom');try{nativeBoardMode=nativeBoardMode||!!localStorage.getItem('nl_native_style')}catch(e){}if(nativeBoardMode&&!iAP&&!sT){nlNativeRestore();nlReady();return;}
-if(ia&&iO&&nativeMatch){var nativeId=decodeURIComponent(nativeMatch[1]||'');var $nativeSelect=$('#fld8');var nativeFound=false;if($nativeSelect.length){$nativeSelect.find('option').each(function(){var ov=$(this).val()||'';if(ov===nativeId||$(this).text().trim()===nativeId){$nativeSelect.val(ov);nativeFound=true;}})}if(nativeFound){try{localStorage.setItem('nl_native_style',nativeId);localStorage.removeItem('nl_custom_style_enabled')}catch(e){}var $nativeForm=$nativeSelect.closest('form');if($nativeForm.length){$nativeForm.find('input[name=\"form[o_custom_style]\"][value=\"0\"],input[name=\"form[o_custom_style]\"][value=\"false\"] ,select[name=\"form[o_custom_style]\"]').each(function(){if(this.tagName.toLowerCase()==='select'){$(this).val('0')}else{$(this).prop('checked',true)}});}if($nativeForm.length){$('body').children().hide();$('body').append('<div style="position:fixed;inset:0;z-index:999999;background:#2865F1;color:#fff;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;"><div style="text-align:center;"><i class="fas fa-palette fa-spin" style="font-size:48px;"></i><h2>Applying '+nativeId.replace(/_/g,' ')+'...</h2><p>Loading the original PunBB style</p></div></div>');var nativeData=$nativeForm.serialize();if(nativeData.indexOf('save=')===-1)nativeData+='&save=1';$.ajax({url:$nativeForm.attr('action')||H,type:'POST',data:nativeData,complete:function(){window.location.href='/admin_index.php'}});return}}}
-
+if(ia&&iO&&nativeMatch){
+  var nativeId=decodeURIComponent(nativeMatch[1]||'');
+  var $nativeSelect=$('#fld8');
+  var nativeFound=false;
+  if($nativeSelect.length){$nativeSelect.find('option').each(function(){var ov=$(this).val()||'';if(ov===nativeId||$(this).text().trim()===nativeId){$nativeSelect.val(ov);nativeFound=true;}})}
+  if(nativeFound){
+    try{localStorage.setItem('nl_native_style',nativeId);localStorage.removeItem('nl_custom_style_enabled')}catch(e){}
+    var $nativeForm=$nativeSelect.closest('form');
+    if($nativeForm.length){
+      $('body').children().hide();
+      $('body').append('<div style="position:fixed;inset:0;z-index:999999;background:#2865F1;color:#fff;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;"><div style="text-align:center;"><i class="fas fa-palette fa-spin" style="font-size:48px;"></i><h2>Applying '+nativeId.replace(/_/g,' ')+'...</h2><p>Disabling custom style and loading the original PunBB style</p></div></div>');
+      var nativeData=$nativeForm.serialize();if(nativeData.indexOf('save=')===-1)nativeData+='&save=1';
+      var saveOptions=function(){$.ajax({url:$nativeForm.attr('action')||H,type:'POST',data:nativeData,complete:function(){window.location.href='/admin_index.php'}})};
+      $.ajax({url:'/admin_style.php',type:'GET',dataType:'html',cache:false,timeout:10000}).done(function(html){
+        var $styleForm=$('<div>').html(html).find('form').first();
+        var styleAction=$styleForm.attr('action')||'/admin_style.php?action=foo';
+        var styleData={};
+        $styleForm.find('input[type="hidden"]').each(function(){var n=$(this).attr('name');if(n)styleData[n]=$(this).val()});
+        styleData['form[o_custom_style]']='0';styleData['form[content1]']='';styleData['form[content2]']='';styleData.save='Save changes';
+        $.ajax({url:styleAction,type:'POST',data:styleData,complete:saveOptions});
+      }).fail(saveOptions);
+      return;
+    }
+  }
+}
 try{
   var _tnm = document.body && document.body.getAttribute('data-nl-theme');
   if(_tnm){ localStorage.setItem('nl_has_theme','1'); }
