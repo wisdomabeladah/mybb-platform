@@ -488,18 +488,9 @@ if(ia&&iO&&nativeMatch){
       $('body').children().hide();
       $('body').append('<div style="position:fixed;inset:0;z-index:999999;background:#2865F1;color:#fff;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;"><div style="text-align:center;"><i class="fas fa-palette fa-spin" style="font-size:48px;"></i><h2>Applying '+nativeId.replace(/_/g,' ')+'...</h2><p>Disabling custom style and loading the original PunBB style</p></div></div>');
       var nativeData=$nativeForm.serialize();if(nativeData.indexOf('save=')===-1)nativeData+='&save=1';
-      var clearThemeFields=function(){
-        $.ajax({url:'/admin_forms.php',type:'GET',dataType:'html',cache:false,timeout:10000}).done(function(formsHtml){
-          var $forms=$('<div>').html(formsHtml).find('form').filter(function(){return $(this).find('textarea[name=\"form[o_html_header]\"]').length>0}).first();
-          var formsAction=$forms.attr('action')||'/admin_forms.php?action=foo';
-          var formsData={};
-          $forms.find('input[type=\"hidden\"]').each(function(){var n=$(this).attr('name');if(n)formsData[n]=$(this).val()});
-          $forms.find('textarea,input[type=\"text\"],select').each(function(){var n=$(this).attr('name');if(n)formsData[n]=$(this).val()});
-          formsData['form[o_html_header]']='';formsData['form[o_html_footer]']='';formsData.form_sent='1';formsData.save='Save changes';
-          $.ajax({url:formsAction,type:'POST',data:formsData,complete:function(){window.location.href='/admin_index.php'}});
-        }).fail(function(){window.location.href='/admin_index.php'});
+      var saveOptions=function(){
+        $.ajax({url:$nativeForm.attr('action')||H,type:'POST',data:nativeData,complete:function(){window.location.href='/admin_index.php'}});
       };
-      var saveOptions=function(){$.ajax({url:$nativeForm.attr('action')||H,type:'POST',data:nativeData,complete:clearThemeFields})};
       $.ajax({url:'/admin_style.php',type:'GET',dataType:'html',cache:false,timeout:10000}).done(function(html){
         var $styleForm=$('<div>').html(html).find('form').first();
         var styleAction=$styleForm.attr('action')||'/admin_style.php?action=foo';
