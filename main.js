@@ -58,7 +58,7 @@ function nlWrapThemePayload(payload){
   return '<script>/* MYWEB_THEME_GATE_V1 */'+run+'<'+'/script>';
 }
 window.nlWrapThemePayload=nlWrapThemePayload;
-var nlNativeAssetVersion='e688d84';
+var nlNativeAssetVersion='d4455a3';
 var nlNativeAssets={Mybb_Work_Station:{base:'https://cdn.jsdelivr.net/gh/wisdomabeladah/mybb-platform@'+nlNativeAssetVersion+'/themes/native/Mybb_Work_Station/',files:[['nl-native-structure-css','Mybb_Work_Station.css'],['nl-native-extra-css','extra.css'],['nl-native-mobile-css','mobile.css']]}};
 function nlNativeApply(id){try{sessionStorage.setItem('nl_native_style_pending',id)}catch(e){}window.location.href='/admin_options.php?nl_native='+encodeURIComponent(id)}
 window.nlNativeApply=nlNativeApply;
