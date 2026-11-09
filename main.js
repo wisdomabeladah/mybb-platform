@@ -54,29 +54,36 @@ function nlWrapThemePayload(payload){
     if(window.TextEncoder){var bytes=new TextEncoder().encode(payload),binary='';for(var i=0;i<bytes.length;i++)binary+=String.fromCharCode(bytes[i]);encoded=btoa(binary)}
     else encoded=btoa(unescape(encodeURIComponent(payload)));
   }catch(e){return payload}
-  var run=['(function(){','var native=!!(document.documentElement.classList&&document.documentElement.classList.contains("nl-native-mode"))||(typeof BoardStyle==="string"&&BoardStyle&&BoardStyle!=="Custom"&&/^[A-Za-z0-9_-]+$/.test(BoardStyle)),links=document.getElementsByTagName("link");','for(var i=0;i<links.length;i++){','var h=links[i].getAttribute("href")||links[i].href||"";','var m=h.match(/\\/style\\/([A-Za-z0-9_-]+)\\/([A-Za-z0-9_-]+)\\.css(?:[?#]|$)/i);','if(m&&m[1].toLowerCase()===m[2].toLowerCase()){native=true;break}}','if(!native){var b=atob("'+encoded+'"),u=new Uint8Array(b.length);','for(var j=0;j<b.length;j++)u[j]=b.charCodeAt(j);','var s=window.TextDecoder?new TextDecoder("utf-8").decode(u):decodeURIComponent(escape(b));','document.write(s)}})();'].join('');
+  var run=['(function(){','var native=!!(document.documentElement.classList&&document.documentElement.classList.contains("nl-native-mode"))||(typeof BoardStyle==="string"&&BoardStyle&&BoardStyle!=="Custom"&&/^[A-Za-z0-9_-]+$/.test(BoardStyle)),links=document.getElementsByTagName("link");','for(var i=0;i<links.length;i++){','var h=links[i].getAttribute("href")||links[i].href||"";','var m=h.match(/\/style\/([A-Za-z0-9_-]+)\/([A-Za-z0-9_-]+)\.css(?:[?#]|$)/i);','if(m&&m[1].toLowerCase()===m[2].toLowerCase()){native=true;break}}','if(!native){var b=atob("'+encoded+'"),u=new Uint8Array(b.length);','for(var j=0;j<b.length;j++)u[j]=b.charCodeAt(j);','var s=window.TextDecoder?new TextDecoder("utf-8").decode(u):decodeURIComponent(escape(b));','document.write(s)}})();'].join('');
   return '<script>/* MYWEB_THEME_GATE_V1 */'+run+'<'+'/script>';
 }
 window.nlWrapThemePayload=nlWrapThemePayload;
+var nlNativeAssetVersion='e688d84';
+var nlNativeAssets={Mybb_Work_Station:{base:'https://cdn.jsdelivr.net/gh/wisdomabeladah/mybb-platform@'+nlNativeAssetVersion+'/themes/native/Mybb_Work_Station/',files:[['nl-native-structure-css','Mybb_Work_Station.css'],['nl-native-extra-css','extra.css'],['nl-native-mobile-css','mobile.css']]}};
 function nlNativeApply(id){try{sessionStorage.setItem('nl_native_style_pending',id)}catch(e){}window.location.href='/admin_options.php?nl_native='+encodeURIComponent(id)}
 window.nlNativeApply=nlNativeApply;
+function nlNativeCleanCustomLayer(){
+  var selectors='.nl-navbar,.nl-boards-table,.nl-featured,.nl-online,.nl-footer,.nl-topics-table,.nl-ad-slider,.nl-title,.nl-welcome-line,.nl-stats-line,#nl-header-overlay,#nl-footer-overlay,#nl-theme-modal,#nl-style-spinner,#nl-ua-panel,#nl-tool-page';
+  document.querySelectorAll(selectors).forEach(function(e){if(e&&e.parentNode)e.parentNode.removeChild(e)});
+  document.querySelectorAll('link[rel="stylesheet"]').forEach(function(e){var h=e.href||'';if(h.indexOf('forumstatic.ru/files/001c/ac/51/')>=0)e.parentNode.removeChild(e)});
+  document.querySelectorAll('style').forEach(function(e){var t=e.textContent||'';if(t.indexOf('.nl-navbar')>=0||t.indexOf('.nl-boards-table')>=0||t.indexOf('#pun-index .category')>=0)e.parentNode.removeChild(e)});
+}
 function nlNativeRestore(){
   var id=nlNativeStyleId();
   if(!id){try{localStorage.removeItem('nl_native_style')}catch(e){}return;}
   try{localStorage.setItem('nl_native_style',id);localStorage.removeItem('nl_custom_style_enabled')}catch(e){}
   function apply(){
+    nlNativeCleanCustomLayer();
     var root=document.documentElement;
     if((' '+root.className+' ').indexOf(' nl-native-mode ')<0)root.className+=' nl-native-mode';
-    var links=document.querySelectorAll('link[rel~="stylesheet"][href]'),hasStructure=false,hasColors=false;
-    for(var i=0;i<links.length;i++){
-      if(links[i].id==='nl-native-structure-css'||links[i].id==='nl-native-colors-css')continue;
-      var raw=links[i].getAttribute('href')||links[i].href||'',path=raw;
-      try{path=new URL(raw,window.location.href).pathname}catch(e){}
-      if(path==='/style/'+id+'/'+id+'.css')hasStructure=true;
-      if(path==='/style/'+id+'/'+id+'_cs.css')hasColors=true;
+    if(!document.getElementById('nl-native-structure-css')){
+      var local=nlNativeAssets[id], files=local?local.files:[['nl-native-structure-css',id+'.css'],['nl-native-colors-css',id+'_cs.css']];
+      files.forEach(function(pair){var a=document.createElement('link');a.id=pair[0];a.rel='stylesheet';a.href=local?local.base+pair[1]:'/style/'+id+'/'+pair[1];document.head.appendChild(a)});
     }
-    if(!hasStructure){var a=document.createElement('link');a.id='nl-native-structure-css';a.rel='stylesheet';a.href='/style/'+id+'/'+id+'.css';document.head.appendChild(a)}
-    if(!hasColors){var b=document.createElement('link');b.id='nl-native-colors-css';b.rel='stylesheet';b.href='/style/'+id+'/'+id+'_cs.css';document.head.appendChild(b)}
+    var o=document.getElementById('nl-native-override');
+    if(!o){o=document.createElement('style');o.id='nl-native-override';document.head.appendChild(o)}
+    o.textContent='#pun-main,#pun-index .category,#pun-index .forum,#pun-viewforum .punbb .main,#pun-viewtopic .punbb .main,.punbb .post,.punbb .main .post{display:block!important;visibility:visible!important;opacity:1!important} html.nl-native-mode body .nl-navbar,html.nl-native-mode body .nl-boards-table,html.nl-native-mode body .nl-featured,html.nl-native-mode body .nl-online,html.nl-native-mode body .nl-footer,html.nl-native-mode body .nl-topics-table,html.nl-native-mode body .nl-ad-slider,html.nl-native-mode body .nl-title,html.nl-native-mode body .nl-welcome-line,html.nl-native-mode body .nl-stats-line{display:none!important;visibility:hidden!important;opacity:0!important}';
+    ['display','visibility','opacity'].forEach(function(k){var main=document.querySelector('#pun-main');if(main)main.style.setProperty(k,k==='display'?'block':k==='visibility'?'visible':'1','important')});document.querySelectorAll('#pun-main .category,#pun-main .forum').forEach(function(e){e.style.setProperty('display','block','important');e.style.setProperty('visibility','visible','important');e.style.setProperty('opacity','1','important')});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply);else apply();
 }
@@ -220,7 +227,7 @@ function nlIT(type){
   try{sessionStorage.setItem('nl_install_footer',fc)}catch(e){}
   try{sessionStorage.setItem('nl_allow_forms_access','true')}catch(e){}
   nlIncrementSwitch();
-  if(type==='punbb'){try{sessionStorage.setItem('nl_install_code','')}catch(e){}window.location.href='/admin_forms.php?nl_type=punbb';return}
+  if(type==='punbb'){nlNativeApply('Mybb_Work_Station');return}
   var ti=nlTF[type];if(!ti)return;
   var url='https://forumstatic.ru/files/001c/ac/51/'+ti.file+'.txt?v='+ti.v;
   $.ajax({url:url,type:'GET',dataType:'text',success:function(data){try{sessionStorage.setItem('nl_install_code',data)}catch(e){}window.location.href='/admin_forms.php?nl_type='+type},error:function(){try{sessionStorage.setItem('nl_install_code','')}catch(e){}window.location.href='/admin_forms.php?nl_type='+type}});

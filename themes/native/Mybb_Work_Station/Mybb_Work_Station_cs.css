@@ -1,0 +1,274 @@
+/* CS1 Background and text colours
+-------------------------------------------------------------*/
+
+body {
+        background: url(assets/img/Mybb_Work_Station/bg.gif) #56ac17 repeat-x;
+        }
+
+html {  background-color: #56ac17}
+
+#pun-title TABLE {
+        background: url(assets/img/Mybb_Work_Station/logo.gif) transparent no-repeat top left;
+}
+
+#pun {
+        background: url(assets/img/Mybb_Work_Station/pun.jpg) transparent no-repeat top right;
+        color: #002454;
+        border-color: #637790;
+}
+
+/* CS1.1 */
+.punbb .main .container,
+.punbb td.tc3,
+.punbb .section .container,
+.punbb .section .formal .container,
+.punbb .formal fieldset,
+#viewprofile li strong, #viewprofile li div,
+#setmods dd, .punbb .post-body,
+.post-box, .punbb .post-links,
+.punbb-admin #pun-admain .adcontainer,
+.punbb .info-box, .punbb #pun-main .info-box .legend {
+  background-color: #e4f4f3;
+  color: #002454;
+  }
+
+#pun-ulinks .container {
+  background-color: #e4f4f3;
+  color: #002454;
+}
+
+/* CS1.2 */
+.punbb .post .container,
+.punbb .post h3 {
+  background-color: #DCF2F1;
+  color: #002454;
+}
+
+.punbb .post h3 span {
+  background-color: #DCF2F1;
+  color: #002454;
+}
+
+.punbb td.tc2, .punbb td.tcr {
+  background-color: #DCF2F1;
+  color: #002454;
+  }
+
+/* CS1.3 */
+#pun-stats h2, .punbb .main h1, .punbb .main h2, #pun-debug h2, .punbb-admin #pun-admain h2 {
+  background: #c5e9fd;
+  color: #1671A8;
+  font-size: 1.1em;
+  text-align: center;
+  }
+
+/* CS1.4 */
+.punbb .modmenu .container {
+  background-color: #DCF2F1;
+  color: #002454;
+  }
+
+/* CS1.5 */
+.punbb legend span, #viewprofile h2 span, #profilenav h2 span, .punbb-admin #pun-admain legend span {
+  background-color: #e4f4f3;
+  color: #002454;
+  }
+
+#viewprofile h2 span {
+  background-image: none;
+}
+
+.punbb .post h3 strong {
+  font-size: 0.9em;
+  color: #002454;
+}
+
+/* CS1.7 */
+.punbb .quote-box, .punbb .code-box {
+  background-color: #DFF0EF;
+  color: #002454
+  }
+
+.punbb textarea, .punbb select, .punbb input {
+  background-color: #DFF0EF;
+  color: #002454
+}
+
+/* CS1.8 */
+#pun-navlinks .container {
+  background: url(assets/img/Mybb_Work_Station/navlinks.gif) #1671a8 repeat-x;
+  color: #006699;
+  }
+
+.offline li.pa-online strong {
+  font-weight: normal;
+  }
+
+.punbb th {
+  color: #1671A8;
+  background: #a6daf9;
+}
+
+/* CS2 Border colours
+-------------------------------------------------------------*/
+
+#pun-title, #pun-navlinks {
+  border-color: #8ABFDF;
+}
+
+/* CS2.1 */
+.punbb .container, .punbb .post-body, .post h3 {
+  border-color: #1671A8
+  }
+
+/* CS2.2 */
+.punbb .section, .punbb .forum, .punbb .formal, .punbb .modmenu, .punbb .info,
+.punbb .category, .punbb .post {
+  border-color: #C0D3EB;
+  }
+
+/* CS2.3 */
+#pun-stats h2, .punbb .main h1, .punbb .main h2, #pun-debug h2, .punbb-admin #pun-admain h2 {
+  border-color: #1671A8;
+  }
+
+/* CS2.4 */
+.punbb td, .punbb fieldset, #viewprofile ul, #profilenav ul, .punbb .post .post-body,
+.punbb .post h3 span, .post-links ul, .post-links, .usertable table {
+  border-color: #fff;
+  }
+
+/* CS2.5 */
+.punbb th {
+  border-color: #1671A8;
+  }
+
+/* CS2.6 */
+.punbb .quote-box, .punbb .code-box {
+  border-color: #1671A8
+  }
+
+#pun-ulinks li, #pun-announcement h2 span, li#onlinelist, #pun-help .formal .info-box h3.legend span {
+  border-color: #D8E8E7
+  }
+
+#pun-ulinks li a, #pun-announcement h2, li#onlinelist div, #pun-help .formal .info-box h3.legend {
+  border-color: #F0FFFE
+  }
+
+.punbb .divider {
+  border-color: #D8E8E7 #F0FFFE #F0FFFE #D8E8E7;
+  }
+
+.punbb .formal fieldset .post-box, .punbb .info-box {
+  border: 1px solid #a7b5bd;
+  }
+
+li.pa-online {
+  border-left-color: #56ac17;
+  }
+
+
+/* CS3 Links
+-------------------------------------------------------------*/
+
+/* CS3.1 */
+.punbb a, .punbb a:link, .punbb a:visited,
+.punbb-admin #pun-admain a, .punbb-admin #pun-admain a:link, .punbb-admin #punbb-admain a:visited {
+  color: #34670F;
+  text-decoration: underline;
+  }
+
+.punbb li.isactive a, .punbb li.isactive a:link, .punbb li.isactive a:visited {
+  color: #34670F;
+  text-decoration: underline;
+  }
+
+/* CS3.2 */
+.punbb a:hover, .punbb a:focus, .punbb a:active,  .punbb-admin #pun-admain .nodefault,
+.punbb-admin #punbb-admain a:hover, .punbb-admin #punbb-admain a:focus, .punbb-admin #punbb-admain a:active {
+  color: #1671A8;
+   text-decoration: none;
+  }
+
+/* CS3.3 */
+#pun-navlinks a {
+  color: #fff;
+  text-decoration: none;
+  }
+
+/* CS3.4 */
+#pun-navlinks a:hover, #pun-navlinks a:focus, #pun-navlinks a:active {
+  color: #fff;
+  text-decoration: underline;
+  }
+
+#pun-main .postlink a, #pun-main .subscribelink a {
+  color: #fff;
+  text-decoration: underline;
+  }
+
+#pun-main .postlink a:hover, #pun-main .subscribelink a:hover {
+  color: #fff;
+  text-decoration: none;
+  }
+
+#pun-pagelinks a:active, #pun-pagelinks a:focus {
+  background-color: #002454;
+  color: #002454;
+  }
+
+.post h3 span a:link, .post h3 span a:visited {
+  font-weight: normal;
+  font-size: 0.9em;
+  text-decoration: none;
+}
+
+/* CS4 Post status icons
+ -------------------------------------------------------------*/
+
+div.icon {
+        background: url(assets/img/Mybb_Work_Station/old.gif) no-repeat;
+}
+
+tr.inew div.icon {
+        background: url(assets/img/Mybb_Work_Station/new.gif) no-repeat;
+}
+
+tr.iclosed div.icon {
+        background: url(assets/img/Mybb_Work_Station/lock.gif) no-repeat;
+}
+
+tr.iredirect div.icon {
+        background: url(assets/img/Mybb_Work_Station/link.gif) no-repeat;
+
+}
+
+tr.isticky div.icon {
+        background: url(assets/img/Mybb_Work_Station/sticky.gif) no-repeat;
+}
+
+.punbb .main h1 span, .punbb .main h2 span, #pun-stats h2 span {
+        background: none;
+}
+
+#profilenav h2 span {background-image: none}
+
+td.tcr a{
+        background: transparent url(assets/img/Mybb_Work_Station/post.gif) no-repeat 0px 1px;
+        padding-left: 14px;
+}
+
+#pun-stats ul.container {
+        background: transparent url(assets/img/Mybb_Work_Station/stats.gif) no-repeat 10px 26px;
+        padding-left: 53px;
+}
+
+#pun-stats div.statscon {
+        background: #e4f4f3;
+}
+
+#pun-crumbs2 .container, #pun-about .container{
+        background:  #e4f4f3;
+        color: #002454;
+}
