@@ -35,6 +35,7 @@ var nlNativeThemes=[
 ];
 function nlNativeStyleId(){
   if(typeof BoardStyle==='string'&&BoardStyle&&BoardStyle!=='Custom'&&/^[A-Za-z0-9_-]+$/.test(BoardStyle))return BoardStyle;
+  try{var saved=localStorage.getItem('nl_native_style')||'';if(/^[A-Za-z0-9_-]+$/.test(saved))return saved}catch(e){}
   var links=document.querySelectorAll('link[rel~="stylesheet"][href]');
   for(var i=0;i<links.length;i++){
     if(links[i].id==='nl-native-structure-css'||links[i].id==='nl-native-colors-css')continue;
