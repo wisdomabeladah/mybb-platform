@@ -49,8 +49,9 @@ function nlSetCustomThemeMode(enabled){
 }
 function nlNativeStyleId(){
   if(nlMyWebCustomMode())return '';
+  try{var saved=localStorage.getItem('nl_native_style')||'';if(saved==='Mybb_Work_Station')return saved}catch(e){}
   if(typeof BoardStyle==='string'&&BoardStyle){if(BoardStyle==='Custom')return '';return nlNativeKnownStyleId(BoardStyle)?BoardStyle:''}
-  try{var saved=localStorage.getItem('nl_native_style')||'';if(nlNativeKnownStyleId(saved))return saved}catch(e){}
+  try{var savedFallback=localStorage.getItem('nl_native_style')||'';if(nlNativeKnownStyleId(savedFallback))return savedFallback}catch(e){}
   var links=document.querySelectorAll('link[rel~="stylesheet"][href]');
   for(var i=0;i<links.length;i++){
     if(links[i].id==='nl-native-structure-css'||links[i].id==='nl-native-colors-css')continue;
@@ -78,7 +79,7 @@ function nlWrapThemePayload(payload){
 window.nlWrapThemePayload=nlWrapThemePayload;
 var nlNativeAssetVersion='d4455a3';
 var nlNativeAssets={Mybb_Work_Station:{base:'https://cdn.jsdelivr.net/gh/wisdomabeladah/mybb-platform@'+nlNativeAssetVersion+'/themes/native/Mybb_Work_Station/',files:[['nl-native-structure-css','Mybb_Work_Station.css'],['nl-native-extra-css','extra.css'],['nl-native-mobile-css','mobile.css']]}};
-function nlNativeApply(id){try{sessionStorage.setItem('nl_native_style_pending',id)}catch(e){}nlSetCustomThemeMode(false);window.location.href='/admin_options.php?nl_native='+encodeURIComponent(id)}
+function nlNativeApply(id){try{sessionStorage.setItem('nl_native_style_pending',id);localStorage.removeItem('nl_selected_theme')}catch(e){}nlSetCustomThemeMode(false);window.location.href='/admin_options.php?nl_native='+encodeURIComponent(id)}
 window.nlNativeApply=nlNativeApply;
 function nlNativeCleanCustomLayer(){
   var title=document.getElementById('pun-title');
@@ -141,6 +142,9 @@ var nlIsHub=(window.location.hostname==='forum.myweb.name.ng');
 var nlThemeMap={nairaland:{logo:'#pun-title .nl-title h1 a',nav:'.nl-welcome-line',heroTitle:'.nl-featured-title',heroSubtitle:'.nl-featured-nav',footer:'.nl-footer'},portfolio:{logo:'.portfolio-logo',nav:'.portfolio-nav',heroTitle:'.portfolio-hero h1',heroSubtitle:'.portfolio-hero p',footer:'.portfolio-footer p'},landing:{logo:'.landing-logo',nav:'.landing-nav',heroTitle:'.landing-hero h1',heroSubtitle:'.landing-hero p',footer:'.landing-footer p'},generic:{logo:'[class*="-logo"], .nl-title h1 a, #pun-title h1 a',nav:'[class*="-nav"]',heroTitle:'[class*="-hero"] h1, .nl-featured-title',heroSubtitle:'[class*="-hero"] p, .nl-featured-nav',footer:'[class*="-footer"], .nl-footer'}};
 
 function nlDT(){if(document.body){var b=document.body.getAttribute('data-nl-theme');if(b)return b}if(typeof $!=='undefined'){if($('#pun-title').css('background-color')==='rgb(246, 246, 236)')return'nairaland';if(($('body').css('font-family')||'').indexOf('Open Sans')>=0)return'nairaland';if($('.nl-navbar').length>0)return'nairaland'}return null}
+function nlValidCustomTheme(id){return !!(id&&id!=='punbb'&&Object.prototype.hasOwnProperty.call(nlTP,id))}
+function nlSavedCustomTheme(html){var id='';try{id=localStorage.getItem('nl_selected_theme')||''}catch(e){}if(nlValidCustomTheme(id))return id;var src=html||'',re=/atob\([\"']([A-Za-z0-9+/=]+)[\"']\)/g,m;while((m=re.exec(src))){try{var b=atob(m[1]),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);var text=window.TextDecoder?new TextDecoder('utf-8').decode(u):decodeURIComponent(escape(b));var marker=text.match(/nl-theme-marker:([a-z0-9_-]+)/i);if(marker&&nlValidCustomTheme(marker[1].toLowerCase()))return marker[1].toLowerCase();var attr=text.match(/setAttribute\(['\"]data-nl-theme['\"]\s*,\s*['\"]([a-z0-9_-]+)['\"]\)/i);if(attr&&nlValidCustomTheme(attr[1].toLowerCase()))return attr[1].toLowerCase()}catch(e){}}return ''}
+window.nlSavedCustomTheme=nlSavedCustomTheme;
 function nlResolveUrl(url){if(!url)return '#';if(/^https?:\/\//i.test(url))return url;if(url.indexOf('/')===0)return url;if(url.indexOf('#')===0)return url;if(url.indexOf('?')===0)return url;return '/pages/'+url.replace(/^\/+/,'')}
 function nlGD(){try{var d=localStorage.getItem('nl_site_data');var parsed = d?JSON.parse(d):{txns:[],chats:[]};if(typeof parsed.themeBank==='undefined'){parsed.themeBank=3;parsed.switchCount=0;parsed.lastSwitchAt=null;try{localStorage.setItem('nl_site_data',JSON.stringify(parsed))}catch(e){}}return parsed}catch(e){return{txns:[],chats:[],themeBank:3,switchCount:0,lastSwitchAt:null}}}
 function nlSD(d){try{localStorage.setItem('nl_site_data',JSON.stringify(d))}catch(e){}}
@@ -268,7 +272,7 @@ function nlIT(type){
     nlShowPaywall('bank_empty');
     return;
   }
-  try{localStorage.removeItem('nl_native_style');localStorage.removeItem('nl_native_style_pending')}catch(e){}
+  try{localStorage.removeItem('nl_native_style');localStorage.removeItem('nl_native_style_pending');if(type==='punbb')localStorage.removeItem('nl_selected_theme');else localStorage.setItem('nl_selected_theme',type)}catch(e){}
   try{sessionStorage.removeItem('nl_detected_theme')}catch(e){}
   try{sessionStorage.removeItem('nl_detected_time')}catch(e){}
   var fc=nlGF(type);
@@ -587,8 +591,8 @@ if(ia&&iO&&nativeMatch){
   var $nativeSelect=$('#fld8');
   var nativeFound=false;
   if($nativeSelect.length){$nativeSelect.find('option').each(function(){var ov=$(this).val()||'';if(ov===nativeId||$(this).text().trim()===nativeId){$nativeSelect.val(ov);nativeFound=true;}})}
-  if(nativeFound){
-    try{localStorage.setItem('nl_native_style',nativeId);localStorage.removeItem('nl_native_style_pending');sessionStorage.removeItem('nl_custom_style_enabled')}catch(e){}
+  if(nativeFound||nativeId==='Mybb_Work_Station'){
+    try{localStorage.setItem('nl_native_style',nativeId);localStorage.removeItem('nl_selected_theme');localStorage.removeItem('nl_native_style_pending');sessionStorage.removeItem('nl_custom_style_enabled')}catch(e){}
     var $nativeForm=$nativeSelect.closest('form');
     if($nativeForm.length){
       $('body').children().hide();
@@ -629,10 +633,10 @@ if(iF && !nlIsHub){var cTS=false;try{if(sessionStorage.getItem('nl_allow_forms_a
 
 if(iAI&&ia){
   if(H.indexOf('customize')>=0){nlReady();nlOpenCustomizer();return}
-  var at2=nlDT();if(at2){nlBAP(at2);return}
-  try{var ct=sessionStorage.getItem('nl_detected_theme');var cT=sessionStorage.getItem('nl_detected_time');if(ct&&cT){var el=Date.now()-parseInt(cT);if(el<300000){nlBAP(ct);return}}}catch(e){}
+  var at2=nlDT()||nlSavedCustomTheme();if(at2){nlBAP(at2);return}
+  try{var ct=sessionStorage.getItem('nl_detected_theme');var cT=sessionStorage.getItem('nl_detected_time');if(ct&&ct!=='punbb'&&cT){var el=Date.now()-parseInt(cT);if(el<300000){nlBAP(ct);return}}}catch(e){}
   nlReady();$('body').children().hide();$('body').append('<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><div style="font-size:48px;margin-bottom:16px;"><i class="fas fa-sync-alt fa-spin"></i></div><h2>Loading Admin Panel</h2></div></div>');
-  $.ajax({url:'/admin_forms.php',type:'GET',dataType:'html',timeout:10000,success:function(fH){var det='punbb';var fm2=fH.match(/<textarea[^>]*name="form\[o_html_footer\]"[^>]*>([\s\S]*?)<\/textarea>/i);if(fm2&&fm2[1]){var tcm=fm2[1].match(/data-nl-theme['"]?\s*,\s*['"](\w+)['"]/);if(tcm&&tcm[1])det=tcm[1]}if(det==='punbb'){var hm2=fH.match(/<textarea[^>]*name="form\[o_html_header\]"[^>]*>([\s\S]*?)<\/textarea>/i);if(hm2&&hm2[1]){var hc2=hm2[1];if(hc2.indexOf('food-header')>=0)det='foodblog';else if(hc2.indexOf('Nairaland')>=0)det='nairaland';else if(hc2.indexOf('Portfolio')>=0)det='portfolio';else if(hc2.indexOf('Landing')>=0)det='landing';else if(hc2.indexOf('Grocery')>=0)det='grocery';else if(hc2.indexOf('Fashion')>=0)det='fashion';else if(hc2.indexOf('Tech Blog')>=0)det='techblog';else if(hc2.indexOf('Travel')>=0)det='travel';else if(hc2.indexOf('News')>=0)det='news'}}try{sessionStorage.setItem('nl_detected_theme',det);sessionStorage.setItem('nl_detected_time',Date.now().toString())}catch(e){}$('#nl-loading').remove();nlBAP(det)},error:function(){try{var ft2=sessionStorage.getItem('nl_detected_theme');if(ft2){nlBAP(ft2);return}}catch(e){}nlBAP('punbb')}});return
+  $.ajax({url:'/admin_forms.php',type:'GET',dataType:'html',timeout:10000,success:function(fH){var det=nlSavedCustomTheme(fH)||'punbb';var fm2=fH.match(/<textarea[^>]*name="form\[o_html_footer\]"[^>]*>([\s\S]*?)<\/textarea>/i);if(det==='punbb'&&fm2&&fm2[1]){var tcm=fm2[1].match(/data-nl-theme['"]?\s*,\s*['"](\w+)['"]/);if(tcm&&nlValidCustomTheme(tcm[1]))det=tcm[1]}if(det==='punbb'){var hm2=fH.match(/<textarea[^>]*name="form\[o_html_header\]"[^>]*>([\s\S]*?)<\/textarea>/i);if(hm2&&hm2[1]){var hc2=hm2[1];if(hc2.indexOf('food-header')>=0)det='foodblog';else if(hc2.indexOf('Nairaland')>=0)det='nairaland';else if(hc2.indexOf('Portfolio')>=0)det='portfolio';else if(hc2.indexOf('Landing')>=0)det='landing';else if(hc2.indexOf('Grocery')>=0)det='grocery';else if(hc2.indexOf('Fashion')>=0)det='fashion';else if(hc2.indexOf('Tech Blog')>=0)det='techblog';else if(hc2.indexOf('Travel')>=0)det='travel';else if(hc2.indexOf('News')>=0)det='news'}}try{sessionStorage.setItem('nl_detected_theme',det);sessionStorage.setItem('nl_detected_time',Date.now().toString())}catch(e){}$('#nl-loading').remove();nlBAP(det)},error:function(){var ft2='';try{ft2=sessionStorage.getItem('nl_detected_theme')||''}catch(e){}var saved=nlSavedCustomTheme();nlBAP(nlValidCustomTheme(saved)?saved:(nlValidCustomTheme(ft2)?ft2:'punbb'))}});return
 }
 
 if(sT&&ia){
