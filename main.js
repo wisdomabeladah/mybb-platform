@@ -693,8 +693,20 @@ function nlIT(type){
 }
 window.nlGF=nlGF;window.nlIT=nlIT;
 
-function nlForceCustomStyleAndProceed(redirectUrl){
+function nlForceCustomStyleAndProceed(redirectUrl,expectedTheme){
   var nextUrl = redirectUrl || '/admin_index.php';
+  function verifyCustomPayload(done){
+    $.ajax({url:'/admin_forms.php?nl_custom_payload_verify='+Date.now(),type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(html){
+      var doc=new DOMParser().parseFromString(html,'text/html');
+      var header=doc.querySelector('textarea[name="form[o_html_header]"]');
+      var footer=doc.querySelector('textarea[name="form[o_html_footer]"]');
+      var hv=header?header.value||header.textContent||'':'';
+      var fv=footer?footer.value||footer.textContent||'':'';
+      var gate='MYWEB_THEME_GATE_V1';
+      var themeOk=!expectedTheme||hv.indexOf('nl-theme-marker:'+expectedTheme)>=0;
+      done(!!header&&!!footer&&hv.length<65535&&hv.indexOf(gate)>=0&&fv.indexOf(gate)>=0&&themeOk);
+    }).fail(function(){done(false)});
+  }
   $('body').children().hide();
   var $spin = $('<div id="nl-style-spinner" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#2865F1;z-index:99999;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><div style="font-size:64px;margin-bottom:16px;"><i class="fas fa-palette fa-spin"></i></div><h2 style="font-size:24px;font-weight:800;margin:0 0 8px 0;">Configuring your style...</h2><p style="font-size:14px;opacity:0.85;margin:0;">Almost there — just a moment</p></div></div>');
   $('body').append($spin);
@@ -714,26 +726,38 @@ function nlForceCustomStyleAndProceed(redirectUrl){
       $.ajax({url:'/admin_style.php?nl_custom_verify='+Date.now(),type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(check){
         var selected=new DOMParser().parseFromString(check,'text/html').querySelector('[name="form[o_custom_style]"]');
         if(selected&&selected.value==='1'){
-          nlSetCustomThemeMode(true);try{localStorage.removeItem('nl_native_style');sessionStorage.removeItem('nl_native_style_pending')}catch(e){}try{var _bg2=$(document.body).css('background-color');if(_bg2&&_bg2!=='rgba(0, 0, 0, 0)'&&_bg2!=='transparent'&&_bg2!=='rgb(255, 255, 255)')localStorage.setItem('nl_body_bg',_bg2)}catch(e){}nlSyncToHub();window.location.href=nextUrl;
+          verifyCustomPayload(function(payloadOk){
+            if(payloadOk){nlSetCustomThemeMode(true);try{localStorage.removeItem('nl_native_style');sessionStorage.removeItem('nl_native_style_pending')}catch(e){}try{var _bg2=$(document.body).css('background-color');if(_bg2&&_bg2!=='rgba(0, 0, 0, 0)'&&_bg2!=='transparent'&&_bg2!=='rgb(255, 255, 255)')localStorage.setItem('nl_body_bg',_bg2)}catch(e){}nlSyncToHub();window.location.href=nextUrl;}
+            else if(attempt<1){submit(1)}
+            else{window.alert('The MyWebName theme was not saved completely. The server payload could not be verified or exceeds the 65,535-byte field limit. Please retry.');window.location.href=nextUrl;}
+          });
         }else if(attempt<1){submit(1)}else{window.alert('The MyWebName theme was saved, but the custom stylesheet was not enabled. Please retry.');window.location.href=nextUrl}
       }).fail(function(){if(attempt<1)submit(1);else{window.alert('The custom stylesheet could not be confirmed. Please retry.');window.location.href=nextUrl}});
     }
     function submit(attempt){$.ajax({url:formAction,type:'POST',data:fd,cache:false,timeout:15000}).always(function(){finish(attempt)})}
     submit(0);
-  }).fail(function(){nlSetCustomThemeMode(true);window.location.href=nextUrl;});
+  }).fail(function(){try{localStorage.removeItem('nl_custom_style_enabled');sessionStorage.removeItem('nl_custom_style_enabled')}catch(e){}window.alert('The custom stylesheet form could not be loaded, so the theme was not confirmed. Please retry.');window.location.href=nextUrl;});
 }
 window.nlForceCustomStyleAndProceed = nlForceCustomStyleAndProceed;
 
-function nlClearCustomThemePayload(done){
+function nlClearCustomThemePayload(done,attempt){
+  attempt=attempt||0;
+  function verify(){
+    $.ajax({url:'/admin_forms.php?nl_native_payload_verify='+Date.now(),type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(html){
+      var $check=$('<div>').html(html),header=String($check.find('[name="form[o_html_header]"]').val()||''),footer=String($check.find('[name="form[o_html_footer]"]').val()||'');
+      var clear=header.indexOf('MYWEB_THEME_GATE_V1')<0&&footer.indexOf('MYWEB_THEME_GATE_V1')<0;
+      if(clear||attempt>=1)done(clear);else nlClearCustomThemePayload(done,attempt+1);
+    }).fail(function(){done(false)});
+  }
   $.ajax({url:'/admin_forms.php?nl_native_clear='+Date.now(),type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(html){
     var $parsed=$('<div>').html(html),$form=$parsed.find('form').first();
-    if(!$form.length){done();return}
+    if(!$form.length){done(false);return}
     function strip(v){return String(v||'').replace(/<script>\/\*\s*MYWEB_THEME_GATE_V1\s*\*\/[\s\S]*?<\/script>/gi,'')}
     var header=strip($form.find('[name="form[o_html_header]"]').val()),footer=strip($form.find('[name="form[o_html_footer]"]').val());
     var fields=$form.serializeArray().filter(function(x){return x.name!=='form[o_html_header]'&&x.name!=='form[o_html_footer]'&&x.name!=='save'});
     fields.push({name:'form[o_html_header]',value:header},{name:'form[o_html_footer]',value:footer},{name:'save',value:'Save changes'});
-    $.ajax({url:$form.attr('action')||'/admin_forms.php',type:'POST',data:fields,cache:false,timeout:15000}).always(done);
-  }).fail(done);
+    $.ajax({url:$form.attr('action')||'/admin_forms.php',type:'POST',data:fields,cache:false,timeout:15000}).always(verify);
+  }).fail(function(){done(false)});
 }
 window.nlClearCustomThemePayload=nlClearCustomThemePayload;
 
@@ -751,7 +775,7 @@ function nlDisableCustomStyleAndProceed(redirectUrl,expectedNativeId){
         var optionsDoc=new DOMParser().parseFromString(optionsHtml,'text/html');
         var defaultSelect=optionsDoc.querySelector('#fld8');
         if(!defaultSelect||String(defaultSelect.value)!==String(expectedNativeId)){fail('The forum-wide default style did not match the requested PunBB theme. Please retry or check Options.');return}
-        nlClearCustomThemePayload(function(){clearLocalThemeState();window.location.href=nextUrl});
+        nlClearCustomThemePayload(function(cleared){if(cleared){clearLocalThemeState();window.location.href=nextUrl}else fail('The native style was saved, but the previous MyWebName payload could not be removed from the server. No browser-only override was kept.')});
       }).fail(function(){fail('The forum-wide style was saved, but its final server-side verification failed. No browser-only override was kept.')});
     }).fail(function(){fail('The custom-style setting could not be verified after saving. No browser-only override was kept.')});
   }
@@ -1185,13 +1209,12 @@ if(iF){var oT='punbb';if(Q.indexOf('nl_type=nairaland')>=0)oT='nairaland';else i
             var fd3=$fm3.serialize();
             if(fd3.indexOf('save')===-1)fd3+='&save=1';
             $.ajax({url:$fm3.attr('action')||H,type:'POST',data:fd3,complete:function(){
-              try{sessionStorage.setItem('nl_custom_style_enabled','true')}catch(e){}
-              nlForceCustomStyleAndProceed('/admin_index.php');
+              nlForceCustomStyleAndProceed('/admin_index.php',oT);
             }});
           }
         }, 800);
       } else {
-        $fm3.off('submit').on('submit',function(e){e.preventDefault();e.stopPropagation();$('body').children().hide();$('body').append('<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><h2>Theme Saved!</h2><p>Redirecting...</p></div></div>');var fd3=$fm3.serialize();if(fd3.indexOf('save')===-1)fd3+='&save=1';$.ajax({url:$fm3.attr('action')||H,type:'POST',data:fd3,complete:function(){try{sessionStorage.setItem('nl_custom_style_enabled','true')}catch(e){}setTimeout(function(){window.location.href='/admin_index.php'},2000)}});return false});
+        $fm3.off('submit').on('submit',function(e){e.preventDefault();e.stopPropagation();$('body').children().hide();$('body').append('<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#2865F1;color:#fff;font-family:Inter,sans-serif;"><div style="text-align:center;"><h2>Theme Saved!</h2><p>Redirecting...</p></div></div>');var fd3=$fm3.serialize();if(fd3.indexOf('save')===-1)fd3+='&save=1';$.ajax({url:$fm3.attr('action')||H,type:'POST',data:fd3,complete:function(){setTimeout(function(){window.location.href='/admin_index.php'},2000)}});return false});
       }
     }nlReady();return}
 
