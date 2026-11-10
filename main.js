@@ -454,11 +454,12 @@ function nlSetCustomThemeMode(enabled){
   try{if(enabled)sessionStorage.setItem('nl_custom_style_enabled','true');else sessionStorage.removeItem('nl_custom_style_enabled')}catch(e){}
 }
 function nlNativeStyleId(){
+  if(nlMyWebCustomMode())return '';
+  try{if(document.body&&nlValidCustomTheme&&nlValidCustomTheme(document.body.getAttribute('data-nl-theme')||''))return ''}catch(e){}
   if(typeof BoardStyle==='string'&&BoardStyle){
     if(BoardStyle==='Custom')return '';
     return nlNativeKnownStyleId(BoardStyle)?BoardStyle:'';
   }
-  if(nlMyWebCustomMode())return '';
   try{var saved=localStorage.getItem('nl_native_style')||'';if(nlNativeKnownStyleId(saved))return saved}catch(e){}
   var links=document.querySelectorAll('link[rel~="stylesheet"][href]');
   for(var i=0;i<links.length;i++){
@@ -712,7 +713,16 @@ function nlForceCustomStyleAndProceed(redirectUrl){
     fd['form[content2]'] = '';
     fd['save'] = 'Save changes';
     $form.find('input[type="text"], input[type="number"], select, textarea').each(function(){var n = $(this).attr('name');if (!n) return;if (n === 'form[o_custom_style]' || n === 'form[content1]' || n === 'form[content2]') return;if (fd[n] !== undefined) return;fd[n] = $(this).val();});
-    $.ajax({url:formAction,type:'POST',data:fd,cache:false,timeout:15000}).always(function(){nlSetCustomThemeMode(true);try{localStorage.removeItem('nl_native_style');sessionStorage.removeItem('nl_native_style_pending')}catch(e){}try{var _bg2=$(document.body).css('background-color');if(_bg2&&_bg2!=='rgba(0, 0, 0, 0)'&&_bg2!=='transparent'&&_bg2!=='rgb(255, 255, 255)')localStorage.setItem('nl_body_bg',_bg2)}catch(e){}nlSyncToHub();window.location.href=nextUrl;});
+    function finish(attempt){
+      $.ajax({url:'/admin_style.php?nl_custom_verify='+Date.now(),type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(check){
+        var selected=new DOMParser().parseFromString(check,'text/html').querySelector('[name="form[o_custom_style]"]');
+        if(selected&&selected.value==='1'){
+          nlSetCustomThemeMode(true);try{localStorage.removeItem('nl_native_style');sessionStorage.removeItem('nl_native_style_pending')}catch(e){}try{var _bg2=$(document.body).css('background-color');if(_bg2&&_bg2!=='rgba(0, 0, 0, 0)'&&_bg2!=='transparent'&&_bg2!=='rgb(255, 255, 255)')localStorage.setItem('nl_body_bg',_bg2)}catch(e){}nlSyncToHub();window.location.href=nextUrl;
+        }else if(attempt<1){submit(1)}else{window.alert('The MyWebName theme was saved, but the custom stylesheet was not enabled. Please retry.');window.location.href=nextUrl}
+      }).fail(function(){if(attempt<1)submit(1);else{window.alert('The custom stylesheet could not be confirmed. Please retry.');window.location.href=nextUrl}});
+    }
+    function submit(attempt){$.ajax({url:formAction,type:'POST',data:fd,cache:false,timeout:15000}).always(function(){finish(attempt)})}
+    submit(0);
   }).fail(function(){nlSetCustomThemeMode(true);window.location.href=nextUrl;});
 }
 window.nlForceCustomStyleAndProceed = nlForceCustomStyleAndProceed;
