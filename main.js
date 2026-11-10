@@ -454,9 +454,12 @@ function nlSetCustomThemeMode(enabled){
   try{if(enabled)sessionStorage.setItem('nl_custom_style_enabled','true');else sessionStorage.removeItem('nl_custom_style_enabled')}catch(e){}
 }
 function nlNativeStyleId(){
+  if(typeof BoardStyle==='string'&&BoardStyle){
+    if(BoardStyle==='Custom')return '';
+    return nlNativeKnownStyleId(BoardStyle)?BoardStyle:'';
+  }
   if(nlMyWebCustomMode())return '';
   try{var saved=localStorage.getItem('nl_native_style')||'';if(nlNativeKnownStyleId(saved))return saved}catch(e){}
-  if(typeof BoardStyle==='string'&&BoardStyle){if(BoardStyle==='Custom')return '';return nlNativeKnownStyleId(BoardStyle)?BoardStyle:''}
   var links=document.querySelectorAll('link[rel~="stylesheet"][href]');
   for(var i=0;i<links.length;i++){
     if(links[i].id==='nl-native-structure-css'||links[i].id==='nl-native-colors-css')continue;
@@ -478,13 +481,13 @@ function nlWrapThemePayload(payload){
     if(window.TextEncoder){var bytes=new TextEncoder().encode(payload),binary='';for(var i=0;i<bytes.length;i++)binary+=String.fromCharCode(bytes[i]);encoded=btoa(binary)}
     else encoded=btoa(unescape(encodeURIComponent(payload)));
   }catch(e){return payload}
-  var run=['(function(){','var ids="'+nativeIds+'",known=function(id){return ids.indexOf("|"+id+"|")>=0},forceCustom=false;','try{forceCustom=localStorage.getItem("nl_custom_style_enabled")==="true"||sessionStorage.getItem("nl_custom_style_enabled")==="true"}catch(e){}','var native=!forceCustom&&!!(document.documentElement.classList&&document.documentElement.classList.contains("nl-native-mode")),board=typeof BoardStyle==="string"?BoardStyle:"";','if(!forceCustom&&!native&&board&&board!=="Custom"&&known(board))native=true;','if(!forceCustom&&!native&&!board){var saved="";try{saved=localStorage.getItem("nl_native_style")||""}catch(e){}if(known(saved))native=true;var links=document.getElementsByTagName("link");','for(var i=0;i<links.length;i++){var h=links[i].getAttribute("href")||links[i].href||"",m=h.match(/\\/style\\/([A-Za-z0-9_-]+)\\/([A-Za-z0-9_-]+)\\.css(?:[?#]|$)/i);if(m&&m[1].toLowerCase()===m[2].toLowerCase()&&known(m[1])){native=true;break}}}','if(!native){var b=atob("'+encoded+'"),u=new Uint8Array(b.length);','for(var j=0;j<b.length;j++)u[j]=b.charCodeAt(j);','var s=window.TextDecoder?new TextDecoder("utf-8").decode(u):decodeURIComponent(escape(b));','document.write(s)}})();'].join('');
+  var run=['(function(){','var ids="'+nativeIds+'",known=function(id){return ids.indexOf("|"+id+"|")>=0},forceCustom=false;','try{forceCustom=localStorage.getItem("nl_custom_style_enabled")==="true"||sessionStorage.getItem("nl_custom_style_enabled")==="true"}catch(e){}','var board=typeof BoardStyle==="string"?BoardStyle:"",native=!!(board&&board!=="Custom"&&known(board));','if(!board){if(!forceCustom&&document.documentElement.classList&&document.documentElement.classList.contains("nl-native-mode"))native=true;if(!forceCustom&&!native){var saved="";try{saved=localStorage.getItem("nl_native_style")||""}catch(e){}if(known(saved))native=true;var links=document.getElementsByTagName("link");','for(var i=0;i<links.length;i++){var h=links[i].getAttribute("href")||links[i].href||"",m=h.match(/\\/style\\/([A-Za-z0-9_-]+)\\/([A-Za-z0-9_-]+)\\.css(?:[?#]|$)/i);if(m&&m[1].toLowerCase()===m[2].toLowerCase()&&known(m[1])){native=true;break}}}}','if(!native){var b=atob("'+encoded+'"),u=new Uint8Array(b.length);','for(var j=0;j<b.length;j++)u[j]=b.charCodeAt(j);','var s=window.TextDecoder?new TextDecoder("utf-8").decode(u):decodeURIComponent(escape(b));','document.write(s)}})();'].join('');
   return '<script>/* MYWEB_THEME_GATE_V1 */'+run+'<'+'/script>';
 }
 window.nlWrapThemePayload=nlWrapThemePayload;
 var nlNativeAssetVersion='d4455a3';
 var nlNativeAssets={Mybb_Work_Station:{base:'https://cdn.jsdelivr.net/gh/wisdomabeladah/mybb-platform@'+nlNativeAssetVersion+'/themes/native/Mybb_Work_Station/',files:[['nl-native-structure-css','Mybb_Work_Station.css'],['nl-native-extra-css','extra.css'],['nl-native-mobile-css','mobile.css']]}};
-function nlNativeApply(id){try{sessionStorage.setItem('nl_native_style_pending',id);localStorage.removeItem('nl_selected_theme')}catch(e){}nlSetCustomThemeMode(false);window.location.href='/admin_options.php?nl_native='+encodeURIComponent(id)}
+function nlNativeApply(id){if(!nlNativeKnownStyleId(id))return;try{sessionStorage.setItem('nl_native_style_pending',id);localStorage.removeItem('nl_native_style');localStorage.removeItem('nl_selected_theme')}catch(e){}nlSetCustomThemeMode(false);window.location.href='/admin_options.php?nl_native='+encodeURIComponent(id)}
 window.nlNativeApply=nlNativeApply;
 function nlNativeCleanCustomLayer(){
   var title=document.getElementById('pun-title');
@@ -714,23 +717,36 @@ function nlForceCustomStyleAndProceed(redirectUrl){
 }
 window.nlForceCustomStyleAndProceed = nlForceCustomStyleAndProceed;
 
-function nlDisableCustomStyleAndProceed(redirectUrl){
+function nlDisableCustomStyleAndProceed(redirectUrl,expectedNativeId){
   var nextUrl=redirectUrl||'/admin_index.php';
-  function fail(){window.alert('The native style was selected, but the custom stylesheet could not be disabled. The existing theme code was preserved.');window.location.href=nextUrl}
+  function clearLocalThemeState(){try{localStorage.removeItem('nl_native_style');localStorage.removeItem('nl_native_style_pending');localStorage.removeItem('nl_custom_style_enabled');localStorage.removeItem('nl_body_bg');sessionStorage.removeItem('nl_native_style_pending');sessionStorage.removeItem('nl_custom_style_enabled')}catch(e){}}
+  function fail(message){clearLocalThemeState();window.alert(message||'The server did not confirm the requested native theme. The browser will not keep a local-only override.');window.location.href=nextUrl}
+  function verifyServerSettings(){
+    $.ajax({url:'/admin_style.php',type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(styleHtml){
+      var styleDoc=new DOMParser().parseFromString(styleHtml,'text/html');
+      var customSelect=styleDoc.querySelector('[name="form[o_custom_style]"]');
+      if(!customSelect||customSelect.value!=='0'){fail('The forum-wide custom stylesheet is still enabled; the native style was not confirmed for all visitors.');return}
+      if(!expectedNativeId){clearLocalThemeState();window.location.href=nextUrl;return}
+      $.ajax({url:'/admin_options.php',type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(optionsHtml){
+        var optionsDoc=new DOMParser().parseFromString(optionsHtml,'text/html');
+        var defaultSelect=optionsDoc.querySelector('#fld8');
+        if(!defaultSelect||defaultSelect.value!==expectedNativeId){fail('The forum-wide default style did not match the requested PunBB theme. Please retry or check Options.');return}
+        clearLocalThemeState();
+        window.location.href=nextUrl;
+      }).fail(function(){fail('The forum-wide style was saved, but its final server-side verification failed. No browser-only override was kept.')});
+    }).fail(function(){fail('The custom-style setting could not be verified after saving. No browser-only override was kept.')});
+  }
   $.ajax({url:'/admin_style.php',type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(html){
     var $parsed=$('<div>').html(html),$form=$parsed.find('form.adcontainer').first();
     if(!$form.length)$form=$parsed.find('form').first();
-    if(!$form.length){fail();return}
+    if(!$form.length){fail('Could not load the custom-style settings form. The native theme was not confirmed globally.');return}
     var action=$form.attr('action')||'/admin_style.php?action=foo',fd={};
     $form.find('input[type="hidden"]').each(function(){var n=$(this).attr('name');if(n)fd[n]=$(this).val()});
     $form.find('input[type="text"],input[type="number"],select,textarea').each(function(){var n=$(this).attr('name');if(n)fd[n]=$(this).val()});
     fd['form[o_custom_style]']='0';
     fd.save='Save changes';
-    $.ajax({url:action,type:'POST',data:fd,cache:false,timeout:15000}).done(function(){
-      try{localStorage.removeItem('nl_custom_style_enabled');localStorage.removeItem('nl_body_bg');sessionStorage.removeItem('nl_custom_style_enabled')}catch(e){}
-      window.location.href=nextUrl;
-    }).fail(fail);
-  }).fail(fail);
+    $.ajax({url:action,type:'POST',data:fd,cache:false,timeout:15000}).done(verifyServerSettings).fail(function(){fail('The forum-wide custom-style setting could not be saved. No browser-only override was kept.')});
+  }).fail(function(){fail('Could not load the custom-style settings form. The native theme was not confirmed globally.')});
 }
 window.nlDisableCustomStyleAndProceed=nlDisableCustomStyleAndProceed;
 
@@ -996,19 +1012,27 @@ if(ia&&iO&&nativeMatch){
   var $nativeSelect=$('#fld8');
   var nativeFound=false;
   if($nativeSelect.length){$nativeSelect.find('option').each(function(){var ov=$(this).val()||'';if(ov===nativeId||$(this).text().trim()===nativeId){$nativeSelect.val(ov);nativeFound=true;}})}
+  function nativeApplyFailed(message){try{localStorage.removeItem('nl_native_style');sessionStorage.removeItem('nl_native_style_pending')}catch(e){}window.alert(message);window.location.href='/admin_index.php'}
   if(nativeFound||nativeId==='Mybb_Work_Station'){
-    try{localStorage.setItem('nl_native_style',nativeId);localStorage.removeItem('nl_selected_theme');localStorage.removeItem('nl_native_style_pending');sessionStorage.removeItem('nl_custom_style_enabled')}catch(e){}
+    try{localStorage.removeItem('nl_native_style');localStorage.removeItem('nl_selected_theme')}catch(e){}
+    nlSetCustomThemeMode(false);
     var $nativeForm=$nativeSelect.closest('form');
-    if($nativeForm.length){
-      $('body').children().hide();
-      $('body').append('<div style="position:fixed;inset:0;z-index:999999;background:#2865F1;color:#fff;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;"><div style="text-align:center;"><i class="fas fa-palette fa-spin" style="font-size:48px;"></i><h2>Applying '+nativeId.replace(/_/g,' ')+'...</h2><p>Disabling custom style and loading the original PunBB style</p></div></div>');
-      var nativeData=$nativeForm.serialize();if(nativeData.indexOf('save=')===-1)nativeData+='&save=1';
-      var saveOptions=function(){
-        $.ajax({url:$nativeForm.attr('action')||H,type:'POST',data:nativeData}).done(function(){nlDisableCustomStyleAndProceed('/admin_index.php')}).fail(function(){window.location.href='/admin_index.php'});
-      };
-      saveOptions();
-      return;
-    }
+    if(!$nativeForm.length){nativeApplyFailed('Could not find the Style by default form. The PunBB theme was not saved globally.');return}
+    $('body').children().hide();
+    $('body').append('<div style="position:fixed;inset:0;z-index:999999;background:#2865F1;color:#fff;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;"><div style="text-align:center;"><i class="fas fa-palette fa-spin" style="font-size:48px;"></i><h2>Saving '+nativeId.replace(/_/g,' ')+' as the forum-wide default...</h2><p>Verifying the server settings before finishing</p></div></div>');
+    var nativeData=$nativeForm.serialize();
+    var nativeSaveValue=$nativeForm.find('[name="save"]').first().val()||'Save changes';
+    if(nativeData.indexOf('save=')===-1)nativeData+='&save='+encodeURIComponent(nativeSaveValue);
+    $.ajax({url:$nativeForm.attr('action')||H,type:'POST',data:nativeData,cache:false,timeout:15000}).done(function(){
+      $.ajax({url:'/admin_options.php',type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(verifyHtml){
+        var verifyDoc=new DOMParser().parseFromString(verifyHtml,'text/html');
+        var savedStyle=verifyDoc.querySelector('#fld8');
+        if(!savedStyle||savedStyle.value!==nativeId){nativeApplyFailed('The forum did not save this PunBB theme as its default. The browser will not keep a local-only theme override.');return}
+        nlDisableCustomStyleAndProceed('/admin_index.php',nativeId);
+      }).fail(function(){nativeApplyFailed('The style save request completed, but the server default could not be verified. No browser-only override was kept.')});
+    }).fail(function(){nativeApplyFailed('The forum-wide default style could not be saved. No browser-only override was kept.')});
+  }else{
+    nativeApplyFailed('This style ID is not available in the forum Options list. No browser-only override was applied.');
   }
 }
 try{
