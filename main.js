@@ -481,7 +481,7 @@ function nlWrapThemePayload(payload){
     if(window.TextEncoder){var bytes=new TextEncoder().encode(payload),binary='';for(var i=0;i<bytes.length;i++)binary+=String.fromCharCode(bytes[i]);encoded=btoa(binary)}
     else encoded=btoa(unescape(encodeURIComponent(payload)));
   }catch(e){return payload}
-  var run=['(function(){','var ids="'+nativeIds+'",known=function(id){return ids.indexOf("|"+id+"|")>=0},forceCustom=false;','try{forceCustom=localStorage.getItem("nl_custom_style_enabled")==="true"||sessionStorage.getItem("nl_custom_style_enabled")==="true"}catch(e){}','var board=typeof BoardStyle==="string"?BoardStyle:"",native=!!(board&&board!=="Custom"&&known(board));','if(!board){if(!forceCustom&&document.documentElement.classList&&document.documentElement.classList.contains("nl-native-mode"))native=true;if(!forceCustom&&!native){var saved="";try{saved=localStorage.getItem("nl_native_style")||""}catch(e){}if(known(saved))native=true;var links=document.getElementsByTagName("link");','for(var i=0;i<links.length;i++){var h=links[i].getAttribute("href")||links[i].href||"",m=h.match(/\\/style\\/([A-Za-z0-9_-]+)\\/([A-Za-z0-9_-]+)\\.css(?:[?#]|$)/i);if(m&&m[1].toLowerCase()===m[2].toLowerCase()&&known(m[1])){native=true;break}}}}','if(!native){var b=atob("'+encoded+'"),u=new Uint8Array(b.length);','for(var j=0;j<b.length;j++)u[j]=b.charCodeAt(j);','var s=window.TextDecoder?new TextDecoder("utf-8").decode(u):decodeURIComponent(escape(b));','document.write(s)}})();'].join('');
+  var run=['(function(){','var ids="'+nativeIds+'",known=function(id){return ids.indexOf("|"+id+"|")>=0},forceCustom=false;','try{forceCustom=localStorage.getItem("nl_custom_style_enabled")==="true"||sessionStorage.getItem("nl_custom_style_enabled")==="true"}catch(e){}','var board=typeof BoardStyle==="string"?BoardStyle:"",native=!!(board&&board!=="Custom"&&known(board));','if(!board){if(!forceCustom&&document.documentElement.classList&&document.documentElement.classList.contains("nl-native-mode"))native=true;if(!forceCustom&&!native){var saved="";try{saved=localStorage.getItem("nl_native_style")||""}catch(e){}if(known(saved))native=true;var links=document.getElementsByTagName("link");','for(var i=0;i<links.length;i++){var h=links[i].getAttribute("href")||links[i].href||"",m=h.match(/\\/style\\/([A-Za-z0-9_-]+)\\/([A-Za-z0-9_-]+)\\.css(?:[?#]|$)/i);if(m&&m[1].toLowerCase()===m[2].toLowerCase()&&known(m[1])){native=true;break}}}}','var b=atob("'+encoded+'"),u=new Uint8Array(b.length);','for(var j=0;j<b.length;j++)u[j]=b.charCodeAt(j);','var s=window.TextDecoder?new TextDecoder("utf-8").decode(u):decodeURIComponent(escape(b));','if(!native||s.indexOf("data-nl-theme")>=0||s.indexOf("nl-theme-marker:")>=0)document.write(s);})();'].join('');
   return '<script>/* MYWEB_THEME_GATE_V1 */'+run+'<'+'/script>';
 }
 window.nlWrapThemePayload=nlWrapThemePayload;
@@ -717,6 +717,19 @@ function nlForceCustomStyleAndProceed(redirectUrl){
 }
 window.nlForceCustomStyleAndProceed = nlForceCustomStyleAndProceed;
 
+function nlClearCustomThemePayload(done){
+  $.ajax({url:'/admin_forms.php?nl_native_clear='+Date.now(),type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(html){
+    var $parsed=$('<div>').html(html),$form=$parsed.find('form').first();
+    if(!$form.length){done();return}
+    function strip(v){return String(v||'').replace(/<script>\/\*\s*MYWEB_THEME_GATE_V1\s*\*\/[\s\S]*?<\/script>/gi,'')}
+    var header=strip($form.find('[name="form[o_html_header]"]').val()),footer=strip($form.find('[name="form[o_html_footer]"]').val());
+    var fields=$form.serializeArray().filter(function(x){return x.name!=='form[o_html_header]'&&x.name!=='form[o_html_footer]'&&x.name!=='save'});
+    fields.push({name:'form[o_html_header]',value:header},{name:'form[o_html_footer]',value:footer},{name:'save',value:'Save changes'});
+    $.ajax({url:$form.attr('action')||'/admin_forms.php',type:'POST',data:fields,cache:false,timeout:15000}).always(done);
+  }).fail(done);
+}
+window.nlClearCustomThemePayload=nlClearCustomThemePayload;
+
 function nlDisableCustomStyleAndProceed(redirectUrl,expectedNativeId){
   var nextUrl=redirectUrl||'/admin_index.php';
   function clearLocalThemeState(){try{localStorage.removeItem('nl_native_style');localStorage.removeItem('nl_native_style_pending');localStorage.removeItem('nl_custom_style_enabled');localStorage.removeItem('nl_body_bg');sessionStorage.removeItem('nl_native_style_pending');sessionStorage.removeItem('nl_custom_style_enabled')}catch(e){}}
@@ -731,8 +744,7 @@ function nlDisableCustomStyleAndProceed(redirectUrl,expectedNativeId){
         var optionsDoc=new DOMParser().parseFromString(optionsHtml,'text/html');
         var defaultSelect=optionsDoc.querySelector('#fld8');
         if(!defaultSelect||defaultSelect.value!==expectedNativeId){fail('The forum-wide default style did not match the requested PunBB theme. Please retry or check Options.');return}
-        clearLocalThemeState();
-        window.location.href=nextUrl;
+        nlClearCustomThemePayload(function(){clearLocalThemeState();window.location.href=nextUrl});
       }).fail(function(){fail('The forum-wide style was saved, but its final server-side verification failed. No browser-only override was kept.')});
     }).fail(function(){fail('The custom-style setting could not be verified after saving. No browser-only override was kept.')});
   }
