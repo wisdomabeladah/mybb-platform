@@ -744,13 +744,13 @@ function nlDisableCustomStyleAndProceed(redirectUrl,expectedNativeId){
   function verifyServerSettings(){
     $.ajax({url:'/admin_style.php',type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(styleHtml){
       var styleDoc=new DOMParser().parseFromString(styleHtml,'text/html');
-      var customSelect=styleDoc.querySelector('[name="form[o_custom_style]"]');
-      if(!customSelect||customSelect.value!=='0'){fail('The forum-wide custom stylesheet is still enabled; the native style was not confirmed for all visitors.');return}
+      var customSelect=styleDoc.querySelector('[name="form[o_custom_style]"]'),customValue=customSelect&&((customSelect.value||customSelect.querySelector('option:checked')||customSelect.querySelector('option[selected]')||{}).value);
+      if(!customSelect||String(customValue)!=='0'){fail('The forum-wide custom stylesheet is still enabled; the native style was not confirmed for all visitors.');return}
       if(!expectedNativeId){clearLocalThemeState();window.location.href=nextUrl;return}
       $.ajax({url:'/admin_options.php',type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(optionsHtml){
         var optionsDoc=new DOMParser().parseFromString(optionsHtml,'text/html');
         var defaultSelect=optionsDoc.querySelector('#fld8');
-        if(!defaultSelect||defaultSelect.value!==expectedNativeId){fail('The forum-wide default style did not match the requested PunBB theme. Please retry or check Options.');return}
+        if(!defaultSelect||String(defaultSelect.value)!==String(expectedNativeId)){fail('The forum-wide default style did not match the requested PunBB theme. Please retry or check Options.');return}
         nlClearCustomThemePayload(function(){clearLocalThemeState();window.location.href=nextUrl});
       }).fail(function(){fail('The forum-wide style was saved, but its final server-side verification failed. No browser-only override was kept.')});
     }).fail(function(){fail('The custom-style setting could not be verified after saving. No browser-only override was kept.')});
@@ -764,7 +764,13 @@ function nlDisableCustomStyleAndProceed(redirectUrl,expectedNativeId){
     $form.find('input[type="text"],input[type="number"],select,textarea').each(function(){var n=$(this).attr('name');if(n)fd[n]=$(this).val()});
     fd['form[o_custom_style]']='0';
     fd.save='Save changes';
-    $.ajax({url:action,type:'POST',data:fd,cache:false,timeout:15000}).done(verifyServerSettings).fail(function(){fail('The forum-wide custom-style setting could not be saved. No browser-only override was kept.')});
+    function save(attempt){$.ajax({url:action,type:'POST',data:fd,cache:false,timeout:15000}).always(function(){
+      $.ajax({url:'/admin_style.php?nl_native_verify='+Date.now(),type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(check){
+        var selected=new DOMParser().parseFromString(check,'text/html').querySelector('[name="form[o_custom_style]"]');
+        if(selected&&String(selected.value)==='0')verifyServerSettings();else if(attempt<1)save(1);else fail('The forum-wide custom stylesheet is still enabled; the native style was not confirmed for all visitors.');
+      }).fail(function(){if(attempt<1)save(1);else fail('The custom-style setting could not be verified after saving. No browser-only override was kept.')});
+    })}
+    save(0);
   }).fail(function(){fail('Could not load the custom-style settings form. The native theme was not confirmed globally.')});
 }
 window.nlDisableCustomStyleAndProceed=nlDisableCustomStyleAndProceed;
@@ -1042,14 +1048,17 @@ if(ia&&iO&&nativeMatch){
     var nativeData=$nativeForm.serialize();
     var nativeSaveValue=$nativeForm.find('[name="save"]').first().val()||'Save changes';
     if(nativeData.indexOf('save=')===-1)nativeData+='&save='+encodeURIComponent(nativeSaveValue);
-    $.ajax({url:$nativeForm.attr('action')||H,type:'POST',data:nativeData,cache:false,timeout:15000}).done(function(){
-      $.ajax({url:'/admin_options.php',type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(verifyHtml){
+    function saveNative(attempt){
+      $.ajax({url:$nativeForm.attr('action')||H,type:'POST',data:nativeData,cache:false,timeout:15000}).always(function(){
+      $.ajax({url:'/admin_options.php?nl_native_verify='+Date.now(),type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(verifyHtml){
         var verifyDoc=new DOMParser().parseFromString(verifyHtml,'text/html');
         var savedStyle=verifyDoc.querySelector('#fld8');
-        if(!savedStyle||savedStyle.value!==nativeId){nativeApplyFailed('The forum did not save this PunBB theme as its default. The browser will not keep a local-only theme override.');return}
+        if(!savedStyle||String(savedStyle.value)!==String(nativeId)){if(attempt<1){saveNative(1)}else nativeApplyFailed('The forum did not save this PunBB theme as its default. The browser will not keep a local-only theme override.');return}
         nlDisableCustomStyleAndProceed('/admin_index.php',nativeId);
       }).fail(function(){nativeApplyFailed('The style save request completed, but the server default could not be verified. No browser-only override was kept.')});
-    }).fail(function(){nativeApplyFailed('The forum-wide default style could not be saved. No browser-only override was kept.')});
+      })
+    }
+    saveNative(0);
   }else{
     nativeApplyFailed('This style ID is not available in the forum Options list. No browser-only override was applied.');
   }
