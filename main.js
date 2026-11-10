@@ -766,7 +766,10 @@ function nlClearCustomThemePayload(done,attempt){
 window.nlClearCustomThemePayload=nlClearCustomThemePayload;
 
 function nlPostAdminForm(url,data,referrerPath,done){
-  var body=data instanceof FormData?data:new URLSearchParams(data);
+  var body;
+  if(data instanceof FormData||data instanceof URLSearchParams)body=data;
+  else if(Array.isArray(data)){body=new URLSearchParams();data.forEach(function(item){if(item&&item.name)body.append(item.name,item.value==null?'':item.value)})}
+  else body=new URLSearchParams(data);
   fetch(url,{method:'POST',credentials:'same-origin',cache:'no-store',referrer:new URL(referrerPath,window.location.href).href,body:body}).then(function(r){return r.text().then(function(text){done(r,text)})}).catch(function(){done(null,'')});
 }
 
