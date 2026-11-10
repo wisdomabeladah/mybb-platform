@@ -695,6 +695,10 @@ window.nlGF=nlGF;window.nlIT=nlIT;
 
 function nlForceCustomStyleAndProceed(redirectUrl,expectedTheme){
   var nextUrl = redirectUrl || '/admin_index.php';
+  function postAdminForm(url,data,referrerPath,done){
+    var body=data instanceof FormData?data:new URLSearchParams(data);
+    fetch(url,{method:'POST',credentials:'same-origin',cache:'no-store',referrer:new URL(referrerPath,window.location.href).href,body:body}).then(function(r){return r.text().then(function(text){done(r,text)})}).catch(function(){done(null,'')});
+  }
   function verifyCustomPayload(done){
     $.ajax({url:'/admin_forms.php?nl_custom_payload_verify='+Date.now(),type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(html){
       var doc=new DOMParser().parseFromString(html,'text/html');
@@ -734,7 +738,7 @@ function nlForceCustomStyleAndProceed(redirectUrl,expectedTheme){
         }else if(attempt<1){submit(1)}else{window.alert('The MyWebName theme was saved, but the custom stylesheet was not enabled. Please retry.');window.location.href=nextUrl}
       }).fail(function(){if(attempt<1)submit(1);else{window.alert('The custom stylesheet could not be confirmed. Please retry.');window.location.href=nextUrl}});
     }
-    function submit(attempt){$.ajax({url:formAction,type:'POST',data:fd,cache:false,timeout:15000}).always(function(){finish(attempt)})}
+    function submit(attempt){postAdminForm(formAction,fd,'/admin_style.php',function(){finish(attempt)})}
     submit(0);
   }).fail(function(){try{localStorage.removeItem('nl_custom_style_enabled');sessionStorage.removeItem('nl_custom_style_enabled')}catch(e){}window.alert('The custom stylesheet form could not be loaded, so the theme was not confirmed. Please retry.');window.location.href=nextUrl;});
 }
@@ -756,10 +760,15 @@ function nlClearCustomThemePayload(done,attempt){
     var header=strip($form.find('[name="form[o_html_header]"]').val()),footer=strip($form.find('[name="form[o_html_footer]"]').val());
     var fields=$form.serializeArray().filter(function(x){return x.name!=='form[o_html_header]'&&x.name!=='form[o_html_footer]'&&x.name!=='save'});
     fields.push({name:'form[o_html_header]',value:header},{name:'form[o_html_footer]',value:footer},{name:'save',value:'Save changes'});
-    $.ajax({url:$form.attr('action')||'/admin_forms.php',type:'POST',data:fields,cache:false,timeout:15000}).always(verify);
+    nlPostAdminForm($form.attr('action')||'/admin_forms.php',fields,'/admin_forms.php',verify);
   }).fail(function(){done(false)});
 }
 window.nlClearCustomThemePayload=nlClearCustomThemePayload;
+
+function nlPostAdminForm(url,data,referrerPath,done){
+  var body=data instanceof FormData?data:new URLSearchParams(data);
+  fetch(url,{method:'POST',credentials:'same-origin',cache:'no-store',referrer:new URL(referrerPath,window.location.href).href,body:body}).then(function(r){return r.text().then(function(text){done(r,text)})}).catch(function(){done(null,'')});
+}
 
 function nlDisableCustomStyleAndProceed(redirectUrl,expectedNativeId){
   var nextUrl=redirectUrl||'/admin_index.php';
@@ -788,7 +797,7 @@ function nlDisableCustomStyleAndProceed(redirectUrl,expectedNativeId){
     $form.find('input[type="text"],input[type="number"],select,textarea').each(function(){var n=$(this).attr('name');if(n)fd[n]=$(this).val()});
     fd['form[o_custom_style]']='0';
     fd.save='Save changes';
-    function save(attempt){$.ajax({url:action,type:'POST',data:fd,cache:false,timeout:15000}).always(function(){
+    function save(attempt){nlPostAdminForm(action,fd,'/admin_style.php',function(){
       $.ajax({url:'/admin_style.php?nl_native_verify='+Date.now(),type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(check){
         var selected=new DOMParser().parseFromString(check,'text/html').querySelector('[name="form[o_custom_style]"]');
         if(selected&&String(selected.value)==='0')verifyServerSettings();else if(attempt<1)save(1);else fail('The forum-wide custom stylesheet is still enabled; the native style was not confirmed for all visitors.');
