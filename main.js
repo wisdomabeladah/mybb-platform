@@ -49,9 +49,8 @@ function nlSetCustomThemeMode(enabled){
 }
 function nlNativeStyleId(){
   if(nlMyWebCustomMode())return '';
-  try{var saved=localStorage.getItem('nl_native_style')||'';if(saved==='Mybb_Work_Station')return saved}catch(e){}
+  try{var saved=localStorage.getItem('nl_native_style')||'';if(nlNativeKnownStyleId(saved))return saved}catch(e){}
   if(typeof BoardStyle==='string'&&BoardStyle){if(BoardStyle==='Custom')return '';return nlNativeKnownStyleId(BoardStyle)?BoardStyle:''}
-  try{var savedFallback=localStorage.getItem('nl_native_style')||'';if(nlNativeKnownStyleId(savedFallback))return savedFallback}catch(e){}
   var links=document.querySelectorAll('link[rel~="stylesheet"][href]');
   for(var i=0;i<links.length;i++){
     if(links[i].id==='nl-native-structure-css'||links[i].id==='nl-native-colors-css')continue;
