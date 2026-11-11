@@ -454,12 +454,12 @@ function nlSetCustomThemeMode(enabled){
   try{if(enabled)sessionStorage.setItem('nl_custom_style_enabled','true');else sessionStorage.removeItem('nl_custom_style_enabled')}catch(e){}
 }
 function nlNativeStyleId(){
-  if(nlMyWebCustomMode())return '';
   try{if(document.body&&nlValidCustomTheme&&nlValidCustomTheme(document.body.getAttribute('data-nl-theme')||''))return ''}catch(e){}
   if(typeof BoardStyle==='string'&&BoardStyle){
     if(BoardStyle==='Custom')return '';
     return nlNativeKnownStyleId(BoardStyle)?BoardStyle:'';
   }
+  if(nlMyWebCustomMode())return '';
   try{var saved=localStorage.getItem('nl_native_style')||'';if(nlNativeKnownStyleId(saved))return saved}catch(e){}
   var links=document.querySelectorAll('link[rel~="stylesheet"][href]');
   for(var i=0;i<links.length;i++){
@@ -471,11 +471,26 @@ function nlNativeStyleId(){
   }
   return '';
 }
+function nlReconcileCustomThemeMode(){
+  var theme='';try{theme=document.body&&document.body.getAttribute('data-nl-theme')||''}catch(e){}
+  if(!nlValidCustomTheme(theme))return false;
+  var root=document.documentElement;
+  try{root.classList.remove('nl-native-mode');root.classList.add('nl-custom-mode')}catch(e){root.className=(root.className||'').replace(/\bnl-native-mode\b/g,' ').replace(/\s+/g,' ').trim()+' nl-custom-mode'}
+  ['nl-native-override','nl-native-structure-css','nl-native-colors-css','nl-native-extra-css','nl-native-mobile-css'].forEach(function(id){var node=document.getElementById(id);if(node&&node.parentNode)node.parentNode.removeChild(node)});
+  try{localStorage.removeItem('nl_native_style')}catch(e){}
+  try{sessionStorage.removeItem('nl_native_style_pending')}catch(e){}
+  try{if(typeof window.__MYWEB_ENABLE_CUSTOM_MODE==='function')window.__MYWEB_ENABLE_CUSTOM_MODE(true)}catch(e){}
+  return true;
+}
+window.nlReconcileCustomThemeMode=nlReconcileCustomThemeMode;
 window.nlNativeStyleId=nlNativeStyleId;
 window.nlNativeKnownStyleId=nlNativeKnownStyleId;
 function nlWrapThemePayload(payload){
   if(typeof payload!=='string'||!payload)return payload||'';
   if(payload.indexOf('MYWEB_THEME_GATE_V1')>=0)return payload;
+  var hasThemeMarker=/nl-theme-marker:[a-z0-9_-]+/i.test(payload)||/data-nl-theme/i.test(payload);
+  if(/nl-theme-marker:travel/i.test(payload))payload=payload.replace(/#pun-index\s+\.punbb\s+\.main\b/g,'#pun-index .main').replace(/#pun-viewforum\s+\.punbb\s+\.main/g,'#pun-viewforum .main').replace(/#pun-viewtopic\s+\.punbb(?=\s)/g,'#pun-viewtopic');
+  if(hasThemeMarker)payload='<script>if(window.__MYWEB_ENABLE_CUSTOM_MODE)window.__MYWEB_ENABLE_CUSTOM_MODE(true);<'+'/script>'+payload;
   var nativeIds='|Mybb_Work_Station|';for(var ni=0;ni<nlNativeThemes.length;ni++)nativeIds+=nlNativeThemes[ni].id+'|';
   var encoded='';
   try{encoded=JSON.stringify(payload).replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/&/g,'\\u0026')}catch(e){return payload}
@@ -1067,6 +1082,7 @@ var ia=(typeof GroupID!=='undefined'&&GroupID===1);
 var iF=H.indexOf('admin_forms.php')>=0;var iS=H.indexOf('admin_style.php')>=0;var iAI=H.indexOf('admin_index.php')>=0;
 var sT=(Q.indexOf('theme')>=0);var iAP=H.indexOf('admin_')>=0;
 var iO=H.indexOf('admin_options.php')>=0;var nativeMatch=Q.match(/[?&]nl_native=([^&]+)/);
+nlReconcileCustomThemeMode();
 var nativeBoardMode=!!nlNativeStyleId();if(nativeBoardMode&&!iAP&&!sT){nlNativeRestore();nlReady();return;}
 if(ia&&iO&&nativeMatch){
   var nativeId=decodeURIComponent(nativeMatch[1]||'');
