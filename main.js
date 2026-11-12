@@ -454,11 +454,11 @@ function nlSetCustomThemeMode(enabled){
   try{if(enabled)sessionStorage.setItem('nl_custom_style_enabled','true');else sessionStorage.removeItem('nl_custom_style_enabled')}catch(e){}
 }
 function nlNativeStyleId(){
-  try{if(document.body&&nlValidCustomTheme&&nlValidCustomTheme(document.body.getAttribute('data-nl-theme')||''))return ''}catch(e){}
   if(typeof BoardStyle==='string'&&BoardStyle){
     if(BoardStyle==='Custom')return '';
     return nlNativeKnownStyleId(BoardStyle)?BoardStyle:'';
   }
+  try{if(document.body&&nlValidCustomTheme&&nlValidCustomTheme(document.body.getAttribute('data-nl-theme')||''))return ''}catch(e){}
   if(nlMyWebCustomMode())return '';
   try{var saved=localStorage.getItem('nl_native_style')||'';if(nlNativeKnownStyleId(saved))return saved}catch(e){}
   var links=document.querySelectorAll('link[rel~="stylesheet"][href]');
@@ -472,6 +472,13 @@ function nlNativeStyleId(){
   return '';
 }
 function nlReconcileCustomThemeMode(){
+  var board=typeof BoardStyle==='string'?BoardStyle:'';
+  if(board&&board!=='Custom'&&nlNativeKnownStyleId(board)){
+    var nativeRoot=document.documentElement;
+    try{nativeRoot.classList.remove('nl-custom-mode');nativeRoot.classList.add('nl-native-mode')}catch(e){nativeRoot.className=(nativeRoot.className||'').replace(/\bnl-custom-mode\b/g,' ').replace(/\s+/g,' ').trim()+' nl-native-mode'}
+    try{nlNativeCleanCustomLayer()}catch(e){}
+    return false;
+  }
   var theme='';try{theme=document.body&&document.body.getAttribute('data-nl-theme')||''}catch(e){}
   if(!nlValidCustomTheme(theme))return false;
   var root=document.documentElement;
@@ -494,7 +501,7 @@ function nlWrapThemePayload(payload){
   var nativeIds='|Mybb_Work_Station|';for(var ni=0;ni<nlNativeThemes.length;ni++)nativeIds+=nlNativeThemes[ni].id+'|';
   var encoded='';
   try{encoded=JSON.stringify(payload).replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/&/g,'\\u0026')}catch(e){return payload}
-  var run=['(function(){','var ids="'+nativeIds+'",known=function(id){return ids.indexOf("|"+id+"|")>=0},forceCustom=false;','try{forceCustom=localStorage.getItem("nl_custom_style_enabled")==="true"||sessionStorage.getItem("nl_custom_style_enabled")==="true"}catch(e){}','var board=typeof BoardStyle==="string"?BoardStyle:"",native=!!(board&&board!=="Custom"&&known(board));','if(!board){if(!forceCustom&&document.documentElement.classList&&document.documentElement.classList.contains("nl-native-mode"))native=true;if(!forceCustom&&!native){var saved="";try{saved=localStorage.getItem("nl_native_style")||""}catch(e){}if(known(saved))native=true;var links=document.getElementsByTagName("link");','for(var i=0;i<links.length;i++){var h=links[i].getAttribute("href")||links[i].href||"",m=h.match(/\\/style\\/([A-Za-z0-9_-]+)\\/([A-Za-z0-9_-]+)\\.css(?:[?#]|$)/i);if(m&&m[1].toLowerCase()===m[2].toLowerCase()&&known(m[1])){native=true;break}}}}','var s='+encoded+';','if(!native||s.indexOf("data-nl-theme")>=0||s.indexOf("nl-theme-marker:")>=0)document.write(s);})();'].join('');
+  var run=['(function(){','var ids="'+nativeIds+'",known=function(id){return ids.indexOf("|"+id+"|")>=0},forceCustom=false;','try{forceCustom=localStorage.getItem("nl_custom_style_enabled")==="true"||sessionStorage.getItem("nl_custom_style_enabled")==="true"}catch(e){}','var board=typeof BoardStyle==="string"?BoardStyle:"",native=!!(board&&board!=="Custom"&&known(board));','if(!board){if(!forceCustom&&document.documentElement.classList&&document.documentElement.classList.contains("nl-native-mode"))native=true;if(!forceCustom&&!native){var saved="";try{saved=localStorage.getItem("nl_native_style")||""}catch(e){}if(known(saved))native=true;var links=document.getElementsByTagName("link");','for(var i=0;i<links.length;i++){var h=links[i].getAttribute("href")||links[i].href||"",m=h.match(/\\/style\\/([A-Za-z0-9_-]+)\\/([A-Za-z0-9_-]+)\\.css(?:[?#]|$)/i);if(m&&m[1].toLowerCase()===m[2].toLowerCase()&&known(m[1])){native=true;break}}}}','var s='+encoded+';','if(board==="Custom"||!native)document.write(s);})();'].join('');
   return '<script>/* MYWEB_THEME_GATE_V1 */'+run+'<'+'/script>';
 }
 window.nlWrapThemePayload=nlWrapThemePayload;
