@@ -1005,8 +1005,33 @@ function nlSPS(key,plan){var ov=document.createElement('div');ov.style.cssText='
 function nlSLP(tid){var tn=tid?nlUA.allTools[tid].name:'Premium';var ov=document.createElement('div');ov.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;';ov.innerHTML='<div style="background:#fff;border-radius:16px;padding:28px;max-width:420px;width:90%;text-align:center;"><div style="font-size:48px;">🔒</div><h3>'+tn+' is Locked</h3><p>Subscribe to unlock.</p><button onclick="this.parentElement.parentElement.remove();nlSP();" style="width:100%;background:#2865F1;color:#fff;border:none;padding:12px;border-radius:10px;margin:12px 0 6px;cursor:pointer;">View Plans</button><button onclick="this.parentElement.parentElement.remove();" style="width:100%;background:#f0f2f5;color:#6b7280;border:none;padding:10px;border-radius:10px;cursor:pointer;">Close</button></div>';document.body.appendChild(ov)}
 window.nlAL=nlAL;window.nlSP=nlSP;window.nlMA=nlMA;window.nlIP=nlIP;window.nlPP=nlPP;window.nlSPS=nlSPS;window.nlSLP=nlSLP;
 
+function nlUAEnsurePanelStyles(){
+  if(document.getElementById('nl-ua-panel-style'))return;
+  var style=document.createElement('style');
+  style.id='nl-ua-panel-style';
+  style.textContent=[
+    '#nl-ua-panel .nl-ua-section{background:rgba(255,255,255,.95);border-radius:20px;padding:24px;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,.08)}',
+    '#nl-ua-panel .nl-ua-section h3{font-size:18px;font-weight:800;margin:0 0 16px;padding-bottom:12px;border-bottom:2px solid #e8ecf1;display:flex;align-items:center;gap:10px;cursor:pointer}',
+    '#nl-ua-panel .nl-ua-section h3 .sec-icon{font-size:20px;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}',
+    '#nl-ua-panel .nl-ua-section h3 .arrow{margin-left:auto;transition:transform .3s;font-size:14px;color:#6b7280;padding-left:10px;flex-shrink:0}',
+    '#nl-ua-panel .nl-ua-section.collapsed .nl-ua-grid{display:none!important}',
+    '#nl-ua-panel .nl-ua-section.collapsed h3 .arrow{transform:rotate(-90deg)}',
+    '#nl-ua-panel .nl-ua-grid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}',
+    '#nl-ua-panel .nl-ua-tool{display:flex!important;align-items:center!important;gap:12px;padding:14px 16px;border-radius:12px;border:1.5px solid #e8ecf1;text-decoration:none!important;color:#1a1a2e!important;transition:all .25s;background:#fafbfc;cursor:pointer;box-sizing:border-box}',
+    '#nl-ua-panel .nl-ua-tool:hover{border-color:#2865f1;background:#f0f4ff;transform:translateY(-2px);box-shadow:0 6px 20px rgba(40,101,241,.1)}',
+    '#nl-ua-panel .nl-ua-tool .t-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}',
+    '#nl-ua-panel .nl-ua-tool .t-info{flex:1;min-width:0}',
+    '#nl-ua-panel .nl-ua-tool .t-info .t-name{font-size:13px;font-weight:700;line-height:1.2}',
+    '#nl-ua-panel .nl-ua-tool .t-info .t-desc{font-size:10px;color:#6b7280;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
+    '@media(max-width:768px){#nl-ua-panel .nl-ua-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#nl-ua-panel .nl-ua-tool{padding:12px}#nl-ua-panel .nl-ua-tool .t-icon{width:34px;height:34px;font-size:15px}#nl-ua-panel .nl-ua-tool .t-info .t-name{font-size:12px}}',
+    '@media(max-width:480px){#nl-ua-panel .nl-ua-section{padding:16px}#nl-ua-panel .nl-ua-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}#nl-ua-panel .nl-ua-tool{padding:10px;gap:8px}}'
+  ].join('');
+  document.head.appendChild(style);
+}
+
 function nlBAP(at){
   if(window.location.href.indexOf('customize')>=0){nlOpenCustomizer();return}
+  nlUAEnsurePanelStyles();
   try{
     var p=nlUA.palettes[at]||nlUA.palettes.punbb;
     var tc=nlUA.themes[at]||nlUA.themes.punbb;
