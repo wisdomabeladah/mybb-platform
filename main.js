@@ -1090,7 +1090,7 @@ var iF=H.indexOf('admin_forms.php')>=0;var iS=H.indexOf('admin_style.php')>=0;va
 var sT=(Q.indexOf('theme')>=0);var iAP=H.indexOf('admin_')>=0;
 var iO=H.indexOf('admin_options.php')>=0;var nativeMatch=Q.match(/[?&]nl_native=([^&]+)/);
 nlReconcileCustomThemeMode();
-var nativeBoardMode=!!nlNativeStyleId();if(nativeBoardMode&&!iAP&&!sT){nlNativeRestore();nlReady();return;}
+var nativeBoardMode=!!nlNativeStyleId();if(nativeBoardMode&&!sT&&!(iO&&nativeMatch)){nlNativeRestore();nlReady();return;}
 if(ia&&iO&&nativeMatch){
   var nativeId=decodeURIComponent(nativeMatch[1]||'');
   var $nativeSelect=$('#fld8');
