@@ -1117,7 +1117,9 @@ var iO=H.indexOf('admin_options.php')>=0;var nativeMatch=Q.match(/[?&]nl_native=
 nlReconcileCustomThemeMode();
 var nativeBoardMode=!!nlNativeStyleId();
 var nativeAdminDashboard=ia&&iAI&&!sT&&H.indexOf('customize')<0;
-if(nativeBoardMode&&!sT&&!(iO&&nativeMatch)&&!nativeAdminDashboard){nlNativeRestore();nlReady();return;}
+var nativeInstallTheme='';try{nativeInstallTheme=new URLSearchParams(Q).get('nl_type')||''}catch(e){}
+var nativeThemeInstallRoute=ia&&iF&&Object.prototype.hasOwnProperty.call(nlTF,nativeInstallTheme);
+if(nativeBoardMode&&!sT&&!(iO&&nativeMatch)&&!nativeAdminDashboard&&!nativeThemeInstallRoute){nlNativeRestore();nlReady();return;}
 if(ia&&iO&&nativeMatch){
   var nativeId=decodeURIComponent(nativeMatch[1]||'');
   var $nativeSelect=$('#fld8');
