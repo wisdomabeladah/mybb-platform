@@ -911,8 +911,38 @@ function nlRenderLogin(){
 }
 window.nlRenderLogin = nlRenderLogin;
 
+function nlEnsureCustomizerLayoutStyles(){
+  if(document.getElementById('nl-customizer-layout-styles'))return;
+  var style=document.createElement('style');
+  style.id='nl-customizer-layout-styles';
+  style.textContent=[
+    '#nl-customizer .nl-cz-layout{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:20px;max-width:1400px;margin:0 auto;align-items:start}',
+    '#nl-customizer .nl-cz-panel{background:#fff;border-radius:16px;padding:20px;max-height:calc(100vh - 140px);overflow-y:auto}',
+    '#nl-customizer .nl-cz-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;border-bottom:1px solid #e8ecf1;padding-bottom:12px}',
+    '#nl-customizer .nl-cz-tab{padding:6px 12px;border-radius:16px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid #d1d5db;background:#fff;color:#6b7280;transition:all .2s}',
+    '#nl-customizer .nl-cz-tab.active{border-color:#2865F1;background:#2865F1;color:#fff}',
+    '#nl-customizer .nl-cz-field{margin-bottom:14px}',
+    '#nl-customizer .nl-cz-field label{display:block;font-weight:600;font-size:12px;margin-bottom:5px;color:#1a1a2e}',
+    '#nl-customizer .nl-cz-field input[type="text"],#nl-customizer .nl-cz-field input[type="url"],#nl-customizer .nl-cz-field input[type="number"],#nl-customizer .nl-cz-field input[type="email"],#nl-customizer .nl-cz-field select,#nl-customizer .nl-cz-field textarea{width:100%;padding:9px 12px;border:1.5px solid #d1d5db;border-radius:9px;font-size:13px;box-sizing:border-box;font-family:inherit}',
+    '#nl-customizer .nl-cz-field input[type="color"]{width:100%;height:40px;padding:3px;border:1.5px solid #d1d5db;border-radius:9px;cursor:pointer;box-sizing:border-box}',
+    '#nl-customizer .nl-cz-field textarea{min-height:70px;resize:vertical}',
+    '#nl-customizer .nl-cz-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}',
+    '#nl-customizer .nl-cz-save{display:flex;gap:8px;margin-top:14px}',
+    '#nl-customizer .nl-cz-save button{padding:11px;border-radius:10px;border:none;cursor:pointer;font-weight:700;font-size:13px}',
+    '#nl-customizer .nl-cz-save .reset{flex:0 0 90px;background:#f0f2f5;color:#6b7280}',
+    '#nl-customizer .nl-cz-save .save{flex:1;background:#22c55e;color:#fff}',
+    '#nl-customizer .nl-cz-preview{background:#fff;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-height:600px}',
+    '#nl-customizer .nl-cz-preview iframe{flex:1;width:100%;min-height:560px;border:none}',
+    '@media(max-width:900px){#nl-customizer .nl-cz-layout{grid-template-columns:minmax(0,1fr)}#nl-customizer .nl-cz-panel{max-height:none}}',
+    '@media(max-width:520px){#nl-customizer{padding:10px!important}#nl-customizer .nl-cz-row{grid-template-columns:minmax(0,1fr)}#nl-customizer .nl-cz-preview{min-height:480px}#nl-customizer .nl-cz-preview iframe{min-height:440px}}'
+  ].join('\n');
+  (document.head||document.documentElement).appendChild(style);
+}
+
 function nlOpenCustomizer(){
-  var at = nlDT() || 'punbb'; var c = nlGetCustom(); var hostname = window.location.hostname;
+  var nativeStyle = typeof nlNativeStyleId === 'function' && !!nlNativeStyleId();
+  var at = nativeStyle ? 'punbb' : (nlDT() || 'punbb'); var c = nlGetCustom(); var hostname = window.location.hostname;
+  nlEnsureCustomizerLayoutStyles();
   $('body').children().hide();
   var h = '';
   h += '<div id="nl-customizer" style="min-height:100vh;background:linear-gradient(135deg,#667eea,#764ba2);font-family:Inter,system-ui,sans-serif;padding:16px;">';
