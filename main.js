@@ -712,8 +712,10 @@ function nlIT(type){
   if(type==='punbb'){nlNativeApply('Mybb_Work_Station');return}
   var ti=nlTF[type];if(!ti)return;
   nlSetCustomThemeMode(true);
-  var url='https://forumstatic.ru/files/001c/ac/51/'+ti.file+'.txt?v='+ti.v;
-  $.ajax({url:url,type:'GET',dataType:'text',success:function(data){try{sessionStorage.setItem('nl_install_code',data)}catch(e){}window.location.href='/admin_forms.php?nl_type='+type},error:function(){try{sessionStorage.setItem('nl_install_code','')}catch(e){}window.location.href='/admin_forms.php?nl_type='+type}});
+  var mirrorUrl='https://forumstatic.ru/files/001c/ac/51/'+ti.file+'.txt?v='+ti.v;
+  var localUrl='/admin_files.php?edit&file='+encodeURIComponent(ti.file+'.txt')+'&nl_source='+Date.now();
+  function install(data){try{sessionStorage.setItem('nl_install_code',data||'')}catch(e){}window.location.href='/admin_forms.php?nl_type='+type}
+  $.ajax({url:localUrl,type:'GET',dataType:'html',cache:false,success:function(html){var data='';try{data=$('<div>').html(html).find('textarea').first().val()||''}catch(e){}if(data.indexOf('nl-theme-marker:')<0){$.ajax({url:mirrorUrl,type:'GET',dataType:'text',success:function(fallback){install(fallback)},error:function(){install('')}})}else{install(data)}},error:function(){$.ajax({url:mirrorUrl,type:'GET',dataType:'text',success:function(data){install(data)},error:function(){install('')}})}});
 }
 window.nlGF=nlGF;window.nlIT=nlIT;
 
