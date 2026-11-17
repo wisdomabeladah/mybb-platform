@@ -1,0 +1,35 @@
+<!-- nl-theme-marker:nairaland_replica -->
+<!-- Nairaland-inspired classic layout for MyWebName forums. This skin retains the forum's own content and controls. -->
+<script>(function(){var p=(window.location&&window.location.pathname)||'';if(/^\/(?:admin(?:_|\/)|admin\/)/i.test(p))return;document.documentElement.classList.add('nl-nairaland-replica');})();</script>
+<style id="nl-nairaland-replica-v1">
+html.nl-nairaland-replica,html.nl-nairaland-replica body{background:#eef3ee!important;color:#111!important;font-family:Arial,Helvetica,sans-serif!important;font-size:13px!important;line-height:1.45!important}
+html.nl-nairaland-replica #pun{width:96%!important;max-width:1100px!important;margin:8px auto!important;position:relative!important}
+html.nl-nairaland-replica .punbb{font-family:Arial,Helvetica,sans-serif!important;font-size:13px!important;color:#111!important}
+html.nl-nairaland-replica #pun-title{background:#fff!important;border:1px solid #cfd8cf!important;border-bottom:3px solid #087b39!important;border-radius:3px!important;box-shadow:none!important;padding:7px 10px!important;text-align:left!important}
+html.nl-nairaland-replica #pun-title .container{background:transparent!important;border:0!important;box-shadow:none!important}
+html.nl-nairaland-replica #pun-title h1,html.nl-nairaland-replica #pun-title h2,html.nl-nairaland-replica #pun-title .title-logo{margin:0!important;padding:0!important}
+html.nl-nairaland-replica #pun-title h1 a,html.nl-nairaland-replica #pun-title h2 a,html.nl-nairaland-replica #pun-title .title-logo a{color:#087b39!important;font-size:20px!important;font-weight:700!important;text-decoration:none!important}
+html.nl-nairaland-replica #pun-navlinks,html.nl-nairaland-replica #pun-ulinks{background:#087b39!important;border:1px solid #076c31!important;border-radius:3px!important;color:#fff!important}
+html.nl-nairaland-replica #pun-navlinks a,html.nl-nairaland-replica #pun-ulinks a{color:#fff!important;font-weight:700!important;text-decoration:none!important}
+html.nl-nairaland-replica #pun-navlinks a:hover,html.nl-nairaland-replica #pun-ulinks a:hover{background:#076c31!important;color:#fff!important;text-decoration:underline!important}
+html.nl-nairaland-replica #pun-status{background:#e8f1e8!important;border:1px solid #cfd8cf!important;border-radius:3px!important;color:#333!important;padding:6px 9px!important}
+html.nl-nairaland-replica #pun-status a,html.nl-nairaland-replica #pun-crumbs1 a,html.nl-nairaland-replica #pun-crumbs2 a{color:#0645ad!important}
+html.nl-nairaland-replica .punbb .container,html.nl-nairaland-replica #pun-stats .container,html.nl-nairaland-replica #pun-about .container{background:#fff!important;border:1px solid #cfd8cf!important;border-radius:3px!important;box-shadow:none!important}
+html.nl-nairaland-replica .punbb th{background:#087b39!important;border-color:#076c31!important;color:#fff!important;font-weight:700!important}
+html.nl-nairaland-replica .punbb th a{color:#fff!important}
+html.nl-nairaland-replica .punbb td{background:#fff!important;border-color:#e1e7e1!important;color:#111!important}
+html.nl-nairaland-replica .punbb tr:nth-child(even) td{background:#f7faf7!important}
+html.nl-nairaland-replica .punbb .category h2,html.nl-nairaland-replica .punbb .category h3,html.nl-nairaland-replica #pun-main h2{color:#087b39!important}
+html.nl-nairaland-replica .punbb h3 a,html.nl-nairaland-replica .punbb .tcl a,html.nl-nairaland-replica .punbb .tcr a{color:#0645ad!important}
+html.nl-nairaland-replica .punbb a{color:#0645ad!important}
+html.nl-nairaland-replica .punbb a:hover{color:#033c90!important;text-decoration:underline!important}
+html.nl-nairaland-replica .punbb .post{visibility:visible!important;background:#fff!important;border:1px solid #cfd8cf!important;border-radius:3px!important;box-shadow:none!important}
+html.nl-nairaland-replica .punbb .post h3{background:#e8f1e8!important;border-bottom:1px solid #cfd8cf!important;color:#222!important;padding:7px 9px!important}
+html.nl-nairaland-replica .punbb .post-body,html.nl-nairaland-replica .punbb .post-content,html.nl-nairaland-replica .punbb .entry-content{color:#111!important;line-height:1.55!important}
+html.nl-nairaland-replica #pun-stats,html.nl-nairaland-replica #pun-about{background:#fff!important;border:1px solid #cfd8cf!important;border-radius:3px!important;color:#333!important;padding:8px 10px!important}
+html.nl-nairaland-replica input[type="text"],html.nl-nairaland-replica input[type="password"],html.nl-nairaland-replica input[type="number"],html.nl-nairaland-replica textarea,html.nl-nairaland-replica select{border:1px solid #bfcbbf!important;border-radius:2px!important;padding:5px 8px!important;font:13px Arial,Helvetica,sans-serif!important}
+html.nl-nairaland-replica input[type="submit"],html.nl-nairaland-replica button,html.nl-nairaland-replica .button{background:#087b39!important;border:1px solid #076c31!important;border-radius:2px!important;color:#fff!important;padding:5px 12px!important;font:700 13px Arial,Helvetica,sans-serif!important;cursor:pointer!important}
+html.nl-nairaland-replica input[type="submit"]:hover,html.nl-nairaland-replica button:hover,html.nl-nairaland-replica .button:hover{background:#076c31!important}
+html.nl-nairaland-replica .pagelink a,html.nl-nairaland-replica .pagelink strong,html.nl-nairaland-replica .pagelink span{border-radius:2px!important}
+@media screen and (max-width:640px){html.nl-nairaland-replica #pun{width:98%!important;margin:4px auto!important}html.nl-nairaland-replica #pun-title{padding:6px 8px!important}html.nl-nairaland-replica #pun-title h1 a,html.nl-nairaland-replica #pun-title h2 a{font-size:18px!important}html.nl-nairaland-replica .punbb td{padding:5px 6px!important}html.nl-nairaland-replica #pun-navlinks,html.nl-nairaland-replica #pun-ulinks{overflow-x:auto!important}}
+</style>
