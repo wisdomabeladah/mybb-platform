@@ -1402,7 +1402,7 @@ if (isHome) {
 }
 
 var themeAttrAny = document.body && document.body.getAttribute('data-nl-theme');
-var hasThemeMarkupAny = !!themeAttrAny || $('.nl-navbar').length > 0 || $('.nl-boards-table').length > 0;
+var hasThemeMarkupAny = !!themeAttrAny || $('html.nl-nairaland-replica').length > 0 || $('.nl-replica-home').length > 0 || $('.nl-navbar').length > 0 || $('.nl-boards-table').length > 0;
 if (!hasThemeMarkupAny && $('#nl-construction-card, #nl-welcome-card').length === 0 && !$('#nl-customizer').length) {
   $('#pun-index .main, #pun .main, .punbb .main, #pun-stats, #pun-announcement, #pun-crumbs1, #pun-crumbs2, #pun-title, #pun-navlinks, #pun-ulinks, #pun-status').hide();
   var cardFallback = !ia
