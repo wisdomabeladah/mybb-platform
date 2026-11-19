@@ -511,6 +511,23 @@ var nlNativeAssetVersion='d4455a3';
 var nlNativeAssets={Mybb_Work_Station:{base:'https://cdn.jsdelivr.net/gh/wisdomabeladah/mybb-platform@'+nlNativeAssetVersion+'/themes/native/Mybb_Work_Station/',files:[['nl-native-structure-css','Mybb_Work_Station.css'],['nl-native-extra-css','extra.css'],['nl-native-mobile-css','mobile.css']]}};
 function nlNativeApply(id){if(!nlNativeKnownStyleId(id))return;try{sessionStorage.setItem('nl_native_style_pending',id);localStorage.removeItem('nl_native_style');localStorage.removeItem('nl_selected_theme')}catch(e){}nlSetCustomThemeMode(false);window.location.href='/admin_options.php?nl_native='+encodeURIComponent(id)}
 window.nlNativeApply=nlNativeApply;
+function nlForceUserStyleChoiceOff(form){
+  var yes=document.getElementById('fld-on-o_user_change_style'),no=document.getElementById('fld-off-o_user_change_style');
+  if(!yes||!no)return false;
+  function forceNo(){yes.checked=false;no.checked=true}
+  forceNo();
+  yes.disabled=true;
+  yes.title='Style choice is disabled for this forum.';
+  if(yes.setAttribute)yes.setAttribute('aria-disabled','true');
+  form=form||no.form;
+  if(form&&form.addEventListener&&!form.__nlUserStyleChoiceLocked){
+    form.addEventListener('submit',forceNo,true);
+    form.addEventListener('formdata',function(event){try{event.formData.set('form[o_user_change_style]','0')}catch(e){} });
+    form.__nlUserStyleChoiceLocked=true;
+  }
+  return true;
+}
+window.nlForceUserStyleChoiceOff=nlForceUserStyleChoiceOff;
 function nlNativeCleanCustomLayer(){
   var title=document.getElementById('pun-title');
   var selectors='.nl-navbar,.nl-boards-table,.nl-featured,.nl-online,.nl-footer,.nl-topics-table,.nl-ad-slider,.nl-title,.nl-welcome-line,.nl-stats-line,#nl-header-overlay,#nl-footer-overlay,#nl-theme-modal,#nl-style-spinner,#nl-ua-panel,#nl-tool-page,#nl-construction-card,#nl-welcome-card';
@@ -1151,6 +1168,7 @@ var iO=H.indexOf('admin_options.php')>=0;var nativeMatch=Q.match(/[?&]nl_native=
 nlReconcileCustomThemeMode();
 var nativeBoardMode=!!nlNativeStyleId();
 var nativeAdminRoute=ia&&iAP;
+if(ia&&iO)nlForceUserStyleChoiceOff();
 if(nativeBoardMode&&!sT&&!(iO&&nativeMatch)&&!nativeAdminRoute){nlNativeRestore();nlReady();return;}
 if(ia&&iO&&nativeMatch){
   var nativeId=decodeURIComponent(nativeMatch[1]||'');
@@ -1163,6 +1181,7 @@ if(ia&&iO&&nativeMatch){
     nlSetCustomThemeMode(false);
     var $nativeForm=$nativeSelect.closest('form');
     if(!$nativeForm.length){nativeApplyFailed('Could not find the Style by default form. The PunBB theme was not saved globally.');return}
+    nlForceUserStyleChoiceOff($nativeForm[0]);
     $('body').children().hide();
     $('body').append('<div style="position:fixed;inset:0;z-index:999999;background:#2865F1;color:#fff;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;"><div style="text-align:center;"><i class="fas fa-palette fa-spin" style="font-size:48px;"></i><h2>Saving '+nativeId.replace(/_/g,' ')+' as the forum-wide default...</h2><p>Verifying the server settings before finishing</p></div></div>');
     var nativeData=$nativeForm.serialize();
@@ -1173,7 +1192,9 @@ if(ia&&iO&&nativeMatch){
       $.ajax({url:'/admin_options.php?nl_native_verify='+Date.now(),type:'GET',dataType:'html',cache:false,timeout:15000}).done(function(verifyHtml){
         var verifyDoc=new DOMParser().parseFromString(verifyHtml,'text/html');
         var savedStyle=verifyDoc.querySelector('#fld8');
+        var allowStyleNo=verifyDoc.querySelector('#fld-off-o_user_change_style');
         if(!savedStyle||String(savedStyle.value)!==String(nativeId)){if(attempt<1){saveNative(1)}else nativeApplyFailed('The forum did not save this PunBB theme as its default. The browser will not keep a local-only theme override.');return}
+        if(!allowStyleNo||!allowStyleNo.checked){if(attempt<1){saveNative(1)}else nativeApplyFailed('The PunBB theme was saved, but “Allow users to choose style” could not be confirmed as No. Please verify this setting in Options.');return}
         nlDisableCustomStyleAndProceed('/admin_index.php',nativeId);
       }).fail(function(){nativeApplyFailed('The style save request completed, but the server default could not be verified. No browser-only override was kept.')});
       })
