@@ -1403,6 +1403,12 @@ if (isHome) {
 
 var themeAttrAny = document.body && document.body.getAttribute('data-nl-theme');
 var hasThemeMarkupAny = !!themeAttrAny || $('html.nl-nairaland-replica').length > 0 || $('.nl-replica-home').length > 0 || $('.nl-navbar').length > 0 || $('.nl-boards-table').length > 0;
+if($('html.nl-nairaland-replica').length && /^(?:\/|\/index\.php)?$/i.test(location.pathname) && !$('.nl-replica-home').length){
+  var $nRoot=$('#pun-index');
+  if($nRoot.length && (!$nRoot.find('#pun-main').text()||!$nRoot.find('#pun-main').text().trim())){
+    $nRoot.prepend('<div class="nl-replica-home"><div class="nl-replica-title"><strong><a href="/">Community Forum</a></strong><span>Welcome to our community forum</span></div><div class="nl-replica-nav"><a href="/">Home</a><a href="/search.php?action=show_new">Latest News</a><a href="/register.php">Register</a><a href="/login.php">Login</a></div><table class="nl-replica-boards"><thead><tr><th>Community Forums</th></tr></thead><tbody><tr><td><a href="/viewforum.php?id=1">Announcements</a><small>News &amp; Announcements</small></td></tr><tr><td><a href="/viewforum.php?id=2">Community</a><small>Community Chat, Questions &amp; Answers</small></td></tr><tr><td><a href="/viewforum.php?id=3">General</a><small>General Discussion</small></td></tr></tbody></table><div class="nl-replica-note">Every member is responsible for anything they post or upload on this forum.</div></div>');
+  }
+}
 if (!hasThemeMarkupAny && $('#nl-construction-card, #nl-welcome-card').length === 0 && !$('#nl-customizer').length) {
   $('#pun-index .main, #pun .main, .punbb .main, #pun-stats, #pun-announcement, #pun-crumbs1, #pun-crumbs2, #pun-title, #pun-navlinks, #pun-ulinks, #pun-status').hide();
   var cardFallback = !ia
