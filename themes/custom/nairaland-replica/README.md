@@ -1,7 +1,10 @@
-# Nairaland Replica theme
+# Nairaland themes
 
-This theme applies a compact, classic forum presentation inspired by Nairaland’s public homepage: a centered content column, small Arial typography, white surfaces, leaf-green section bars, blue links, pale green page background, thin borders, and nearly square corners.
+This directory contains two separate Nairaland-inspired theme payloads:
 
-The package is intentionally a skin, not a site-content clone. It keeps each MyWebName forum’s configured title, categories, topics, users, navigation links, statistics, forms, and existing PunBB DOM. It does not import Nairaland posts, member data, category names, ads, or branding. The injected script only adds a CSS scope class on public forum pages; it skips `admin_*.php` routes so MyWebName’s modern admin interface is not restyled by this package.
+- `theme.txt` is the restored original working Nairaland skin. It uses the marker `nl-theme-marker:nairaland_replica` and corresponds to the customer file `15535.txt`.
+- `theme-v2.txt` is the newer compact/fallback variant. It uses the marker `nl-theme-marker:nairaland_v2` and is uploaded separately as customer file `95151.txt`, exposed in the selector as **Nairaland Plus**.
 
-The theme payload is `theme.txt`. It is fetched as text by the MyWebName theme selector and installed through the existing PunBB Forms & HTML flow. The marker `nl-theme-marker:nairaland_replica` is required by the theme-mode wrapper.
+Both payloads keep each MyWebName forum’s configured title, categories, topics, users, navigation links, statistics, forms, and existing PunBB DOM. They do not import Nairaland posts, member data, advertising, or branding. The injected styles skip `admin_*.php` routes so the administration interface is not restyled.
+
+The payloads are fetched as text by the MyWebName theme selector and installed through the existing PunBB Forms & HTML flow. The selector registry in `main.js` maps `nairaland` to `15535.txt` and `nairaland_v2` to `95151.txt`.
