@@ -1,38 +1,259 @@
-<!-- nl-theme-marker:nairaland_replica -->
-<!-- Nairaland-inspired classic layout for MyWebName forums. This skin retains the forum's own content and controls. -->
-<script>(function(){var p=(window.location&&window.location.pathname)||'';if(/^\/(?:admin(?:_|\/)|admin\/)/i.test(p))return;document.documentElement.classList.add('nl-nairaland-replica');})();</script>
-<style id="nl-nairaland-replica-v1">
-html.nl-nairaland-replica,html.nl-nairaland-replica body{background:#eef3ee!important;color:#111!important;font-family:Arial,Helvetica,sans-serif!important;font-size:13px!important;line-height:1.45!important}
-html.nl-nairaland-replica #pun{width:96%!important;max-width:1100px!important;margin:8px auto!important;position:relative!important}
-html.nl-nairaland-replica .punbb{font-family:Arial,Helvetica,sans-serif!important;font-size:13px!important;color:#111!important}
-html.nl-nairaland-replica #pun-title{background:#fff!important;border:1px solid #cfd8cf!important;border-bottom:3px solid #087b39!important;border-radius:3px!important;box-shadow:none!important;padding:7px 10px!important;text-align:left!important}
-html.nl-nairaland-replica #pun-title .container{background:transparent!important;border:0!important;box-shadow:none!important}
-html.nl-nairaland-replica #pun-title h1,html.nl-nairaland-replica #pun-title h2,html.nl-nairaland-replica #pun-title .title-logo{margin:0!important;padding:0!important}
-html.nl-nairaland-replica #pun-title h1 a,html.nl-nairaland-replica #pun-title h2 a,html.nl-nairaland-replica #pun-title .title-logo a{color:#087b39!important;font-size:20px!important;font-weight:700!important;text-decoration:none!important}
-html.nl-nairaland-replica #pun-navlinks,html.nl-nairaland-replica #pun-ulinks{background:#087b39!important;border:1px solid #076c31!important;border-radius:3px!important;color:#fff!important}
-html.nl-nairaland-replica #pun-navlinks a,html.nl-nairaland-replica #pun-ulinks a{color:#fff!important;font-weight:700!important;text-decoration:none!important}
-html.nl-nairaland-replica #pun-navlinks a:hover,html.nl-nairaland-replica #pun-ulinks a:hover{background:#076c31!important;color:#fff!important;text-decoration:underline!important}
-html.nl-nairaland-replica #pun-status{background:#e8f1e8!important;border:1px solid #cfd8cf!important;border-radius:3px!important;color:#333!important;padding:6px 9px!important}
-html.nl-nairaland-replica #pun-status a,html.nl-nairaland-replica #pun-crumbs1 a,html.nl-nairaland-replica #pun-crumbs2 a{color:#0645ad!important}
-html.nl-nairaland-replica .punbb .container,html.nl-nairaland-replica #pun-stats .container,html.nl-nairaland-replica #pun-about .container{background:#fff!important;border:1px solid #cfd8cf!important;border-radius:3px!important;box-shadow:none!important}
-html.nl-nairaland-replica .punbb th{background:#087b39!important;border-color:#076c31!important;color:#fff!important;font-weight:700!important}
-html.nl-nairaland-replica .punbb th a{color:#fff!important}
-html.nl-nairaland-replica .punbb td{background:#fff!important;border-color:#e1e7e1!important;color:#111!important}
-html.nl-nairaland-replica .punbb tr:nth-child(even) td{background:#f7faf7!important}
-html.nl-nairaland-replica .punbb .category h2,html.nl-nairaland-replica .punbb .category h3,html.nl-nairaland-replica #pun-main h2{color:#087b39!important}
-html.nl-nairaland-replica .punbb h3 a,html.nl-nairaland-replica .punbb .tcl a,html.nl-nairaland-replica .punbb .tcr a{color:#0645ad!important}
-html.nl-nairaland-replica .punbb a{color:#0645ad!important}
-html.nl-nairaland-replica .punbb a:hover{color:#033c90!important;text-decoration:underline!important}
-html.nl-nairaland-replica .punbb .post{visibility:visible!important;background:#fff!important;border:1px solid #cfd8cf!important;border-radius:3px!important;box-shadow:none!important}
-html.nl-nairaland-replica .punbb .post h3{background:#e8f1e8!important;border-bottom:1px solid #cfd8cf!important;color:#222!important;padding:7px 9px!important}
-html.nl-nairaland-replica .punbb .post-body,html.nl-nairaland-replica .punbb .post-content,html.nl-nairaland-replica .punbb .entry-content{color:#111!important;line-height:1.55!important}
-html.nl-nairaland-replica #pun-stats,html.nl-nairaland-replica #pun-about{background:#fff!important;border:1px solid #cfd8cf!important;border-radius:3px!important;color:#333!important;padding:8px 10px!important}
-html.nl-nairaland-replica input[type="text"],html.nl-nairaland-replica input[type="password"],html.nl-nairaland-replica input[type="number"],html.nl-nairaland-replica textarea,html.nl-nairaland-replica select{border:1px solid #bfcbbf!important;border-radius:2px!important;padding:5px 8px!important;font:13px Arial,Helvetica,sans-serif!important}
-html.nl-nairaland-replica input[type="submit"],html.nl-nairaland-replica button,html.nl-nairaland-replica .button{background:#087b39!important;border:1px solid #076c31!important;border-radius:2px!important;color:#fff!important;padding:5px 12px!important;font:700 13px Arial,Helvetica,sans-serif!important;cursor:pointer!important}
-html.nl-nairaland-replica input[type="submit"]:hover,html.nl-nairaland-replica button:hover,html.nl-nairaland-replica .button:hover{background:#076c31!important}
-html.nl-nairaland-replica .pagelink a,html.nl-nairaland-replica .pagelink strong,html.nl-nairaland-replica .pagelink span{border-radius:2px!important}
-@media screen and (max-width:640px){html.nl-nairaland-replica #pun{width:98%!important;margin:4px auto!important}html.nl-nairaland-replica #pun-title{padding:6px 8px!important}html.nl-nairaland-replica #pun-title h1 a,html.nl-nairaland-replica #pun-title h2 a{font-size:18px!important}html.nl-nairaland-replica .punbb td{padding:5px 6px!important}html.nl-nairaland-replica #pun-navlinks,html.nl-nairaland-replica #pun-ulinks{overflow-x:auto!important}}
+<!-- nl-theme-marker:nairaland -->
+<!-- BUZZ NAME REPLICA v14 -->
+<link rel="preconnect" href="https://fonts.gstatic.com" />
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<style>
+.punbb .post,.punbb .main .post,#pun-viewtopic .post{visibility:hidden!important}
+.nl-post-wrapper{visibility:visible!important}
+body{background:#fff!important;text-align:center!important;font-family:'Open Sans',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",sans-serif!important;font-size:11pt!important;color:#000!important}
+#pun{margin:8px auto!important;max-width:1024px!important;width:96%!important;position:relative!important}
+.punbb{font-family:'Open Sans',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",sans-serif!important;font-size:11pt!important;color:#000!important}
+.punbb .container{border-radius:16px!important;border:1px solid #d8dcd0!important}
+.punbb th{background:#e8ece0!important;color:#200!important;font-weight:700!important}
+.punbb td{background:#fff!important}
+a,a:link{color:#181870!important;text-decoration:none!important}
+a:visited{color:#401848!important}
+a:hover,a:active{text-decoration:underline!important;color:#181870!important}
+input[type="text"],input[type="password"],input[type="number"],textarea,select{border:1px solid #d8dcd0!important;border-radius:16px!important;padding:6px 12px!important;font-size:11pt!important}
+input[type="submit"],button,.button{border:1px solid #d8dcd0!important;border-radius:16px!important;padding:6px 16px!important;background:#fff!important;cursor:pointer!important;font-size:11pt!important;color:#000!important}
+input[type="submit"]:hover,button:hover,.button:hover{background:#e8ece0!important}
+blockquote,.punbb .quote-box{background-color:#d7e0c9!important;border:1px solid #c6ccbe!important;border-radius:16px!important;padding:8px 12px!important;margin:0 0 8px 0!important}
+#pun-title{margin:8px auto!important;max-width:1024px!important;width:96%!important;position:relative!important;background:#f6f6ec!important;border:1px solid #d8dcd0!important;border-radius:16px!important;padding:6px 12px!important;text-align:left!important}
+#pun-title *{background:transparent!important;border:none!important}
+.nl-title h1{margin:0!important;padding:0!important;height:auto!important;line-height:1.1!important}
+.nl-title h1 a{color:#185518!important;font-weight:700!important;font-size:18pt!important;text-decoration:none!important}
+.nl-welcome-line{font-size:11pt!important;margin:0!important;padding:0!important;color:#000!important;line-height:1.3!important}
+.nl-welcome-line b{color:#200!important}
+.nl-welcome-line a{color:#181870!important;text-decoration:none!important}
+.nl-stats-line{font-size:11pt!important;margin:0!important;padding:0!important;color:#000!important;line-height:1.3!important}
+.nl-stats-line b{color:#200!important}
+.nl-search-form{margin:2px 0 0 0!important}
+.nl-search-form input[type="text"]{border:1px solid #d8dcd0!important;border-radius:16px!important;padding:4px 12px!important;height:34px!important;font-size:11pt!important;width:200px!important}
+.nl-search-form input[type="submit"]{border:1px solid #d8dcd0!important;border-radius:16px!important;padding:4px 14px!important;height:34px!important;background:#fff!important;cursor:pointer!important;font-size:11pt!important;color:#000!important}
+.nl-search-form input[type="submit"]:hover{background:#e8ece0!important}
+.nl-boards-table{border-spacing:0!important;margin:8px auto!important;max-width:1024px!important;width:96%!important;border:1px solid #d8dcd0!important;border-radius:16px!important;overflow:hidden!important}
+.nl-boards-table th{background:#c8d4c0!important;padding:10px 8px!important;border:none!important;text-align:center!important}
+.nl-boards-table th h3{color:#200!important;font-size:14pt!important;font-weight:700!important;margin:0!important}
+.nl-boards-table td{padding:10px 8px!important;border-bottom:1px solid #d8dcd0!important;text-align:left!important;line-height:1.6!important}
+.nl-board-cat{color:#185518!important;font-weight:700!important;font-size:11pt!important;text-decoration:none!important;margin-right:8px!important}
+.nl-board-link{color:#181870!important;text-decoration:none!important;margin:0 4px!important;white-space:nowrap!important}
+.nl-featured{background:#f6f6ec!important;border:1px solid #d8dcd0!important;border-radius:16px!important;padding:0!important;margin:8px auto!important;max-width:1024px!important;width:96%!important;text-align:center!important;overflow:hidden!important}
+.nl-featured-nav{background:#c8d4c0!important;padding:10px 8px!important;margin:0!important;font-size:11pt!important;text-align:center!important}
+.nl-featured-nav b a{color:#181870!important;text-decoration:none!important}
+.nl-featured-title{padding:12px 16px!important;font-size:11pt!important;text-align:center!important}
+.nl-featured-title a{color:#181870!important;text-decoration:none!important}
+.nl-featured-title b{color:#181870!important;font-weight:700!important}
+.nl-featured hr{border:none!important;margin:6px 0!important;height:1px!important;background:#d2d9d2!important}
+.nl-online{background:#f6f6ec!important;border:1px solid #d8dcd0!important;border-radius:16px!important;padding:10px 8px!important;margin:8px auto!important;max-width:1024px!important;width:96%!important;text-align:center!important;font-size:11pt!important}
+.nl-online h3{color:#200!important;font-size:13pt!important;margin:0 0 4px 0!important}
+.nl-online b{color:#200!important}
+.nl-pagination{text-align:center!important;margin:8px auto!important;padding:8px!important}
+.pgn{border:1px solid #d8dcd0!important;border-radius:8px!important;padding:2px 8px!important;background-color:#f6f6ec!important;line-height:1.8!important;white-space:nowrap!important;margin:0 2px!important;display:inline-block!important;font-size:10pt!important;color:#181870!important}
+.pgn.current{font-weight:bold!important;background-color:#e8ece0!important}
+.nl-footer{background-color:#f6f6ec!important;border:1px solid #d8dcd0!important;border-radius:16px!important;padding:12px 8px!important;margin:8px auto!important;max-width:1024px!important;width:96%!important;text-align:center!important;font-size:9.5pt!important}
+.nl-footer a{color:#181870!important;text-decoration:none!important}
+.nl-footer b{color:#200!important}
+.nl-footer .nl-goup{display:block!important;margin-bottom:8px!important}
+.nl-loading-text{text-align:center;padding:20px;color:#888;font-style:italic;font-size:11pt}
+.nl-topics-table{border-spacing:0!important;margin:8px auto!important;max-width:1024px!important;width:96%!important;border:1px solid #d8dcd0!important;border-radius:16px!important;overflow:hidden!important}
+.nl-topics-table th{background:#c8d4c0!important;padding:10px 8px!important;border:none!important;text-align:center!important;font-size:11pt!important;color:#200!important;font-weight:400!important}
+.nl-topics-table td{padding:10px 8px!important;border-bottom:1px solid #d8dcd0!important;text-align:center!important;line-height:1.5!important;font-size:11pt!important}
+.nl-topic-icon{vertical-align:middle;margin-right:4px;width:16px;height:16px}
+.nl-topic-title-link{color:#181870!important;text-decoration:none!important;font-weight:700!important;font-size:11pt!important}
+.nl-topic-meta{font-size:9.5pt!important;color:#555518!important;display:block!important;margin-top:4px!important}
+.nl-topic-meta a{color:#551818!important;font-weight:700!important;font-size:9.5pt!important;text-decoration:none!important}
+.punbb .post-body,.punbb .post-box,.punbb .post-content,.punbb .entry-content{margin-left:0!important;width:100%!important;padding:0!important;border-left:none!important}
+.nl-topic-top-area{margin:8px auto!important;max-width:1024px!important;width:96%!important;text-align:left!important}
+.nl-topic-top-area h1{color:#200!important;font-size:14pt!important;font-weight:700!important;margin:0 0 4px 0!important}
+.nl-topic-breadcrumb{font-size:11pt!important;margin:2px 0!important}
+.nl-topic-breadcrumb a{color:#181870!important;text-decoration:none!important}
+.nl-ad-slider{position:relative!important;max-width:1024px!important;width:96%!important;margin:8px auto!important;overflow:hidden!important;border-radius:16px!important;border:1px solid #d8dcd0!important;background:#f6f6ec!important}
+.nl-ad-slides{display:flex!important;transition:transform 0.5s ease!important;touch-action:pan-y!important}
+.nl-ad-slide{min-width:100%!important;box-sizing:border-box!important}
+.nl-ad-slide img{width:100%!important;height:106px!important;object-fit:cover!important;display:block!important;border-radius:16px!important}
+.nl-ad-prev,.nl-ad-next{position:absolute!important;top:50%!important;transform:translateY(-50%)!important;background:rgba(0,0,0,0.4)!important;color:#fff!important;border:none!important;border-radius:50%!important;width:32px!important;height:32px!important;font-size:16px!important;cursor:pointer!important;z-index:5!important;line-height:32px!important;text-align:center!important;padding:0!important}
+.nl-ad-prev{left:8px!important}.nl-ad-next{right:8px!important}
+.nl-ad-dots{text-align:center!important;padding:6px 0!important;background:#f6f6ec!important}
+.nl-ad-dot{display:inline-block!important;width:10px!important;height:10px!important;margin:0 4px!important;border-radius:50%!important;background:#d8dcd0!important;cursor:pointer!important}
+.nl-ad-dot.active{background:#551818!important}
+.nl-reply-btn{display:inline-block!important;background:#f6f6ec!important;border:1px solid #d8dcd0!important;border-radius:8px!important;padding:2px 12px!important;font-size:10pt!important;color:#181870!important;text-decoration:none!important;font-weight:700!important}
+.nl-post-wrapper{margin:8px auto!important;max-width:1024px!important;width:96%!important}
+.nl-post-header{background:#c8d4c0!important;padding:8px 12px!important;border-radius:16px 16px 0 0!important;border:1px solid #d8dcd0!important;border-bottom:none!important;text-align:left!important}
+.nl-post-header a{color:#181870!important;text-decoration:none!important;font-weight:700!important;font-size:11pt!important}
+.nl-post-header a.user-link{color:#551818!important}
+.nl-post-content{padding:12px!important;border:1px solid #d8dcd0!important;border-top:none!important;border-radius:0 0 16px 16px!important;text-align:left!important;font-size:11pt!important;line-height:1.5!important;overflow-wrap:break-word!important;width:100%!important;box-sizing:border-box!important;margin-left:0!important}
+.nl-post-content div{text-align:left!important;width:100%!important}
+.nl-post-content img{max-width:100%!important;height:auto!important}
+.nl-share-bar{margin-top:12px!important;font-size:9.5pt!important;color:#555518!important}
+#pun-profile #pun-title .container,#pun-profile #title-logo-table,#pun-profile #title-logo-tbody,#pun-profile #title-logo-tr,#pun-profile #title-logo-tdl,#pun-profile #title-logo-tdr{display:none!important}
+#pun-profile #viewprofile-next,#pun-profile #viewprofile{display:none!important}
+.nl-profile-card{margin:8px auto!important;max-width:1024px!important;width:96%!important;background:#f6f6ec!important;border:1px solid #d8dcd0!important;border-radius:16px!important;overflow:hidden!important;text-align:left!important}
+.nl-profile-header{background:#c8d4c0!important;padding:20px 16px!important;display:flex!important;align-items:center!important;gap:16px!important;flex-wrap:wrap!important}
+.nl-profile-avatar{flex-shrink:0!important}
+.nl-profile-avatar img{width:80px!important;height:80px!important;border-radius:50%!important;border:3px solid #fff!important;object-fit:cover!important;display:block!important;background:#e8ece0!important}
+.nl-profile-name-section{flex:1!important;min-width:200px!important}
+.nl-profile-displayname{font-size:16pt!important;font-weight:700!important;color:#185518!important;margin:0 0 2px 0!important;line-height:1.2!important}
+.nl-profile-username{font-size:10pt!important;color:#555518!important;margin:0 0 6px 0!important}
+.nl-profile-title{font-size:11pt!important;color:#200!important;margin:0!important;font-weight:400!important}
+.nl-profile-online{display:inline-block!important;background:#185518!important;color:#fff!important;font-size:9pt!important;padding:2px 10px!important;border-radius:12px!important;margin-top:4px!important;font-weight:400!important}
+.nl-profile-online.offline{background:#888!important}
+.nl-profile-nav{display:flex!important;flex-wrap:wrap!important;gap:0!important;background:#185518!important;padding:0!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
+.nl-profile-nav-link{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:10px 14px!important;font-size:10pt!important;color:#fff!important;text-decoration:none!important;font-weight:400!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,0.15)!important;transition:background 0.2s!important;flex-shrink:0!important}
+.nl-profile-nav-link i{font-size:10pt!important;width:14px!important;text-align:center!important}
+.nl-profile-nav-link:hover{background:rgba(255,255,255,0.12)!important;text-decoration:none!important;color:#fff!important}
+.nl-profile-nav-link.active{background:#f6f6ec!important;color:#185518!important;font-weight:700!important}
+.nl-profile-nav-link.active:hover{background:#e8ece0!important;color:#185518!important}
+.nl-profile-stats{display:flex!important;flex-wrap:wrap!important;gap:0!important;border-top:1px solid #d8dcd0!important;border-bottom:1px solid #d8dcd0!important;background:#fff!important}
+.nl-profile-stat{flex:1!important;min-width:80px!important;text-align:center!important;padding:14px 8px!important;cursor:default!important;border-right:1px solid #d8dcd0!important}
+.nl-profile-stat:last-child{border-right:none!important}
+.nl-profile-stat:hover{background:#e8ece0!important}
+.nl-profile-stat a{text-decoration:none!important;display:block!important}
+.nl-profile-stat-count{font-size:13pt!important;font-weight:700!important;color:#185518!important;display:block!important;line-height:1.2!important}
+.nl-profile-stat-label{font-size:9pt!important;color:#555518!important;display:block!important;margin-top:2px!important}
+.nl-profile-details{padding:0!important;background:#fff!important}
+.nl-profile-detail-row{padding:12px 16px!important;border-bottom:1px solid #d8dcd0!important;display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:8px!important}
+.nl-profile-detail-row:last-child{border-bottom:none!important;border-radius:0 0 16px 16px!important}
+.nl-profile-detail-row:nth-child(even){background:#f6f6ec!important}
+.nl-profile-detail-row:nth-child(odd){background:#e8ece0!important}
+.nl-profile-detail-icon{font-size:13pt!important;width:24px!important;text-align:center!important;flex-shrink:0!important}
+.nl-profile-detail-label{font-size:9.5pt!important;color:#555518!important;min-width:100px!important;flex-shrink:0!important}
+.nl-profile-detail-value{font-size:11pt!important;color:#200!important;font-weight:400!important;flex:1!important}
+.nl-profile-detail-value a{color:#181870!important;text-decoration:none!important;font-weight:700!important}
+.nl-profile-detail-value a:hover{text-decoration:underline!important}
+.nl-profile-actions{padding:12px 16px!important;background:#f6f6ec!important;border-top:1px solid #d8dcd0!important;display:flex!important;flex-wrap:wrap!important;gap:8px!important;border-radius:0 0 16px 16px!important}
+.nl-profile-action-btn{display:inline-block!important;background:#fff!important;border:1px solid #d8dcd0!important;border-radius:16px!important;padding:6px 16px!important;font-size:10pt!important;color:#181870!important;text-decoration:none!important;font-weight:700!important;cursor:pointer!important}
+.nl-profile-action-btn:hover{background:#e8ece0!important;text-decoration:none!important}
+@media screen and (max-width:540px){.nl-profile-header{flex-direction:column!important;text-align:center!important;padding:16px!important}.nl-profile-name-section{text-align:center!important}.nl-profile-nav{flex-wrap:nowrap!important;overflow-x:auto!important}.nl-profile-nav-link{padding:10px 10px!important;font-size:9pt!important;gap:4px!important}.nl-profile-nav-link i{font-size:9pt!important}.nl-profile-stats{flex-wrap:wrap!important}.nl-profile-stat{min-width:33%!important;flex:1 1 33%!important;border-bottom:1px solid #d8dcd0!important}.nl-profile-detail-row{flex-direction:column!important;align-items:flex-start!important;gap:2px!important}.nl-profile-detail-label{min-width:auto!important}}
 </style>
+<script>
+var nlAdImages=['https://via.placeholder.com/636x106/185518/ffffff?text=Advertise+Here+1','https://via.placeholder.com/636x106/551818/ffffff?text=Advertise+Here+2','https://via.placeholder.com/636x106/181870/ffffff?text=Advertise+Here+3'];
+var nlAdLinks=['#','#','#'];var nlTotalAds=nlAdImages.length;var nlAdInterval=null;var nlCurrentAd=0;
+function nlGoToAd(i){nlCurrentAd=i;$('.nl-ad-slides').css('transform','translateX(-'+(i*100)+'%)');$('.nl-ad-dot').removeClass('active');$('.nl-ad-dot').eq(i).addClass('active');if(nlAdInterval){clearInterval(nlAdInterval);}nlAdInterval=setInterval(nlNextAd,4000);}
+function nlNextAd(){nlGoToAd((nlCurrentAd+1)%nlTotalAds);}
+function nlPrevAd(){nlGoToAd((nlCurrentAd-1+nlTotalAds)%nlTotalAds);}
+function buildAdSliderHTML(){var h='<div class="nl-ad-slider"><div class="nl-ad-slides">';for(var a=0;a<nlAdImages.length;a++){h+='<div class="nl-ad-slide"><a href="'+nlAdLinks[a]+'" rel="sponsored" target="_blank"><img src="'+nlAdImages[a]+'" /></a></div>';}h+='</div><button class="nl-ad-prev" onclick="nlPrevAd()">\u2039</button><button class="nl-ad-next" onclick="nlNextAd()">\u203A</button><div class="nl-ad-dots">';for(var d=0;d<nlAdImages.length;d++){h+='<span class="nl-ad-dot'+(d===0?' active':'')+'" onclick="nlGoToAd('+d+')"></span>';}h+='</div></div>';return h;}
+function initAdSliderTouch(){var ts=0;$(document).on('touchstart','.nl-ad-slider',function(e){ts=e.originalEvent.touches[0].clientX;});$(document).on('touchend','.nl-ad-slider',function(e){if(Math.abs(ts-e.originalEvent.changedTouches[0].clientX)>50){if(ts-e.originalEvent.changedTouches[0].clientX>0){nlNextAd();}else{nlPrevAd();}}});}
+$(document).ready(function(){
+if($('#pun-admin_index').length||$('#pun-admain').length){return;}
+var pageId=$('body').find('[id^="pun-"]').attr('id')||'',isIndex=(pageId==='pun-index'||pageId==='');
+var isViewforum=(pageId==='pun-viewforum'),isViewtopic=(pageId==='pun-viewtopic');
+var isProfile=(pageId==='pun-profile'),isLogin=(pageId==='pun-login'),isRegister=(pageId==='pun-register'),isUserlist=(pageId==='pun-userlist'),isMessages=(pageId==='pun-messages'),isSearch=(pageId==='pun-search');
+if(!isProfile&&window.location.href.indexOf('profile.php')>=0){isProfile=true;}
+if(!isLogin&&window.location.href.indexOf('login.php')>=0){isLogin=true;}
+if(!isRegister&&window.location.href.indexOf('register.php')>=0){isRegister=true;}
+if(!isUserlist&&window.location.href.indexOf('userlist.php')>=0){isUserlist=true;}
+if(!isMessages&&window.location.href.indexOf('messages.php')>=0){isMessages=true;}
+if(!isSearch&&window.location.href.indexOf('search.php')>=0){isSearch=true;}
+if(!isViewforum&&window.location.href.match(/viewforum\.php/)){isViewforum=true;}
+if(!isViewtopic&&window.location.href.match(/viewtopic\.php/)){isViewtopic=true;}
+if(!isIndex&&(window.location.pathname==='/'||window.location.pathname.match(/\/(index\.php)?$/))){isIndex=true;}
+if(isLogin||isRegister||isUserlist||isMessages||isSearch){return;}
+var isHomepage=isIndex;var isProfilePage=isProfile;
+var now=new Date(),days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+var dateStr=days[now.getDay()]+', '+now.getDate()+' '+months[now.getMonth()]+' '+now.getFullYear();
+var hours=now.getHours(),mins=now.getMinutes(),ampm=hours>=12?'PM':'AM';
+if(hours>12){hours-=12;}if(hours===0){hours=12;}if(mins<10){mins='0'+mins;}
+var dateTimeHTML='<b>Date:</b> '+dateStr+' at '+hours+':'+mins+' '+ampm;
+var totalUsers='...',totalTopics='...',totalPosts='...',onlineCount='...',guestCount='...';
+try{var su=sessionStorage.getItem('nl_totalUsers');if(su&&su!=='...'){totalUsers=su;totalTopics=sessionStorage.getItem('nl_totalTopics');totalPosts=sessionStorage.getItem('nl_totalPosts');onlineCount=sessionStorage.getItem('nl_onlineCount');guestCount=sessionStorage.getItem('nl_guestCount');}}catch(e){}
+var savedCategories=null;
+try{if(sessionStorage.getItem('nl_categories')){savedCategories=JSON.parse(sessionStorage.getItem('nl_categories'));}}catch(e){}
+function updateStatsDisplay(){if($('#nl-stats-display').length){$('#nl-stats-display').html('<b>Stats:</b> '+totalUsers+' members, '+totalTopics+' topics, '+totalPosts+' posts. '+dateTimeHTML);}if($('#nl-online-display').length){$('#nl-online-display').html('<h3>Members Online:</h3><b>'+onlineCount+' Members</b> and <b>'+guestCount+' Guests</b> online in <b>last 5 minutes</b>!</div>');}}
+function saveCategoriesToStorage(cats){try{sessionStorage.setItem('nl_categories',JSON.stringify(cats));}catch(e){}}
+function buildNairalandProfile(){
+var $origProfile=$('#viewprofile');if(!$origProfile.length){return;}
+var profileId='';var idMatch=window.location.href.match(/[?&]id=(\d+)/);if(idMatch){profileId=idMatch[1];}
+var isLoggedIn=(typeof UserID!=='undefined'&&UserID&&UserID>1);
+var profileName=$.trim($origProfile.find('#profile-name strong').text())||'User';
+var profileTitle=$.trim($origProfile.find('#profile-title strong').text())||'';
+var avatarSrc=$origProfile.find('#pa-avatar img').attr('src')||'';
+var onlineText=$.trim($origProfile.find('#pa-online strong').text())||'';
+var isOnline=onlineText.toLowerCase().indexOf('online')>=0&&onlineText.toLowerCase().indexOf('offline')===-1;
+var details={};
+$origProfile.find('#profile-right li').each(function(){var $li=$(this);var id=$li.attr('id')||'';var label=$.trim($li.find('span').text()).replace(/:$/,'').replace(/\s+/g,' ');var value=$.trim($li.find('strong').text());var valueHTML=$.trim($li.find('strong').html())||value;if(id&&label){details[id]={label:label,value:value,valueHTML:valueHTML};}});
+var postsCount='0';if(details['pa-posts']){postsCount=details['pa-posts'].value.replace(/\s*-\s*.*$/,'').trim();}
+var registeredDate=details['pa-register-date']?details['pa-register-date'].value:'--';
+var lastVisit=details['pa-last-visit']?details['pa-last-visit'].value:'--';
+var lastPost=details['pa-last-post']?details['pa-last-post'].value:'--';
+var totalTime=details['pa-time-visit']?details['pa-time-visit'].value:'--';
+var invites=details['pa-invites']?details['pa-invites'].value:'0';
+var respect=details['pa-respect']?details['pa-respect'].value:'+0/-0';
+var positive=details['pa-positive']?details['pa-positive'].value:'+0/-0';
+var profileHTML='<div class="nl-profile-card"><div class="nl-profile-header">';
+if(avatarSrc){profileHTML+='<div class="nl-profile-avatar"><img src="'+avatarSrc+'" alt="'+profileName+'" /></div>';}
+profileHTML+='<div class="nl-profile-name-section"><div class="nl-profile-displayname">'+profileName+'</div><div class="nl-profile-username">@'+profileName.toLowerCase().replace(/[^a-z0-9_]/g,'')+'</div>';
+if(profileTitle){profileHTML+='<div class="nl-profile-title">'+profileTitle+'</div>';}
+if(onlineText){profileHTML+='<span class="nl-profile-online'+(isOnline?'':' offline')+'">'+onlineText+'</span>';}
+profileHTML+='</div></div>';
+if(isLoggedIn&&profileId){
+var profileNavSections=[{name:'Essentials',slug:'essentials',icon:'fa-solid fa-gear'},{name:'Personal',slug:'personal',icon:'fa-solid fa-user-pen'},{name:'Avatar',slug:'avatar',icon:'fa-solid fa-camera'},{name:'Signature',slug:'signature',icon:'fa-solid fa-signature'},{name:'Display',slug:'display',icon:'fa-solid fa-desktop'},{name:'Privacy',slug:'privacy',icon:'fa-solid fa-shield-haltered'},{name:'Invitations',slug:'invitations',icon:'fa-solid fa-envelope-open-text'},{name:'Uploads',slug:'uploads',icon:'fa-solid fa-cloud-arrow-up'},{name:'Management',slug:'admin',icon:'fa-solid fa-screwdriver-wrench'}];
+var currentSection='';var secMatch=window.location.href.match(/[?&]section=([a-z]+)/i);if(secMatch){currentSection=secMatch[1].toLowerCase();}
+profileHTML+='<div class="nl-profile-nav">';
+for(var s=0;s<profileNavSections.length;s++){var sec=profileNavSections[s];var isActive=(currentSection===sec.slug);if(!currentSection&&sec.slug==='essentials'){isActive=true;}if(currentSection==='admin'&&sec.slug==='admin'){isActive=true;}profileHTML+='<a href="/profile.php?section='+sec.slug+'&id='+profileId+'" class="nl-profile-nav-link'+(isActive?' active':'')+'"><i class="'+sec.icon+'"></i> '+sec.name+'</a>';}
+profileHTML+='</div>';}
+profileHTML+='<div class="nl-profile-stats"><div class="nl-profile-stat"><span class="nl-profile-stat-count">'+postsCount+'</span><span class="nl-profile-stat-label">Posts</span></div><div class="nl-profile-stat"><span class="nl-profile-stat-count">'+invites+'</span><span class="nl-profile-stat-label">Invites</span></div><div class="nl-profile-stat"><span class="nl-profile-stat-count">'+respect+'</span><span class="nl-profile-stat-label">Respect</span></div><div class="nl-profile-stat"><span class="nl-profile-stat-count">'+positive+'</span><span class="nl-profile-stat-label">Positive</span></div></div>';
+profileHTML+='<div class="nl-profile-details"><div class="nl-profile-detail-row"><div class="nl-profile-detail-icon"><i class="fa-solid fa-calendar-days" style="color:#555518;"></i></div><div class="nl-profile-detail-label">Registered</div><div class="nl-profile-detail-value"><b>'+registeredDate+'</b></div></div><div class="nl-profile-detail-row"><div class="nl-profile-detail-icon"><i class="fa-solid fa-right-to-bracket" style="color:#555518;"></i></div><div class="nl-profile-detail-label">Last Visit</div><div class="nl-profile-detail-value"><b>'+lastVisit+'</b></div></div><div class="nl-profile-detail-row"><div class="nl-profile-detail-icon"><i class="fa-solid fa-pen-to-square" style="color:#555518;"></i></div><div class="nl-profile-detail-label">Last Post</div><div class="nl-profile-detail-value"><b>'+lastPost+'</b></div></div><div class="nl-profile-detail-row"><div class="nl-profile-detail-icon"><i class="fa-solid fa-clock" style="color:#555518;"></i></div><div class="nl-profile-detail-label">Total Time</div><div class="nl-profile-detail-value"><b>'+totalTime+'</b></div></div></div>';
+profileHTML+='<div class="nl-profile-actions">';
+if(details['pa-posts']&&details['pa-posts'].valueHTML.indexOf('href=')>=0){var postsMatch=details['pa-posts'].valueHTML.match(/href="([^"]+)"[^>]*>Show all posts</);var topicsMatch=details['pa-posts'].valueHTML.match(/href="([^"]+)"[^>]*>Show all topics</);if(postsMatch){profileHTML+='<a class="nl-profile-action-btn" href="'+postsMatch[1]+'"><i class="fa-solid fa-list"></i> <b>Show All Posts</b></a>';}if(topicsMatch){profileHTML+='<a class="nl-profile-action-btn" href="'+topicsMatch[1]+'"><i class="fa-solid fa-comments"></i> <b>Show All Topics</b></a>';}}
+if(profileHTML.indexOf('nl-profile-action-btn')===-1&&profileId){profileHTML+='<a class="nl-profile-action-btn" href="/search.php?action=show_user_posts&user_id='+profileId+'"><i class="fa-solid fa-list"></i> <b>Show All Posts</b></a>';profileHTML+='<a class="nl-profile-action-btn" href="/search.php?action=show_user_topics&user_id='+profileId+'"><i class="fa-solid fa-comments"></i> <b>Show All Topics</b></a>';}
+profileHTML+='</div></div>';
+$('.nl-boards-table').after(profileHTML);}
 
-<script>(function(){if(!/^(?:\/|\/index\.php)?$/i.test(location.pathname))return;function ready(){var root=document.querySelector('#pun-index');if(!root||root.querySelector('.nl-replica-home'))return;var main=root.querySelector('#pun-main');if(main&&(main.innerText||'').trim())return;var h='<div class="nl-replica-home"><div class="nl-replica-title"><strong><a href="/">'+(document.title||'Community Forum').replace(/\s*-.*$/,'')+'</a></strong><span>Welcome to our community forum</span></div><div class="nl-replica-nav"><a href="/">Home</a><a href="/search.php?action=show_new">Latest News</a><a href="/register.php">Register</a><a href="/login.php">Login</a></div><table class="nl-replica-boards"><thead><tr><th>Community Forums</th></tr></thead><tbody><tr><td><a href="/viewforum.php?id=1">Announcements</a><small>News &amp; Announcements</small></td></tr><tr><td><a href="/viewforum.php?id=2">Community</a><small>Community Chat, Questions &amp; Answers</small></td></tr><tr><td><a href="/viewforum.php?id=3">General</a><small>General Discussion</small></td></tr></tbody></table><div class="nl-replica-note">Every member is responsible for anything they post or upload on this forum.</div></div>';root.insertAdjacentHTML('afterbegin',h)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);else setTimeout(ready,0)})();</script>
-<style id="nl-replica-home">.nl-replica-home{margin:8px auto;max-width:1100px;width:96%;font:13px Arial,Helvetica,sans-serif;color:#111}.nl-replica-title{background:#fff;border:1px solid #cfd8cf;border-bottom:3px solid #087b39;padding:8px 10px}.nl-replica-title strong{display:block;font-size:20px}.nl-replica-title strong a{color:#087b39;text-decoration:none}.nl-replica-title span{display:block;color:#555;margin-top:3px}.nl-replica-nav{background:#087b39;border:1px solid #076c31;padding:7px 10px}.nl-replica-nav a{color:#fff;font-weight:700;text-decoration:none;margin-right:18px}.nl-replica-boards{width:100%;margin-top:8px;border-collapse:collapse;background:#fff;border:1px solid #cfd8cf}.nl-replica-boards th{background:#087b39;color:#fff;text-align:left;padding:9px}.nl-replica-boards td{padding:10px;border-bottom:1px solid #e1e7e1}.nl-replica-boards tr:nth-child(even) td{background:#f7faf7}.nl-replica-boards a{display:inline-block;color:#0645ad;font-weight:700;margin-right:12px}.nl-replica-boards small{color:#555}.nl-replica-note{background:#e8f1e8;border:1px solid #cfd8cf;padding:8px 10px;margin-top:8px}@media(max-width:640px){.nl-replica-nav{overflow:auto;white-space:nowrap}.nl-replica-boards small{display:block;margin-top:3px}}</style>
+function buildPage(allCategories){
+var isLoggedIn=(typeof UserID!=='undefined'&&UserID&&UserID>1),username=(typeof UserName!=='undefined'&&UserName)||(typeof UserLogin!=='undefined'&&UserLogin)||'Guest';
+var welcomeHTML='';
+if(isLoggedIn){welcomeHTML+='Welcome, <b>'+username+'</b>: ';welcomeHTML+='<a href="/profile.php?id='+UserID+'">Profile</a> \u2022 ';welcomeHTML+='<a href="/login.php?action=out&id='+UserID+'">Logout</a> \u2022 ';}
+else{welcomeHTML+='Welcome, <b>Guest</b>: ';welcomeHTML+='<a href="/register.php">Register</a> \u2022 ';welcomeHTML+='<a href="/login.php">Login</a> \u2022 ';}
+welcomeHTML+='<a href="/search.php?action=show_recent">Trending</a> \u2022 <a href="/search.php?action=show_new">New</a>';
+var headerHTML='<table cellspacing="0" style="width:100%;border:none;"><tr><td style="border:none;"><h1><a href="/">Buzz Name</a></h1>';
+headerHTML+='<div class="nl-welcome-line">'+welcomeHTML+'</div><div class="nl-stats-line" id="nl-stats-display"><b>Stats:</b> '+totalUsers+' members, '+totalTopics+' topics, '+totalPosts+' posts. '+dateTimeHTML+'</div>';
+headerHTML+='<form class="nl-search-form" action="/search.php" method="get"><input type="text" name="keywords" size="32" placeholder="Search..." /><input type="submit" name="search" value="Search" /></form></td></tr></table>';
+$('#pun-title').addClass('nl-title').html(headerHTML);
+$('#pun-navlinks,#pun-ulinks,#pun-status,#pun-crumbs1,#pun-crumbs2,#pun-break1,#pun-break2,#pun-break3,#pun-break4,#pun-stats,#pun-about').hide();
+
+if(isProfilePage){
+var boardsHTML='<table class="nl-boards-table"><tbody><tr><th><h3>BUZZ NAME FORUMS</h3></th></tr>';
+for(var i=0;i<allCategories.length;i++){var cat=allCategories[i],bg=(i%2===0)?'#e8ece0':'#f6f6ec';boardsHTML+='<tr><td style="background:'+bg+' !important;"><a href="#" class="nl-board-cat"><b>'+cat.name+'</b></a>: ';for(var j=0;j<cat.forums.length;j++){var f=cat.forums[j];boardsHTML+='<a href="'+(f.href||f.h||'#')+'" class="nl-board-link"><b>'+(f.name||f.n||'')+'</b></a>';if(j<cat.forums.length-1){boardsHTML+=', ';}}boardsHTML+='</td></tr>';}
+boardsHTML+='</tbody></table>';$('#pun-title').after(boardsHTML);buildNairalandProfile();
+$('#pun').append('<div class="nl-footer"><span class="nl-goup">(<a href="#pun-title"><b>Go Up</b></a>)</span><br><form class="nl-search-form" action="/search.php" method="get" style="margin:8px 0;"><input type="text" name="keywords" size="32" placeholder="Search..." /><input type="submit" name="search" value="Search" /></form><br><b><a href="/">Buzz Name</a></b> - Copyright (c) 2025 - '+(new Date()).getFullYear()+' <a href="/">Admin</a>. All rights reserved. <a href="#">How To Advertise</a>.<br><b>Disclaimer:</b> Every member is <b>solely responsible</b> for <b>anything</b> that he/she <b>posts</b> or <b>uploads</b> on this forum.</div>');
+return;}
+
+if(isHomepage){
+var boardsHTML2='<table class="nl-boards-table"><tbody><tr><th><h3>BUZZ NAME FORUMS</h3></th></tr>';
+for(var i2=0;i2<allCategories.length;i2++){var cat2=allCategories[i2],bg2=(i2%2===0)?'#e8ece0':'#f6f6ec';boardsHTML2+='<tr><td style="background:'+bg2+' !important;"><a href="#" class="nl-board-cat"><b>'+cat2.name+'</b></a>: ';for(var j2=0;j2<cat2.forums.length;j2++){var f2=cat2.forums[j2];boardsHTML2+='<a href="'+(f2.href||f2.h||'#')+'" class="nl-board-link"><b>'+(f2.name||f2.n||'')+'</b></a>';if(j2<cat2.forums.length-1){boardsHTML2+=', ';}}boardsHTML2+='</td></tr>';}
+boardsHTML2+='</tbody></table>';$('#pun-title').after(boardsHTML2);
+var adHTML=buildAdSliderHTML();$('.nl-boards-table').after(adHTML);nlAdInterval=setInterval(nlNextAd,4000);initAdSliderTouch();}
+else if(isViewforum||isViewtopic){var adHTML2=buildAdSliderHTML();$('#pun-title').after(adHTML2);nlAdInterval=setInterval(nlNextAd,4000);initAdSliderTouch();}
+if(isViewforum){setTimeout(buildBuzzTopicTable,300);}
+if(isViewtopic){setTimeout(buildBuzzPostView,200);}
+
+if(isHomepage){
+var featuredHTML='<div class="nl-featured" id="nl-featured-area"><div class="nl-featured-nav"><b><a href="/search.php?action=show_new">Latest News</a></b> \u2022 <b><a href="#">Twitter</a></b> \u2022 <b><a href="#">Facebook</a></b> \u2022 <b><a href="#">How To Advertise</a></b></div><div class="nl-featured-title" id="nl-featured-content"><div class="nl-loading-text">Loading featured topics...</div></div></div>';
+$('.nl-ad-slider').after(featuredHTML);
+$.ajax({url:'/userlist.php',type:'GET',timeout:10000,success:function(userlistData){
+var $ul=$(userlistData);var staffIds=[];
+$ul.find('tr').each(function(){var $row=$(this);var rowText=$.trim($row.text())||'';if(rowText.indexOf('Administrator')>=0||rowText.indexOf('Moderator')>=0){var $links=$row.find('a[href*="profile.php?id="]');$links.each(function(){var href=$(this).attr('href')||'';var idMatch=href.match(/[?&]id=(\d+)/);if(idMatch){var uid=parseInt(idMatch[1]);if(uid>0&&staffIds.indexOf(uid)<0){staffIds.push(uid);}}});}});
+if(staffIds.length===0){$('#nl-featured-content').html('<b style="color:#551818;">\u00BB</b> <a href="/search.php?action=show_new"><b>No featured topics yet.</b></a> <b style="color:#551818;">\u00AB</b>');$('.nl-featured').after('<div class="nl-pagination"><b class="pgn current">1</b></div>');if($('#nl-online-display').length===0){$('.nl-pagination').after('<div class="nl-online" id="nl-online-display"><h3>Members Online:</h3><b>'+onlineCount+' Members</b> and <b>'+guestCount+' Guests</b> online in <b>last 5 minutes</b>!</div>');}return;}
+var allTopics=[];var totalStaffRequests=staffIds.length;var completedStaffRequests=0;
+function fetchStaffTopics(staffId,pageNum,callback){var url='/search.php?action=show_user_topics&user_id='+staffId;if(pageNum>1){url+='&p='+pageNum;}$.ajax({url:url,type:'GET',timeout:10000,success:function(topicData){var $td=$(topicData);var foundTopics=0;$td.find('td.tcl').each(function(){var $tcl=$(this);var $topicLink=$tcl.find('a[href*="viewtopic.php?id="]').first();if($topicLink.length){var title=$.trim($topicLink.text())||'';var link=$topicLink.attr('href')||'';if(title&&title.length>3&&link){var tidMatch=link.match(/[?&]id=(\d+)/);if(tidMatch){var tid=parseInt(tidMatch[1]);if(title.indexOf('Search')<0&&title.indexOf('Forum')<0&&title.indexOf('Home')<0&&title.indexOf('Today')<0&&!title.match(/^\d{4}-\d{2}-\d{2}/)){allTopics.push({title:title,link:link,id:tid});foundTopics++;}}}}});var hasNextPage=false;$td.find('.pagelink a,.linksb .pagelink a').each(function(){var pageText=$.trim($(this).text());var pageNum2=parseInt(pageText);if(pageNum2===pageNum+1){hasNextPage=true;}});if($td.find('a.next,a[rel="next"]').length>0){hasNextPage=true;}if($td.find('.pagelink').text().indexOf('\u00BB')>=0&&pageNum===1){hasNextPage=true;}if(hasNextPage&&foundTopics>0){fetchStaffTopics(staffId,pageNum+1,callback);}else{callback();}},error:function(){callback();}});}
+function processAllTopics(){allTopics.sort(function(a,b){return b.id-a.id;});var totalTopics=allTopics.length;var perPage=20;var totalPages=Math.ceil(totalTopics/perPage);var currentPage=1;var hashMatch=window.location.hash.match(/nl-page-(\d+)/);if(hashMatch){currentPage=parseInt(hashMatch[1]);}if(currentPage<1){currentPage=1;}if(currentPage>totalPages){currentPage=totalPages;}var startIdx=(currentPage-1)*perPage;var endIdx=Math.min(startIdx+perPage,totalTopics);var fc='',cnt=0;for(var u=startIdx;u<endIdx;u++){var ft=allTopics[u];var fs=(cnt===0)?'12pt':'11pt';fc+='<b style="color:#551818 !important;font-size:'+fs+';">\u00BB</b> <a href="'+ft.link+'" style="font-size:'+fs+';"><b>'+ft.title+'</b></a> <b style="color:#551818 !important;font-size:'+fs+';">\u00AB</b>';if(cnt<(endIdx-startIdx-1)){fc+='<hr />';}cnt++;}if(totalTopics===0){fc='<b style="color:#551818;">\u00BB</b> <a href="/search.php?action=show_new"><b>No featured topics yet.</b></a> <b style="color:#551818;">\u00AB</b>';}$('#nl-featured-content').html(fc);var paginationHTML='';if(totalPages>1){paginationHTML+='<div class="nl-pagination">';if(currentPage>1){paginationHTML+='<a href="#nl-page-'+(currentPage-1)+'" class="pgn" onclick="window.location.hash=\'nl-page-'+(currentPage-1)+'\';window.location.reload();"><b>\u00AB Prev</b></a> ';}var maxPagesToShow=7;var startPage=Math.max(1,currentPage-Math.floor(maxPagesToShow/2));var endPage2=Math.min(totalPages,startPage+maxPagesToShow-1);if(endPage2-startPage<maxPagesToShow-1){startPage=Math.max(1,endPage2-maxPagesToShow+1);}if(startPage>1){paginationHTML+='<a href="#nl-page-1" class="pgn" onclick="window.location.hash=\'nl-page-1\';window.location.reload();">1</a> ';if(startPage>2){paginationHTML+='<span class="pgn">...</span> ';}}for(var pg=startPage;pg<=endPage2;pg++){if(pg===currentPage){paginationHTML+='<b class="pgn current">'+pg+'</b> ';}else{paginationHTML+='<a href="#nl-page-'+pg+'" class="pgn" onclick="window.location.hash=\'nl-page-'+pg+'\';window.location.reload();">'+pg+'</a> ';}}if(endPage2<totalPages){if(endPage2<totalPages-1){paginationHTML+='<span class="pgn">...</span> ';}paginationHTML+='<a href="#nl-page-'+totalPages+'" class="pgn" onclick="window.location.hash=\'nl-page-'+totalPages+'\';window.location.reload();">'+totalPages+'</a> ';}if(currentPage<totalPages){paginationHTML+='<a href="#nl-page-'+(currentPage+1)+'" class="pgn" onclick="window.location.hash=\'nl-page-'+(currentPage+1)+'\';window.location.reload();"><b>Next \u00BB</b></a>';}paginationHTML+='</div>';}$('.nl-pagination').remove();$('#nl-online-display').remove();$('.nl-featured').after(paginationHTML);var onlineHTML='<div class="nl-online" id="nl-online-display"><h3>Members Online:</h3><b>'+onlineCount+' Members</b> and <b>'+guestCount+' Guests</b> online in <b>last 5 minutes</b>!</div>';if(paginationHTML){$('.nl-pagination').after(onlineHTML);}else{$('.nl-featured').after(onlineHTML);}if(typeof abc==='function'){setTimeout(abc,100);}if(typeof ICONS1!=='undefined'&&ICONS1.ICON_Parse){setTimeout(function(){ICONS1.ICON_Parse();},200);}}
+for(var s2=0;s2<staffIds.length;s2++){(function(staffId){fetchStaffTopics(staffId,1,function(){completedStaffRequests++;if(completedStaffRequests>=totalStaffRequests){processAllTopics();}});})(staffIds[s2]);}},error:function(){$('#nl-featured-content').html('<b style="color:#551818;">\u00BB</b> <a href="/search.php?action=show_new"><b>Unable to load topics.</b></a> <b style="color:#551818;">\u00AB</b>');}});}
+else if(isViewforum){$('.nl-topics-table').after('<div class="nl-online"><h3>Members Online:</h3><b>'+onlineCount+' Members</b> and <b>'+guestCount+' Guests</b> online in <b>last 5 minutes</b>!</div>');}
+else if(isViewtopic){$('.nl-post-wrapper').last().after('<div class="nl-online"><h3>Members Online:</h3><b>'+onlineCount+' Members</b> and <b>'+guestCount+' Guests</b> online in <b>last 5 minutes</b>!</div>');}
+else if(!isHomepage){$('.nl-ad-slider').after('<div class="nl-online"><h3>Members Online:</h3><b>'+onlineCount+' Members</b> and <b>'+guestCount+' Guests</b> online in <b>last 5 minutes</b>!</div>');}
+$('#pun').append('<div class="nl-footer"><span class="nl-goup">(<a href="#pun-title"><b>Go Up</b></a>)</span><br><form class="nl-search-form" action="/search.php" method="get" style="margin:8px 0;"><input type="text" name="keywords" size="32" placeholder="Search..." /><input type="submit" name="search" value="Search" /></form><br><b><a href="/">Buzz Name</a></b> - Copyright (c) 2025 - '+(new Date()).getFullYear()+' <a href="/">Admin</a>. All rights reserved. <a href="#">How To Advertise</a>.<br><b>Disclaimer:</b> Every member is <b>solely responsible</b> for <b>anything</b> that he/she <b>posts</b> or <b>uploads</b> on this forum.</div>');}
+
+function buildBuzzTopicTable(){$('.punbb .main table,.punbb .main .container table').hide();var th='<table class="nl-topics-table"><tbody><tr><th><b>Topic:</b> <a href="#">Posts</a> \u2022 <a href="#">Views</a> \u2022 <b>Updated</b> \u2022 <a href="#">New</a></th></tr>';var $ot=$('.punbb .main table,.punbb .main .container table').first(),rc=0;$ot.find('tbody tr').each(function(){var $r=$(this);if($r.find('th').length>0){return;}var $tc=$r.find('.tcl').first();if(!$tc.length){$tc=$r.find('td').first();}if(!$tc.length){return;}var $tl=$tc.find('h3 a,a').first();if(!$tl.length){return;}var tt=($.trim($tl.text())||'Untitled').replace(/\.\.\./g,'');var thref=$tl.attr('href')||'#',pc='0',$t2=$r.find('.tc2').first();if($t2.length){pc=$.trim($t2.text())||'0';}var vc='0',$t3=$r.find('.tc3').first();if($t3.length){vc=$.trim($t3.text())||'0';}var au='Unknown',ut='--',ud='--',lb='Unknown',$tcr=$r.find('.tcr').first();if($tcr.length){var tx=$.trim($tcr.text()),m=tx.match(/(?:by|from)\s+([A-Za-z0-9_]+)/i);if(m){lb=m[1];}m=tx.match(/(\d{4}[-\/]\d{2}[-\/]\d{2})/);if(m){ud=m[1];}m=tx.match(/(\d{1,2}:\d{2}(?:\s*(?:am|pm))?)/i);if(m){ut=m[1];}if(ud==='--'){m=tx.match(/(Today|Yesterday|\w+\s+\d+)/i);if(m){ud=m[1];}}}var m2=$tc.text().match(/(?:by|from)\s+([A-Za-z0-9_]+)/i);if(m2){au=m2[1];}if(au==='Unknown'&&$tcr.length){m2=$.trim($tcr.text()).match(/(?:by|from)\s+([A-Za-z0-9_]+)/i);if(m2){au=m2[1];}}var rb=(rc%2===0)?'#e8ece0':'#f6f6ec';rc++;th+='<tr><td style="background:'+rb+' !important;text-align:center;"><img src="http://forumstatic.ru/files/001c/ac/51/74159.gif?v=1" class="nl-topic-icon" /> <b><a href="'+thref+'" class="nl-topic-title-link">'+tt+'</a></b><br /><span class="nl-topic-meta">Created by <b><a href="#">'+au+'</a></b>. <b>'+pc+'</b> posts. <b>'+vc+'</b> views. Updated at <b>'+ut+'</b> On <b>'+ud+'</b> by <b><a href="#">'+lb+'</a></b></span></td></tr>';});th+='</tbody></table>';$('.nl-ad-slider').after(th);}
+
+function buildBuzzPostView(){var pt=$.trim($('title').text())||'',tp=pt.split(' - '),ttl=(tp[0]||'Topic').replace(/\.\.\./g,'').replace(/\u00A4[^\u00A4]*\u00A4/g,'').replace(/\u00A4/g,''),ftl=tp[1]||'',stl=tp[2]||'Buzz Name',bc='',lt='';$('.punbb .crumbs a').each(function(){var ct=$.trim($(this).text()),ch=$(this).attr('href')||'#';if(ct&&ct.length>1&&ct!==lt&&ct!==ttl){if(bc!==''){bc+=' \u2022 ';}bc+='<a href="'+ch+'">'+ct+'</a>';lt=ct;}});if(bc!==''){bc+=' \u2022 ';}bc+=ttl;var vc='0',$t3=$('.punbb .main .tc3,.punbb .main td.tc3').first();if($t3.length){vc=$.trim($t3.text())||'0';}var rh=$('.punbb .postlink a,.punbb .linkst .postlink a').attr('href')||'#newpost',tth='<div class="nl-topic-top-area"><h1>'+ttl+(ftl?' - '+ftl:'')+' - '+stl+'</h1><div class="nl-topic-breadcrumb">'+bc+' ('+vc+' Views)</div><div class="nl-topic-pagination-row"><a class="nl-reply-btn" href="'+rh+'"><b>Reply</b></a> <span style="font-size:9.5pt;">(<a href="#nl-footer"><b>Go Down</b></a>)</span></div></div>';$('.nl-ad-slider').after(tth);var statsText=$('#nl-stats-display').text()||'';var statsDateMatch=statsText.match(/Date:\s*(.+?)(?:\s*$)/);var serverDateTimeStr=statsDateMatch?statsDateMatch[1]:'';$('.punbb .post').each(function(pi){var $p=$(this),$ph=$p.find('h3').first(),$pl=$ph.find('a').first(),lkt=$.trim($pl.text()),phref=$pl.attr('href')||'#';if(!lkt||lkt.length<3||lkt.match(/^Share/i)){var hc=$ph.clone();hc.find('span,strong,.byuser').remove();lkt=$.trim(hc.text());}var pdt=lkt.replace(/^#\d+\s*/i,'');if(!pdt||pdt.length<3){pdt=ttl;}if(pi>0&&!pdt.match(/^Re:/i)){pdt='Re: '+pdt;}var $al=$p.find('.post-author .pa-author a').first();if(!$al.length){$al=$p.find('.post-author a').first();}if(!$al.length){$al=$ph.find('a.user,a[href*="profile"]').first();}var an=$.trim($al.text())||'Unknown';var ah=$al.attr('href')||'#';if(ah.indexOf('profile.php')<0){var $profileLink=$p.find('.post-author a[href*="profile.php"]').first();if($profileLink.length){ah=$profileLink.attr('href')||ah;}if(ah.indexOf('profile.php')<0){var $anyProfileLink=$p.find('a[href*="profile.php"]').first();if($anyProfileLink.length){ah=$anyProfileLink.attr('href')||ah;}}}var postDateTime='';var h3FullText=$.trim($ph.text())||'';var h3HTML=$ph.html()||'';var dateTimeMatch=h3FullText.match(/(\d{4}[-\/]\d{2}[-\/]\d{2}\s+\d{1,2}:\d{2}(?:\s*(?:am|pm|AM|PM))?)/);if(dateTimeMatch){postDateTime=dateTimeMatch[1];}if(!postDateTime){var relDateMatch=h3FullText.match(/(Today|Yesterday)\s+(\d{1,2}:\d{2}\s*(?:am|pm|AM|PM)?)/i);if(relDateMatch){postDateTime=relDateMatch[1]+' '+relDateMatch[2];}}if(!postDateTime){var longDateMatch=h3FullText.match(/(\d{1,2}\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4})\s+(\d{1,2}:\d{2}\s*(?:am|pm|AM|PM)?)/i);if(longDateMatch){postDateTime=longDateMatch[1]+' '+longDateMatch[2];}}if(!postDateTime){var h3Contents=$ph.contents();var lastTextNode='';for(var c=h3Contents.length-1;c>=0;c--){var node=h3Contents[c];if(node.nodeType===3){var nodeText=$.trim(node.textContent||'');if(nodeText.length>0){lastTextNode=nodeText;break;}}}if(lastTextNode){var ltDateMatch=lastTextNode.match(/(\d{4}[-\/]\d{2}[-\/]\d{2}\s+\d{1,2}:\d{2}(?:\s*(?:am|pm|AM|PM))?)/);if(ltDateMatch){postDateTime=ltDateMatch[1];}else{var ltRelMatch=lastTextNode.match(/(Today|Yesterday)\s+(\d{1,2}:\d{2}\s*(?:am|pm|AM|PM)?)/i);if(ltRelMatch){postDateTime=ltRelMatch[1]+' '+ltRelMatch[2];}else{postDateTime=lastTextNode;}}}}if(!postDateTime){var lastTagIndex=Math.max(h3HTML.lastIndexOf('</a>'),h3HTML.lastIndexOf('</span>'),h3HTML.lastIndexOf('</strong>'));if(lastTagIndex>=0){var afterLastTag=$.trim(h3HTML.substring(lastTagIndex).replace(/<[^>]+>/g,''));if(afterLastTag){postDateTime=afterLastTag;}}}if(!postDateTime){var endTimeMatch=h3FullText.match(/(\d{1,2}:\d{2}\s*(?:am|pm|AM|PM)?)\s*$/i);if(endTimeMatch){var timeOnly=endTimeMatch[1];if(serverDateTimeStr){var statsDatePart=serverDateTimeStr.replace(/\s+at\s+.*$/i,'');postDateTime=statsDatePart+' '+timeOnly;}else{postDateTime=timeOnly;}}}if(!postDateTime){var rawTime=h3FullText.match(/(\d{1,2}:\d{2}\s*(?:am|pm|AM|PM)?)/i);if(rawTime){postDateTime=rawTime[1];}}postDateTime=postDateTime.replace(/AM/i,'am').replace(/PM/i,'pm');if(serverDateTimeStr&&postDateTime.match(/^(Today|Yesterday)/i)){var statsDateMatch2=serverDateTimeStr.match(/(\d{1,2}\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4})/i);if(statsDateMatch2){var statsDateStr=statsDateMatch2[1];var relativeDay=postDateTime.match(/^(Today|Yesterday)/i)[1].toLowerCase();var timePart=postDateTime.replace(/^(Today|Yesterday)\s+/i,'');if(relativeDay==='today'){postDateTime=statsDateStr+' '+timePart;}else if(relativeDay==='yesterday'){var monthsArr=['January','February','March','April','May','June','July','August','September','October','November','December'];var sp=statsDateStr.split(' ');var day=parseInt(sp[0]);var month=sp[1];var year=parseInt(sp[2]);var monthIndex=monthsArr.indexOf(month);if(monthIndex>=0){var statsDateObj=new Date(year,monthIndex,day);statsDateObj.setDate(statsDateObj.getDate()-1);postDateTime=statsDateObj.getDate()+' '+monthsArr[statsDateObj.getMonth()]+' '+statsDateObj.getFullYear()+' '+timePart;}}}}if(!postDateTime||postDateTime.length<3){postDateTime='--:--';}var $pb=$p.find('.post-body,.post-content,.entry-content').first();$pb.css('margin-left','0');$pb.css('width','100%');var pct=($pb.html()||'').replace(/\.\.\./g,'').replace(/\u00A4[^\u00A4]*\u00A4/g,'').replace(/<img[^>]*class="(?:MyTemaIcon|StTemaIcon|temaImg)[^>]*>/gi,'');var rb2=(pi%2===0)?'#e8ece0':'#f6f6ec',nh='<div class="nl-post-wrapper"><div class="nl-post-header"><a href="'+phref+'">'+pdt+'</a> by <a href="'+ah+'" class="user-link">'+an+'</a>: <span style="font-size:9.5pt;color:#555518;"><b>'+postDateTime+'</b></span></div><div class="nl-post-content" style="background:'+rb2+';"><div style="text-align:left;width:100%;overflow-wrap:break-word;">'+pct+'</div><div class="nl-share-bar"><b>Share</b></div></div></div>';$p.replaceWith(nh);});}
+
+$.get('/index.php',function(data){var $d=$(data),stx=$d.find('#pun-stats').text()||'';if(stx){var tm2=stx.match(/Total\s+Topics?:\s*(\d+)/i),pm=stx.match(/Total\s+Posts?:\s*(\d+)/i),mm=stx.match(/Total\s+Members?:?\s*(\d+)/i);if(tm2){totalTopics=tm2[1];}if(pm){totalPosts=pm[1];}if(mm){totalUsers=mm[1];}var gm=stx.match(/Guests?:?\s*(\d+)/i),rm=stx.match(/Registered\s+Users?:?\s*(\d+)/i);if(gm){guestCount=gm[1];}if(rm){onlineCount=rm[1];}try{if(totalUsers!=='...'){sessionStorage.setItem('nl_totalUsers',totalUsers);sessionStorage.setItem('nl_totalTopics',totalTopics);sessionStorage.setItem('nl_totalPosts',totalPosts);sessionStorage.setItem('nl_onlineCount',onlineCount);sessionStorage.setItem('nl_guestCount',guestCount);}}catch(e){}updateStatsDisplay();}});
+
+function extractCategoriesFromHTML(htmlString){var cats=[],td=document.createElement('div');td.innerHTML=htmlString;var ads=td.getElementsByTagName('div');for(var d=0;d<ads.length;d++){if(ads[d].className&&ads[d].className.indexOf('category')>=0){var cd=ads[d],cn='Category',hds=cd.getElementsByTagName('h2');if(hds.length===0){hds=cd.getElementsByTagName('h3');}if(hds.length>0){cn=$.trim(hds[0].innerText||hds[0].textContent||'Category');}var fms=[],lks=cd.getElementsByTagName('a');for(var l=0;l<lks.length;l++){var lk=lks[l],nm=$.trim(lk.innerText||lk.textContent||''),hr=lk.getAttribute('href')||'#';if(nm&&nm.length>2&&!nm.match(/category/i)&&(hr.match(/viewforum|forum/)||hr.match(/\.php\?id=\d+$/))){fms.push({n:nm,h:hr});}}if(fms.length>0){cats.push({name:cn,forums:fms});}}}return cats;}
+
+var allCategories=extractCategoriesFromHTML(document.documentElement.innerHTML);
+if(allCategories.length>0){saveCategoriesToStorage(allCategories);buildPage(allCategories);}
+else{if(savedCategories&&savedCategories.length>0){buildPage(savedCategories);}else{$.get('/index.php',function(data){var cats=extractCategoriesFromHTML(data);if(cats.length>0){saveCategoriesToStorage(cats);buildPage(cats);}else if(savedCategories&&savedCategories.length>0){buildPage(savedCategories);}else{buildPage([{name:'Forums',forums:[{n:'Home',h:'/index.php'}]}]);}}).fail(function(){if(savedCategories&&savedCategories.length>0){buildPage(savedCategories);}else{buildPage([{name:'Forums',forums:[{n:'Home',h:'/index.php'}]}]);}});}}
+});
+</script>
