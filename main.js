@@ -1455,6 +1455,22 @@ if (!hasThemeMarkupAny && $('#nl-construction-card, #nl-welcome-card').length ==
   $('body').prepend(cardFallback);
 }
 
+function nlApplyCustomerBranding(){
+  try{
+    var logo=document.querySelector('#pun-title .title-logo, #pun-title h1');
+    if(!logo)return;
+    var current=(logo.textContent||'').replace(/^\s*[»>]+\s*/,'').trim();
+    if(!/^(mybb|punbb)$/i.test(current))return;
+    var sub=(window.location.hostname||'').split('.')[0]||'';
+    var title=(document.title||'').trim();
+    var brand=title&&!/^(mybb|punbb)$/i.test(title)?title:sub;
+    if(!brand||/^(forum|bb)$/i.test(brand))return;
+    var span=logo.querySelector('span');
+    if(span)span.textContent=brand;else logo.textContent=brand;
+    if(/^(mybb|punbb)$/i.test(document.title||''))document.title=brand;
+  }catch(e){}
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',nlApplyCustomerBranding);else nlApplyCustomerBranding();
 nlReady();
 });
 
