@@ -2,6 +2,21 @@
 (function(){
 'use strict';
 
+/* The forum host's Digital Caramel SDK creates floating ads after page load.
+   Keep normal/in-content creatives untouched; suppress only detached overlays. */
+function nlSuppressHostAdOverlays(){
+  var css='.caramel-creative--detached[caramel-creative-id],'+
+    '[caramel-creative-id].caramel-creative--detached,'+
+    '[class*="caramel-bottomLine"],[class*="caramel-fadeInBox"],[class*="caramel-fullscreen"]'+
+    '{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}';
+  try{
+    var s=document.getElementById('nl-hide-platform-ad-overlays');
+    if(!s){s=document.createElement('style');s.id='nl-hide-platform-ad-overlays';(document.head||document.documentElement).appendChild(s)}
+    if(s.textContent.indexOf('caramel-creative--detached')<0)s.appendChild(document.createTextNode(css));
+  }catch(e){}
+}
+nlSuppressHostAdOverlays();
+
 function nlReady(){try{document.documentElement.className=document.documentElement.className.replace('nl-loading','nl-ready')}catch(e){}}
 window.nlReady=nlReady;
 
