@@ -7,6 +7,8 @@
 function nlSuppressHostAdOverlays(){
   var css='.caramel-creative--detached[caramel-creative-id],'+
     '[caramel-creative-id].caramel-creative--detached,'+
+    '[caramel-creative-id].caramel-creative--overlay,'+
+    '[caramel-creative-id].caramel-creative--loading,'+
     '[class*="caramel-bottomLine"],[class*="caramel-fadeInBox"],[class*="caramel-fullscreen"]'+
     '{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}';
   try{
